@@ -24,3 +24,30 @@
  */
 
 #include "clutterperl.h"
+
+MODULE = Clutter::Rectangle	PACKAGE = Clutter::Rectangle	PREFIX = clutter_rectangle_
+
+
+ClutterActor_noinc *
+clutter_rectangle_new (class, color=NULL)
+	ClutterColor_ornull *color
+    CODE:
+    	if (items == 1)
+		RETVAL = clutter_rectangle_new ();
+	else
+        	RETVAL = clutter_rectangle_new_with_color (color);
+    OUTPUT:
+        RETVAL
+	
+ClutterColor_copy *
+clutter_rectangle_get_color (ClutterRectangle *rectangle)
+    PREINIT:
+        ClutterColor color;
+    CODE:
+        clutter_rectangle_get_color (rectangle, &color);
+	RETVAL = &color;
+    OUTPUT:
+        RETVAL
+
+void
+clutter_rectangle_set_color (ClutterRectangle *rectangle, ClutterColor *color)

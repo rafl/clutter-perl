@@ -140,20 +140,20 @@ show (ClutterActor *actor)
 	}
 
 void
-clutter_actor_request_coords (ClutterActor *self, ClutterActorBox *box)
+clutter_actor_request_coords (ClutterActor *actor, ClutterActorBox *box)
 
 void
-clutter_actor_allocate_coords (ClutterActor *self, ClutterActorBox *box)
+clutter_actor_allocate_coords (ClutterActor *actor, ClutterActorBox *box)
 
 void
-clutter_actor_set_geometry (ClutterActor *self, ClutterGeometry *geom)
+clutter_actor_set_geometry (ClutterActor *actor, ClutterGeometry *geom)
 
 ClutterGeometry_copy *
-clutter_actor_get_geometry (ClutterActor *self)
+clutter_actor_get_geometry (ClutterActor *actor)
     PREINIT:
         ClutterGeometry geom;
     CODE:
-        clutter_actor_get_geometry (self, &geom);
+        clutter_actor_get_geometry (actor, &geom);
 	RETVAL = &geom;
     OUTPUT:
         RETVAL
@@ -162,12 +162,12 @@ clutter_actor_get_geometry (ClutterActor *self)
 =for signature (x1, y1, x2, y2) = $actor->get_coords
 =cut
 void
-clutter_actor_get_coords (ClutterActor *self)
+clutter_actor_get_coords (ClutterActor *actor)
     PREINIT:
         gint x1, y1;
 	gint x2, y2;
     PPCODE:
-        clutter_actor_get_coords (self, &x1, &y1, &x2, &y2);
+        clutter_actor_get_coords (actor, &x1, &y1, &x2, &y2);
 	EXTEND (SP, 4);
 	PUSHs (sv_2mortal (newSViv (x1)));
 	PUSHs (sv_2mortal (newSViv (y1)));
@@ -175,86 +175,86 @@ clutter_actor_get_coords (ClutterActor *self)
 	PUSHs (sv_2mortal (newSViv (y2)));
 
 void
-clutter_actor_set_position (ClutterActor *self, gint x, gint y)
+clutter_actor_set_position (ClutterActor *actor, gint x, gint y)
 
 void
-clutter_actor_set_size (ClutterActor *self, gint width, gint height)
+clutter_actor_set_size (ClutterActor *actor, gint width, gint height)
 
 =for apidoc
 =for signature (x, y) = $actor->get_abs_position
 =cut
 void
-clutter_actor_get_abs_position (ClutterActor *self)
+clutter_actor_get_abs_position (ClutterActor *actor)
     PREINIT:
         gint x, y;
     PPCODE:
-        clutter_actor_get_abs_position (self, &x, &y);
+        clutter_actor_get_abs_position (actor, &x, &y);
 	EXTEND (SP, 2);
 	PUSHs (sv_2mortal (newSViv (x)));
 	PUSHs (sv_2mortal (newSViv (y)));
 
 guint
-clutter_actor_get_width (ClutterActor *self)
+clutter_actor_get_width (ClutterActor *actor)
 
 guint
-clutter_actor_get_height (ClutterActor *self)
+clutter_actor_get_height (ClutterActor *actor)
 
 gint
-clutter_actor_get_x (ClutterActor *self)
+clutter_actor_get_x (ClutterActor *actor)
 
 gint
-clutter_actor_get_y (ClutterActor *self)
+clutter_actor_get_y (ClutterActor *actor)
 
 void
-clutter_actor_rotate_z (ClutterActor *self, gfloat angle, gint x, gint y)
+clutter_actor_rotate_z (ClutterActor *actor, gfloat angle, gint x, gint y)
 
 void
-clutter_actor_rotate_x (ClutterActor *self, gfloat angle, gint y, gint z)
+clutter_actor_rotate_x (ClutterActor *actor, gfloat angle, gint y, gint z)
 
 void
-clutter_actor_rotate_y (ClutterActor *self, gfloat angle, gint x, gint z)
+clutter_actor_rotate_y (ClutterActor *actor, gfloat angle, gint x, gint z)
 
 void
-clutter_actor_set_opacity (ClutterActor *self, guint8 opacity)
+clutter_actor_set_opacity (ClutterActor *actor, guint8 opacity)
 
 guint8
-clutter_actor_get_opacity (ClutterActor *self)
+clutter_actor_get_opacity (ClutterActor *actor)
 
 void
-clutter_actor_set_name (ClutterActor *self, const gchar *id)
+clutter_actor_set_name (ClutterActor *actor, const gchar *id)
 
 const gchar *
-clutter_actor_get_name (ClutterActor *self)
+clutter_actor_get_name (ClutterActor *actor)
 
 guint32
-clutter_actor_get_id (ClutterActor *self)
+clutter_actor_get_id (ClutterActor *actor)
 
 void
-clutter_actor_set_clip (ClutterActor *self, gint xoff, gint yoff, gint width, gint height)
+clutter_actor_set_clip (ClutterActor *actor, gint xoff, gint yoff, gint width, gint height)
 
 void
-clutter_actor_remove_clip (ClutterActor *self)
+clutter_actor_remove_clip (ClutterActor *actor)
 
 void
-clutter_actor_set_parent (ClutterActor *self, ClutterActor *parent)
+clutter_actor_set_parent (ClutterActor *actor, ClutterActor *parent)
 
-ClutterActor*
-clutter_actor_get_parent (ClutterActor *self)
-
-void
-clutter_actor_raise (ClutterActor *self, ClutterActor *below)
+ClutterActor_ornull *
+clutter_actor_get_parent (ClutterActor *actor)
 
 void
-clutter_actor_lower (ClutterActor *self, ClutterActor *above)
+clutter_actor_raise (ClutterActor *actor, ClutterActor *below)
 
 void
-clutter_actor_raise_top (ClutterActor *self)
+clutter_actor_lower (ClutterActor *actor, ClutterActor *above)
 
 void
-clutter_actor_lower_bottom (ClutterActor *self)
+clutter_actor_raise_top (ClutterActor *actor)
 
 void
-clutter_actor_set_depth (ClutterActor *self, gint depth)
+clutter_actor_lower_bottom (ClutterActor *actor)
+
+void
+clutter_actor_set_depth (ClutterActor *actor, gint depth)
 
 gint
-clutter_actor_get_depth (ClutterActor *self)
+clutter_actor_get_depth (ClutterActor *actor)

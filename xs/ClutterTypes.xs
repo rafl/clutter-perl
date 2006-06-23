@@ -197,3 +197,88 @@ values (ClutterGeometry *geometry)
 	PUSHs (sv_2mortal (newSViv (geometry->y)));
 	PUSHs (sv_2mortal (newSViv (geometry->width)));
 	PUSHs (sv_2mortal (newSViv (geometry->height)));
+
+MODULE = Clutter::Types		PACKAGE = Clutter::ActorBox
+
+
+ClutterActorBox_copy *
+new (class, x1, y1, x2, y2)
+	gint x1
+	gint y1
+	gint x2
+	gint y2
+    PREINIT:
+        ClutterActorBox box;
+    CODE:
+        box.x1 = x1;
+	box.y1 = y1;
+	box.x2 = x2;
+	box.y2 = y2;
+    	RETVAL = &box;
+    OUTPUT:
+        RETVAL
+
+=for apidoc Clutter::ActorBox::x1
+=for signature integer = $box->x1
+=for signature oldvalue = $box->x1 ($newvalue)
+=for arg newvalue (integer)
+=cut
+
+=for apidoc Clutter::ActorBox::y1
+=for signature integer = $box->y1
+=for signature oldvalue = $box->y1 ($newvalue)
+=for arg newvalue (integer)
+=cut
+
+=for apidoc Clutter::ActorBox::x2
+=for signature integer = $box->x2
+=for signature oldvalue = $box->x2 ($newvalue)
+=for arg newvalue (integer)
+=cut
+
+=for apidoc Clutter::ActorBox::y2
+=for signature integer = $box->y2
+=for signature oldvalue = $box->y2 ($newvalue)
+=for arg newvalue (integer)
+=cut
+
+gint
+x1 (ClutterActorBox *box, SV *newvalue = 0)
+    ALIAS:
+        Clutter::ActorBox::y1 = 1
+	Clutter::ActorBox::x2 = 2
+	Clutter::ActorBox::y2 = 3
+    CODE:
+        switch (ix) {
+		case 0: RETVAL = box->x1; break;
+		case 1: RETVAL = box->y1; break;
+		case 2: RETVAL = box->x2; break;
+		case 3: RETVAL = box->y2; break;
+		default:
+			RETVAL = 0;
+			g_assert_not_reached ();
+	}
+	if (newvalue) {
+	        switch (ix) {
+			case 0: box->x1 = SvIV (newvalue); break;
+			case 1: box->y1 = SvIV (newvalue); break;
+			case 2: box->x2 = SvIV (newvalue); break;
+			case 3: box->y2 = SvIV (newvalue); break;
+			default:
+				g_assert_not_reached ();
+		}
+	}
+    OUTPUT:
+        RETVAL
+
+=for apidoc
+=for signature (x, y, x2, y2) = $box->values
+=cut
+void
+values (ClutterActorBox *box)
+    PPCODE:
+        EXTEND (SP, 4);
+	PUSHs (sv_2mortal (newSViv (box->x1)));
+	PUSHs (sv_2mortal (newSViv (box->y1)));
+	PUSHs (sv_2mortal (newSViv (box->x2)));
+	PUSHs (sv_2mortal (newSViv (box->y2)));

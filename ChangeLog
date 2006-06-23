@@ -1,3 +1,25 @@
 2006-06-23  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* xs/ClutterRectangle.xs: Implement Clutter::Rectangle
+
+	* xs/ClutterTypes.xs: Implement Clutter::ActorBox
+
+	* xs/ClutterActor.xs: Rename parameter name "self" to "actor", so
+	that the apidoc is coherent with the object name.
+
+	* xs/ClutterGroup.xs: Implement Clutter::Group::foreach(); rename
+	Clutter::Group::add_many to ::add, so that the semantics is kept;
+	implement the rest of Clutter::Group methods.
+
+	* xs/ClutterLabel.xs: Implement Clutter::Label.  The constructor
+	takes two optional parameters which are dogfed to the relative
+	accessors.
+
+	* t/ClutterGroup.t:
+	* t/ClutterLabel.t:
+	* t/ClutterRectangle.t: Add test suites for the newly wrapped
+	objects.
+
+2006-06-23  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* *: Initial import of the Perl bindings for Clutter

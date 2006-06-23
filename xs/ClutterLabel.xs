@@ -24,3 +24,62 @@
  */
 
 #include "clutterperl.h"
+
+MODULE = Clutter::Label		PACKAGE = Clutter::Label	PREFIX = clutter_label_
+
+
+ClutterActor_noinc *
+clutter_label_new (class, font_name=NULL, text=NULL)
+	const gchar_ornull *font_name
+	const gchar_ornull *text
+    CODE:
+        RETVAL = clutter_label_new ();
+	if (font_name) {
+		clutter_label_set_font_name (CLUTTER_LABEL (RETVAL), font_name);
+	}
+	if (text) {
+		clutter_label_set_text (CLUTTER_LABEL (RETVAL), text);
+	}
+    OUTPUT:
+    	RETVAL
+
+void
+clutter_label_set_text (ClutterLabel *label, const gchar_ornull *text)
+
+const gchar_ornull *
+clutter_label_get_text (ClutterLabel *label)
+
+void
+clutter_label_set_font_name (ClutterLabel *label, const gchar *font_name)
+
+const gchar_ornull *
+clutter_label_get_font_name (ClutterLabel *label)
+
+void
+clutter_label_set_color (ClutterLabel *label, ClutterColor *color)
+
+ClutterColor_copy *
+clutter_label_get_color (ClutterLabel *label)
+    PREINIT:
+        ClutterColor color;
+    CODE:
+        clutter_label_get_color (label, &color);
+	RETVAL = &color;
+    OUTPUT:
+        RETVAL
+
+void
+clutter_label_set_text_extents (ClutterLabel *label, gint width, gint height)
+
+=for apidoc
+=for signature (width, height) = $label->get_text_extents
+=cut
+void
+clutter_label_get_text_extents (ClutterLabel *label)
+    PREINIT:
+        gint width, height;
+    PPCODE:
+        clutter_label_get_text_extents (label, &width, &height);
+	EXTEND (SP, 2);
+	PUSHs (sv_2mortal (newSViv (width)));
+	PUSHs (sv_2mortal (newSViv (height)));
