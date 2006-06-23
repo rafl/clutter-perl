@@ -1,0 +1,4 @@
+Copyright (C) 2006  OpenedHand Ltd.
+
+This software is licensed under the LGPL.  See L<Clutter> for the full
+copyright notice.
