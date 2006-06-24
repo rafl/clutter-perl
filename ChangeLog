@@ -1,5 +1,13 @@
 2006-06-24  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	A examples/rects.pl
+
+	* MANIFEST:
+	* examples/rects.pl: Add an example program (it's the same
+	one used for the Python bindings).
+
+2006-06-24  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* xs/ClutterTexture.xs:
 	* xs/ClutterTimeline.xs: Implemented Clutter::Texture and
 	Clutter::Timeline.

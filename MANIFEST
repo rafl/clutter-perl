@@ -4,6 +4,7 @@ Clutter.pm
 clutterperl.h
 copyright.pod
 doctypes
+examples/rects.pl
 Makefile.PL
 MANIFEST			This list of files
 MANIFEST.SKIP
