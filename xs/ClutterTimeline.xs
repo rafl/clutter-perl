@@ -24,3 +24,48 @@
  */
 
 #include "clutterperl.h"
+
+MODULE = Clutter::Timeline	PACKAGE = Clutter::Timeline	PREFIX = clutter_timeline_
+
+ClutterTimeline_noinc *
+clutter_timeline_new (class, nframes, fps)
+	guint nframes
+	guint fps
+    C_ARGS:
+        nframes, fps
+
+void
+clutter_timeline_set_speed (ClutterTimeline *timeline, guint fps)
+
+void
+clutter_timeline_start (ClutterTimeline *timeline)
+
+void
+clutter_timeline_pause (ClutterTimeline *timeline)
+
+void
+clutter_timeline_stop (ClutterTimeline *timeline)
+
+void
+clutter_timeline_set_loop (ClutterTimeline *timeline, gboolean loop)
+
+gboolean
+clutter_timeline_get_loop (ClutterTimeline *timeline)
+
+void
+clutter_timeline_rewind (ClutterTimeline *timeline)
+
+void
+clutter_timeline_skip (ClutterTimeline *timeline, guint nframes)
+
+void
+clutter_timeline_advance (ClutterTimeline *timeline, guint frame_num)
+
+gint
+clutter_timeline_get_current_frame (ClutterTimeline *timeline)
+
+guint
+clutter_timeline_get_n_frames (ClutterTimeline *timeline)
+
+gboolean
+clutter_timeline_is_playing (ClutterTimeline *timeline)

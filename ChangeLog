@@ -1,3 +1,9 @@
+2006-06-24  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* xs/ClutterTexture.xs:
+	* xs/ClutterTimeline.xs: Implemented Clutter::Texture and
+	Clutter::Timeline.
+
 2006-06-23  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* xs/ClutterRectangle.xs: Implement Clutter::Rectangle
