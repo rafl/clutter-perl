@@ -1,3 +1,12 @@
+2006-06-25  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* xs/ClutterCloneTexture.xs:
+	* xs/ClutterVideoTexture.xs: Implement the remaining textures.
+
+	* xs/ClutterMedia.xs: Implement Clutter::Media interface; only
+	the C part works - implementing the interface in Perl will
+	require some more black magic.
+
 2006-06-24  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	A examples/rects.pl
