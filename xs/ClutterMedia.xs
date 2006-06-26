@@ -74,13 +74,36 @@ static void
 clutterperl_media_set_playing (ClutterMedia *media,
 			       gboolean      playing)
 {
+  GET_METHOD ("SET_PLAYING");
 
+  if (METHOD_EXISTS)
+    {
+      PREP;
+      XPUSHs (sv_2mortal (newSVuv (playing)));
+      CALL;
+      FINISH;
+    }
 }
 
 static gboolean
 clutterperl_media_get_playing (ClutterMedia *media)
 {
   return FALSE;
+}
+
+static void
+clutterperl_media_set_position (ClutterMedia *media,
+				gint          position)
+{
+  GET_METHOD ("SET_POSITION");
+
+  if (METHOD_EXISTS)
+    {
+      PREP;
+      XPUSHs (sv_2mortal (newSViv (position)));
+      CALL;
+      FINISH;
+    }
 }
 
 static void
