@@ -28,7 +28,7 @@
 MODULE = Clutter::Rectangle	PACKAGE = Clutter::Rectangle	PREFIX = clutter_rectangle_
 
 
-ClutterActor_noinc *
+ClutterActor *
 clutter_rectangle_new (class, color=NULL)
 	ClutterColor_ornull *color
     CODE:

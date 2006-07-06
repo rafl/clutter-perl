@@ -28,13 +28,13 @@
 MODULE = Clutter::Texture	PACKAGE = Clutter::Texture	PREFIX = clutter_texture_
 
 
-ClutterActor_noinc *
+ClutterActor *
 clutter_texture_new_from_pixbuf (class, pixbuf)
 	GdkPixbuf *pixbuf
     C_ARGS:
         pixbuf
 
-ClutterActor_noinc *
+ClutterActor *
 clutter_texture_new (class)
     C_ARGS:
         /* void */

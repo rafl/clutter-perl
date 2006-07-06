@@ -1,3 +1,10 @@
+2006-07-06  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* xs/*.xs: Remove the _noinc from all the classes inheriting from
+	ClutterActor, as it is now a "floating" object.
+
+	* xs/ClutterActor.xs: Re-sync with clutter API changes.
+
 2006-06-25  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* xs/ClutterCloneTexture.xs:

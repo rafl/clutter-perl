@@ -27,7 +27,7 @@
 
 MODULE = Clutter::Stage		PACKAGE = Clutter::Stage	PREFIX = clutter_stage_
 
-ClutterActor_noinc *
+ClutterActor *
 clutter_stage_get_default (class)
     C_ARGS:
         /* void */

@@ -27,7 +27,7 @@
 
 MODULE = Clutter::CloneTexture	PACKAGE = Clutter::CloneTexture	PREFIX = clutter_clone_texture_
 
-ClutterActor_noinc *
+ClutterActor *
 clutter_clone_texture_new (class, texture)
 	ClutterTexture *texture
     C_ARGS:

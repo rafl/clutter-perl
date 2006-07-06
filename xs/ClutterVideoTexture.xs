@@ -28,7 +28,7 @@
 MODULE = Clutter::VideoTexture	PACKAGE = Clutter::VideoTexture	PREFIX = clutter_video_texture_
 
 
-ClutterActor_noinc *
+ClutterActor *
 clutter_video_texture_new (class)
     C_ARGS:
         /* void */

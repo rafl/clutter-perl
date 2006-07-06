@@ -35,7 +35,7 @@ clutterperl_group_foreach_callback (ClutterActor  *actor,
 
 MODULE = Clutter::Group		PACKAGE = Clutter::Group	PREFIX = clutter_group_
 
-ClutterGroup_noinc *
+ClutterActor *
 clutter_group_new (class)
     C_ARGS:
         /* void */

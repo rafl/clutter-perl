@@ -50,8 +50,9 @@ gboolean
 realized (actor, ...)
 	ClutterActor *actor
     ALIAS:
-        Clutter::Actor::mapped  = 1
-	Clutter::Actor::visible = 2
+        Clutter::Actor::realized = 0
+        Clutter::Actor::mapped   = 1
+	Clutter::Actor::visible  = 2
     PREINIT:
         gboolean value = FALSE;
 	ClutterActorFlags flag = 0;
@@ -127,6 +128,8 @@ show (ClutterActor *actor)
 	Clutter::Actor::unrealize    = 3
 	Clutter::Actor::paint        = 4
 	Clutter::Actor::queue_redraw = 5
+	Clutter::Actor::destroy      = 6
+	Clutter::Actor::unparent     = 7
     CODE:
         switch (ix) {
 		case 0: clutter_actor_show         (actor); break;
@@ -135,6 +138,8 @@ show (ClutterActor *actor)
 		case 3: clutter_actor_unrealize    (actor); break;
 		case 4: clutter_actor_paint        (actor); break;
 		case 5: clutter_actor_queue_redraw (actor); break;
+	        case 6: clutter_actor_destroy      (actor); break;
+		case 7: clutter_actor_unparent     (actor); break;
 		default:
 			g_assert_not_reached ();
 	}
@@ -234,6 +239,9 @@ clutter_actor_set_clip (ClutterActor *actor, gint xoff, gint yoff, gint width, g
 
 void
 clutter_actor_remove_clip (ClutterActor *actor)
+
+gboolean
+clutter_actor_has_clip (ClutterActor *actor)
 
 void
 clutter_actor_set_parent (ClutterActor *actor, ClutterActor *parent)
