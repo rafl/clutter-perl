@@ -28,7 +28,16 @@ require DynaLoader;
 
 our @ISA = qw(DynaLoader);
 
-our $VERSION = '0.100';
+# the version scheme is:
+#   CLUTTER_MAJOR
+#   dot
+#   CLUTTER_MINOR * 100 + CLUTTER_MICRO
+#   bindings release
+# this scheme allocates enough space for ten releases
+# of the bindings for each point release of libclutter,
+# which should be enough even in case of brown paper
+# bag releases. -- ebassi
+our $VERSION = '0.110';
 
 sub import {
     my $class = shift;
@@ -98,6 +107,10 @@ functionality.
 
 As well as OpenGL Clutter depends on and uses Glib, Glib::Object,
 Gtk2::Pango, Gtk2::Gdk::Pixbuf and GStreamer.
+
+=head1 DIFFERENCES FROM C API
+
+FIXME
 
 =head1 AUTHOR
 

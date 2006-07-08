@@ -1,3 +1,7 @@
+2006-07-08  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* Makefile.PL: Require clutter HEAD.
+
 2006-07-06  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* xs/*.xs: Remove the _noinc from all the classes inheriting from
