@@ -1,6 +1,6 @@
 use Test::More tests => 4;
 
-use Clutter;
+use Clutter '-init';
 
 isa_ok(Clutter::Label->new, 'Clutter::Label', 'check isa');
 

@@ -1,5 +1,10 @@
 2006-07-08  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* t/*.t: Initialize Clutter when testing, otherwise most of
+	the methods won't work.
+
+2006-07-08  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* Makefile.PL: Require clutter HEAD.
 
 2006-07-06  Emmanuele Bassi  <ebassi@openedhand.com>

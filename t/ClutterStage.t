@@ -1,6 +1,6 @@
 use Test::More tests => 7;
 
-use Clutter;
+use Clutter '-init';
 
 my $stage = Clutter::Stage->get_default;
 isa_ok($stage, 'Clutter::Actor', 'is a bird');
