@@ -4,10 +4,22 @@ use Clutter '-init';
 use strict;
 use warnings;
 
+sub button_press_event_cb
+{
+    my ($stage, $event) = @_;
+
+    printf "Button press at (%d, %d): %d\n",
+           $event->x,
+	   $event->y,
+	   $event->button;
+    
+    Clutter->main_quit;
+}
+
 my $stage = Clutter::Stage->get_default;
 $stage->set_size(800, 600);
 $stage->set_color(Clutter::Color->new(0x6d, 0x6d, 0x70, 0xff));
-$stage->signal_connect(button_press_event => sub { Clutter->main_quit; });
+$stage->signal_connect(button_press_event => \&button_press_event_cb);
 $stage->signal_connect(add => sub {
 	my ($group, $actor) = @_;
 	

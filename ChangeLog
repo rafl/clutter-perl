@@ -1,3 +1,10 @@
+2006-07-15  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* xs/ClutterEvent.xs: Bind the Clutter::Event object.
+
+	* examples/rects.pl: Add an example of the Clutter::Event
+	accessors.
+
 2006-07-08  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* t/*.t: Initialize Clutter when testing, otherwise most of
