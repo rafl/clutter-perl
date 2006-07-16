@@ -201,7 +201,7 @@ clutterperl_event_unwrap (GType       gtype,
 
   if (!sv_derived_from (sv, package))
     croak ("`%s' is not of type `%s'",
-	   gperl_format_variable_for_input (sv),
+	   gperl_format_variable_for_output (sv),
 	   package);
 
   return event;

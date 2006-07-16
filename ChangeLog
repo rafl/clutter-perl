@@ -1,3 +1,7 @@
+2006-07-16  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* xs/ClutterEvent.xs: Fix a typo in clutterperl_event_unwrap().
+
 2006-07-15  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* xs/ClutterEvent.xs: Bind the Clutter::Event object.
