@@ -79,17 +79,19 @@ CHECK_VERSION (class, major, minor, micro)
 =for object Clutter::main
 =cut
 
-void
+ClutterInitError
 clutter_init (class=NULL)
     PREINIT:
         GPerlArgv *pargv;
     CODE:
         pargv = gperl_argv_new ();
 	
-	clutter_init (&pargv->argc, &pargv->argv);
+	RETVAL = clutter_init (&pargv->argc, &pargv->argv);
 
 	gperl_argv_update (pargv);
 	gperl_argv_free (pargv);
+    OUTPUT:
+        RETVAL
 
 void
 clutter_main (class)

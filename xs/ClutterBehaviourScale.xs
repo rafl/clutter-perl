@@ -25,11 +25,16 @@
 
 #include "clutterperl.h"
 
-MODULE = Clutter::VideoTexture	PACKAGE = Clutter::VideoTexture	PREFIX = clutter_video_texture_
+MODULE = Clutter::Behaviour::Scale    PACKAGE = Clutter::Behaviour::Scale   PREFIX = clutter_behaviour_scale_
 
+=for enum ClutterGravity
+=cut
 
-ClutterActor *
-clutter_video_texture_new (class)
+ClutterBehaviour_noinc *
+clutter_behaviour_scale_new (class, alpha, scale_begin, scale_end, gravity)
+        ClutterAlpha *alpha
+        gdouble scale_begin
+        gdouble scale_end
+        ClutterGravity gravity
     C_ARGS:
-        /* void */
-
+        alpha, scale_begin, scale_end, gravity

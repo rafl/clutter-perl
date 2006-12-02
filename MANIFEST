@@ -18,6 +18,11 @@ t/ClutterRectangle.t
 t/ClutterStage.t
 xs/Clutter.xs
 xs/ClutterActor.xs
+xs/ClutterAlpha.xs
+xs/ClutterBehaviour.xs
+xs/ClutterBehaviourOpacity.xs
+xs/ClutterBehaviourPath.xs
+xs/ClutterBehaviourScale.xs
 xs/ClutterCloneTexture.xs
 xs/ClutterEvent.xs
 xs/ClutterGroup.xs
@@ -28,4 +33,3 @@ xs/ClutterStage.xs
 xs/ClutterTexture.xs
 xs/ClutterTimeline.xs
 xs/ClutterTypes.xs
-xs/ClutterVideoTexture.xs

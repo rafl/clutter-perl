@@ -1,3 +1,30 @@
+2006-12-02  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	D xs/ClutterVideoTexture.xs
+	A xs/ClutterAlpha.xs
+	A xs/ClutterBehaviourOpacity.xs
+	A xs/ClutterBehaviourScale.xs
+	A xs/ClutterBehaviour.xs
+
+	* maps: Update types.
+
+	* xs/ClutterAlpha.xs:
+	* xs/ClutterBehaviour.xs: Bind new behaviour API.
+
+	* xs/ClutterBehaviour*.xs: Bind the new behaviour objects.
+
+	* xs/ClutterActor.xs:
+	* xs/ClutterLabel.xs:
+	* xs/ClutterStage.xs:
+	* xs/Clutter.xs: Update API.
+
+	* MANIFEST:
+	* Clutter.pm:
+	* Makefile.PL: Update version, clean up, remove the
+	version macro generation: upstream now has it too.
+
+	* doctypes: Add GdkPixbuf and Pango types.
+
 2006-07-16  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* xs/ClutterEvent.xs: Fix a typo in clutterperl_event_unwrap().

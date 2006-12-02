@@ -69,17 +69,40 @@ clutter_label_get_color (ClutterLabel *label)
         RETVAL
 
 void
-clutter_label_set_text_extents (ClutterLabel *label, gint width, gint height)
+clutter_label_set_ellipsize (ClutterLabel *label, PangoEllipsizeMode mode)
 
-=for apidoc
-=for signature (width, height) = $label->get_text_extents
-=cut
+PangoEllipsizeMode
+clutter_label_get_ellipsize (ClutterLabel *label)
+
 void
-clutter_label_get_text_extents (ClutterLabel *label)
-    PREINIT:
-        gint width, height;
-    PPCODE:
-        clutter_label_get_text_extents (label, &width, &height);
-	EXTEND (SP, 2);
-	PUSHs (sv_2mortal (newSViv (width)));
-	PUSHs (sv_2mortal (newSViv (height)));
+clutter_label_set_line_wrap (ClutterLabel *label, gboolean line_wrap)
+
+gboolean
+clutter_label_get_line_wrap (ClutterLabel *label)
+
+void
+clutter_label_set_line_wrap_mode (ClutterLabel *label, PangoWrapMode wrap_mode)
+
+PangoWrapMode
+clutter_label_get_line_wrap_mode (ClutterLabel *label)
+
+PangoLayout *
+clutter_label_get_layout (ClutterLabel *label)
+
+void
+clutter_label_set_attributes (ClutterLabel *label, PangoAttrList *attrs)
+
+PangoAttrList *
+clutter_label_get_attributes (ClutterLabel *label)
+
+void
+clutter_label_set_use_markup (ClutterLabel *label, gboolean use_markup)
+
+gboolean
+clutter_label_get_use_markup (ClutterLabel *label)
+
+void
+clutter_label_set_alignment (ClutterLabel *label, PangoAlignment alignment)
+
+gboolean
+clutter_label_get_alignment (ClutterLabel *label)

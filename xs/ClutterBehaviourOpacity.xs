@@ -25,33 +25,12 @@
 
 #include "clutterperl.h"
 
-MODULE = Clutter::Stage		PACKAGE = Clutter::Stage	PREFIX = clutter_stage_
+MODULE = Clutter::Behaviour::Opacity    PACKAGE = Clutter::Behaviour::Opacity   PREFIX = clutter_behaviour_opacity_
 
-ClutterActor *
-clutter_stage_get_default (class)
+ClutterBehaviour_noinc *
+clutter_behaviour_opacity_new (class, alpha, opacity_start, opacity_end)
+        ClutterAlpha *alpha
+        guint8 opacity_start
+        guint8 opacity_end
     C_ARGS:
-        /* void */
-
-## Window   clutter_stage_get_xwindow         (ClutterStage *stage);
-##
-## gboolean clutter_stage_set_xwindow_foreign (ClutterStage *stage,
-##                                             Window        xid);
-
-void
-clutter_stage_set_color (ClutterStage *stage, ClutterColor *color)
-
-ClutterColor_copy *
-clutter_stage_get_color (ClutterStage *stage)
-    PREINIT:
-        ClutterColor color;
-    CODE:
-        clutter_stage_get_color (stage, &color);
-	RETVAL = &color;
-    OUTPUT:
-        RETVAL
-
-ClutterActor *
-clutter_stage_get_actor_at_pos (ClutterStage *stage, gint x, gint y)
-
-GdkPixbuf_noinc *
-clutter_stage_snapshot (ClutterStage *stage, gint x, gint y, gint width, gint height)
+        alpha, opacity_start, opacity_end

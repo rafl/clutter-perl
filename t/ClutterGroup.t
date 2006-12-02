@@ -1,6 +1,8 @@
 use Test::More tests => 8;
 
-use Clutter '-init';
+use Clutter;
+
+Clutter->init();
 
 my $group = Clutter::Group->new;
 isa_ok($group, 'Clutter::Group', 'check ISA');
