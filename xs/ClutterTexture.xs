@@ -29,15 +29,15 @@ MODULE = Clutter::Texture	PACKAGE = Clutter::Texture	PREFIX = clutter_texture_
 
 
 ClutterActor *
-clutter_texture_new_from_pixbuf (class, pixbuf)
-	GdkPixbuf *pixbuf
-    C_ARGS:
-        pixbuf
-
-ClutterActor *
-clutter_texture_new (class)
-    C_ARGS:
-        /* void */
+clutter_texture_new (class, pixbuf=NULL)
+        GdkPixbuf *pixbuf
+    CODE:
+        if (pixbuf)
+                RETVAL = clutter_texture_new_from_pixbuf (pixbuf);
+        else
+                RETVAL = clutter_texture_new ();
+    OUTPUT:
+        RETVAL
 
 void
 clutter_texture_set_pixbuf (ClutterTexture *texture, GdkPixbuf *pixbuf)
@@ -84,22 +84,24 @@ clutter_texture_get_n_tiles (ClutterTexture *texture)
 =cut
 
 void
-get_x_tile_detail (ClutterTexture *texture, gint index)
+clutter_texture_get_x_tile_detail (ClutterTexture *texture, gint index)
     ALIAS:
         Clutter::Texture::get_y_tile_detail = 1
     PREINIT:
         gint pos, size, waste;
     PPCODE:
-        if (ix == 0)
+        if (ix == 0) {
 	  clutter_texture_get_x_tile_detail (texture, index,
 			  		     &pos,
 					     &size,
 					     &waste);
-        else if (ix == 1)
+        }
+        else if (ix == 1) {
 	  clutter_texture_get_y_tile_detail (texture, index,
 			  		     &pos,
 					     &size,
 					     &waste);
+        }
         else {
           pos = size = waste = -1;
 	  g_assert_not_reached ();

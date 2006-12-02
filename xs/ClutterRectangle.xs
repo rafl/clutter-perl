@@ -32,10 +32,10 @@ ClutterActor *
 clutter_rectangle_new (class, color=NULL)
 	ClutterColor_ornull *color
     CODE:
-    	if (items == 1)
-		RETVAL = clutter_rectangle_new ();
+    	if (color)
+		RETVAL = clutter_rectangle_new_with_color (color);
 	else
-        	RETVAL = clutter_rectangle_new_with_color (color);
+        	RETVAL = clutter_rectangle_new ();
     OUTPUT:
         RETVAL
 	
@@ -51,3 +51,22 @@ clutter_rectangle_get_color (ClutterRectangle *rectangle)
 
 void
 clutter_rectangle_set_color (ClutterRectangle *rectangle, ClutterColor *color)
+
+guint
+clutter_rectangle_get_border_width (ClutterRectangle *rectangle)
+
+void
+clutter_rectangle_set_border_width (ClutterRectangle *rectangle, guint border_width)
+
+ClutterColor_copy *
+clutter_rectangle_get_border_color (ClutterRectangle *rectangle)
+    PREINIT:
+        ClutterColor color;
+    CODE:
+        clutter_rectangle_get_border_color (rectangle, &color);
+        RETVAL = &color;
+    OUTPUT:
+        RETVAL
+
+void
+clutter_rectangle_set_border_color (ClutterRectangle *rectangle, ClutterColor *color)

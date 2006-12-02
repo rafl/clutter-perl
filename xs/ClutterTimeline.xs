@@ -28,11 +28,14 @@
 MODULE = Clutter::Timeline	PACKAGE = Clutter::Timeline	PREFIX = clutter_timeline_
 
 ClutterTimeline_noinc *
-clutter_timeline_new (class, nframes, fps)
-	guint nframes
+clutter_timeline_new (class, n_frames, fps)
+	guint n_frames
 	guint fps
     C_ARGS:
-        nframes, fps
+        n_frames, fps
+
+guint
+clutter_timeline_get_speed (ClutterTimeline *timeline)
 
 void
 clutter_timeline_set_speed (ClutterTimeline *timeline, guint fps)
@@ -63,6 +66,9 @@ clutter_timeline_advance (ClutterTimeline *timeline, guint frame_num)
 
 gint
 clutter_timeline_get_current_frame (ClutterTimeline *timeline)
+
+void
+clutter_timeline_set_n_frames (ClutterTimeline *timeline, guint n_frames)
 
 guint
 clutter_timeline_get_n_frames (ClutterTimeline *timeline)

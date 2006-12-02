@@ -27,7 +27,7 @@
 
 MODULE = Clutter::Stage		PACKAGE = Clutter::Stage	PREFIX = clutter_stage_
 
-ClutterActor *
+ClutterActor_noinc *
 clutter_stage_get_default (class)
     C_ARGS:
         /* void */
@@ -54,4 +54,9 @@ ClutterActor *
 clutter_stage_get_actor_at_pos (ClutterStage *stage, gint x, gint y)
 
 GdkPixbuf_noinc *
-clutter_stage_snapshot (ClutterStage *stage, gint x, gint y, gint width, gint height)
+clutter_stage_snapshot (stage, x, y, width, height)
+        ClutterStage *stage
+        gint x
+        gint y
+        gint width
+        gint height
