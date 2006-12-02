@@ -25,11 +25,10 @@
 
 #include "clutterperl.h"
 
-MODULE = Clutter::CloneTexture	PACKAGE = Clutter::CloneTexture	PREFIX = clutter_clone_texture_
+MODULE = Clutter::Texture::Clone        PACKAGE = Clutter::Texture::Clone	PREFIX = clutter_clone_texture_
 
 ClutterActor *
 clutter_clone_texture_new (class, texture)
 	ClutterTexture *texture
     C_ARGS:
     	texture
-

@@ -10,7 +10,7 @@ isa_ok($stage, 'Clutter::Stage', 'no, is a Clutter::Stage');
 my $color = Clutter::Color->new(255, 0, 0, 0);
 $stage->set_color($color);
 is($stage->get_color->red, 255, 'check set color (red)');
-is($stage->get_color->green, 0, 'check set color (green)');
+isnt($stage->get_color->green, 255, 'check set color (green)');
 
 $stage->set_size(800, 600);
 is($stage->get_width, 800, 'check width');

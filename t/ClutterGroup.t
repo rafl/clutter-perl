@@ -1,4 +1,4 @@
-use Test::More tests => 8;
+use Test::More tests => 6;
 
 use Clutter;
 
@@ -6,10 +6,6 @@ Clutter->init();
 
 my $group = Clutter::Group->new;
 isa_ok($group, 'Clutter::Group', 'check ISA');
-
-$group->set_size(800, 600);
-is($group->get_width, 800, 'check width');
-isnt($group->get_height, 800, 'check height');
 
 my @children = $group->get_children;
 is(@children, 0, 'no children yet');

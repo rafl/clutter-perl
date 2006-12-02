@@ -6,14 +6,14 @@ CLUTTER_TYPE_BEHAVIOUR_OPACITY  ClutterBehaviourOpacity GObject         Clutter:
 CLUTTER_TYPE_BEHAVIOUR_PATH     ClutterBehaviourPath    GObject         Clutter::Behaviour::Path
 CLUTTER_TYPE_BEHAVIOUR_SCALE    ClutterBehaviourScale   GObject         Clutter::Behaviour::Scale
 CLUTTER_TYPE_BEHAVIOUR          ClutterBehaviour        GObject         Clutter::Behaviour
-CLUTTER_TYPE_CLONE_TEXTURE	ClutterCloneTexture	GObject	        Clutter::CloneTexture
+CLUTTER_TYPE_CLONE_TEXTURE	ClutterCloneTexture	GObject         Clutter::Texture::Clone
 CLUTTER_TYPE_COLOR	        ClutterColor	        GBoxed	        Clutter::Color
 CLUTTER_TYPE_EVENT_TYPE	        ClutterEventType	GEnum	        Clutter::EventType
 CLUTTER_TYPE_EVENT	        ClutterEvent	        GBoxed	        Clutter::Event
 CLUTTER_TYPE_GEOMETRY	        ClutterGeometry	        GBoxed	        Clutter::Geometry
 CLUTTER_TYPE_GRAVITY            ClutterGravity          GEnum           Clutter::Gravity
 CLUTTER_TYPE_GROUP	        ClutterGroup	        GObject	        Clutter::Group
-CLUTTER_TYPE_KNOT               ClutterKnot             GObject         Clutter::Knot
+CLUTTER_TYPE_KNOT               ClutterKnot             GBoxed          Clutter::Knot
 CLUTTER_TYPE_INIT_ERROR         ClutterInitError        GEnum           Clutter::InitError
 CLUTTER_TYPE_LABEL	        ClutterLabel	        GObject	        Clutter::Label
 CLUTTER_TYPE_MEDIA	        ClutterMedia	        GInterface	Clutter::Media
