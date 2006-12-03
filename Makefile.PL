@@ -58,12 +58,12 @@ our %pod_files = (
 Glib::CodeGen->parse_maps('clutterperl');
 Glib::CodeGen->write_boot(ignore => '^Clutter$');
 
-our $clutter = ExtUtils::Depends->new('Clutter', 'Gtk2', 'Glib');
+my $cwd = cwd();
+our $clutter = ExtUtils::Depends->new('Clutter', 'Gtk2');
 $clutter->set_inc($pkgcfg{cflags} . ' -I./build ');
 $clutter->set_libs($pkgcfg{libs});
 $clutter->add_xs(@xs_files);
 $clutter->add_pm(%pm_files);
-my $cwd = cwd();
 $clutter->add_typemaps(map { File::Spec->catfile($cwd, $_) }
                            'build/clutterperl.typemap');
 $clutter->install(qw(clutterperl.h build/clutterperl-autogen.h));

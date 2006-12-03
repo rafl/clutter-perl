@@ -1,3 +1,20 @@
+2006-12-03  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	A t/ClutterBehaviourPath.t
+
+	* Makefile.PL: Clean up.
+
+	* xs/ClutterBehaviourPath.xs: Allow passing undef as
+	alpha object and knots inside the constructor; bind
+	the remaining missing functions:
+
+		clutter_behaviour_path_get_knots
+		clutter_behaviour_path_clear
+
+	* MANIFEST:
+	* t/ClutterBehaviourPath.t: Add test suite for
+	Clutter::Behaviour::Path methods.
+
 2006-12-02  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	A xs/ClutterBehaviourPath.xs

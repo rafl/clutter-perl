@@ -12,6 +12,7 @@ maps
 README
 t/0.t
 t/1.t
+t/ClutterBehaviourPath.t
 t/ClutterGroup.t
 t/ClutterLabel.t
 t/ClutterRectangle.t
