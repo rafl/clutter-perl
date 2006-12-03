@@ -1,5 +1,23 @@
 2006-12-03  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	A examples/behaviour.pl
+	A examples/redhand.png
+
+	* examples/behaviour.pl: Add an example for the new
+	behaviour API.
+
+	* xs/ClutterAlpha.xs: Add symbolic name for the
+	CLUTTER_ALPHA_MAX_ALPHA C macro.
+
+	* xs/ClutterBehaviourOpacity.xs:
+	* xs/ClutterBehaviourScale.xs: Allow passing undef
+	as the Clutter::Alpha object.
+
+	* Clutter.pm: Add pure perl implementation of the
+	convenience alpha functions.
+
+2006-12-03  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	A t/ClutterBehaviourPath.t
 
 	* Makefile.PL: Clean up.

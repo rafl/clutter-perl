@@ -45,15 +45,15 @@ sub import {
     my $init = 0;
 
     foreach (@_) {
-	if (/^-?init$/) {
-	    $init = 1;
-	}
-	else {
-	    $class->VERSION($_);
-	}
+	    if (/^-?init$/) {
+            $init = 1;
+        }
+        else {
+            $class->VERSION($_);
+        }
     }
 
-    Clutter->init if $init;
+    Clutter->init() if $init;
 }
 
 sub dl_load_flags { $^O eq 'darwin' ? 0x00 : 0x01 }
@@ -62,6 +62,71 @@ require XSLoader;
 XSLoader::load('Clutter', $VERSION);
 
 # Preloaded methods go here
+
+package Clutter::Alpha;
+
+sub ramp
+{
+    my $alpha = shift;
+    my $timeline = $alpha->get_timeline();
+
+    my $current_frame_num = $timeline->get_current_frame();
+    my $n_frames = $timeline->get_n_frames();
+
+    if ($current_frame_num > ($n_frames / 2)) {
+        return ($n_frames - $current_frame_num)
+               * Clutter::Alpha->MAX_ALPHA
+               / ($n_frames / 2);
+    } else {
+        return $current_frame_num
+               * Clutter::Alpha->MAX_ALPHA
+               / ($n_frames / 2);
+    }
+}
+
+sub ramp_dec
+{
+    my $alpha = shift;
+    my $timeline = $alpha->get_timeline();
+
+    my $current_frame_num = $timeline->get_current_frame();
+    my $n_frames = $timeline->get_n_frames();
+
+    return ($n_frames - $current_frame_num)
+           * Clutter::Alpha->MAX_ALPHA
+           / $n_frames;
+}
+
+sub ramp_inc
+{
+    my $alpha = shift;
+    my $timeline = $alpha->get_timeline();
+
+    my $current_frame_num = $timeline->get_current_frame();
+    my $n_frames = $timeline->get_n_frames();
+
+    return $current_frame_num
+           * Clutter::Alpha->MAX_ALPHA
+           / $n_frames;
+}
+
+sub sine
+{
+    use Math::Trig ':pi';
+
+    my $alpha = shift;
+    my $timeline = $alpha->get_timeline();
+
+    my $current_frame_num = $timeline->get_current_frame();
+    my $n_frames = $timeline->get_n_frames();
+
+    my $x = ($current_frame_num * pi2) / $n_frames;
+    my $sine = (sin ($x - (pip2)) + 1) * .5;
+
+    return ($sine * Clutter::Alpha->MAX_ALPHA);
+}
+
+package Clutter;
 
 1;
 

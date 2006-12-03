@@ -31,8 +31,8 @@ MODULE = Clutter::Behaviour::Scale    PACKAGE = Clutter::Behaviour::Scale   PREF
 =cut
 
 ClutterBehaviour_noinc *
-clutter_behaviour_scale_new (class, alpha, scale_begin, scale_end, gravity)
-        ClutterAlpha *alpha
+clutter_behaviour_scale_new (class, alpha=NULL, scale_begin, scale_end, gravity)
+        ClutterAlpha_ornull *alpha
         gdouble scale_begin
         gdouble scale_end
         ClutterGravity gravity

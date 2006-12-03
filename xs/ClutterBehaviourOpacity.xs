@@ -28,8 +28,8 @@
 MODULE = Clutter::Behaviour::Opacity    PACKAGE = Clutter::Behaviour::Opacity   PREFIX = clutter_behaviour_opacity_
 
 ClutterBehaviour_noinc *
-clutter_behaviour_opacity_new (class, alpha, opacity_start, opacity_end)
-        ClutterAlpha *alpha
+clutter_behaviour_opacity_new (class, alpha=NULL, opacity_start, opacity_end)
+        ClutterAlpha_ornull *alpha
         guint8 opacity_start
         guint8 opacity_end
     C_ARGS:

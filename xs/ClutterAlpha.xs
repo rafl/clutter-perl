@@ -91,3 +91,10 @@ clutter_alpha_set_timeline (ClutterAlpha *alpha, ClutterTimeline *timeline)
 
 ClutterTimeline *
 clutter_alpha_get_timeline (ClutterAlpha *alpha)
+
+guint32
+MAX_ALPHA (class)
+    CODE:
+        RETVAL = CLUTTER_ALPHA_MAX_ALPHA;
+    OUTPUT:
+        RETVAL
