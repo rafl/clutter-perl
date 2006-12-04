@@ -1,5 +1,14 @@
 2006-12-04  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* xs/ClutterTypes.xs: Remove the virtual accessors:
+	we threat a ClutterKnot as an array reference, and
+	the type is too simple to warrant the extra-complexity
+	of being a blessed reference.
+
+	* doctypes: Add timestamp.
+
+2006-12-04  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* xs/ClutterMedia.xs: Add the perl machinery needed
 	in order to implement a Clutter::Media interface in
 	pure perl.

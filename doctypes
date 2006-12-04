@@ -4,4 +4,4 @@ PangoAttrList   Gtk2::Pango::AttrList
 PangoEllipsizeMode      Gtk2::Pango::EllipsizeMode
 PangoLayout     Gtk2::Pango::Layout
 PangoWrapMode   Gtk2::Pango::WrapMode
-time_t  timestamp
+timestamp       seconds from the System Epoch
