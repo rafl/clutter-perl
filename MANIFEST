@@ -4,7 +4,9 @@ Clutter.pm
 clutterperl.h
 copyright.pod
 doctypes
+examples/behaviour.pl
 examples/rects.pl
+examples/redhand.png
 Makefile.PL
 MANIFEST			This list of files
 MANIFEST.SKIP
@@ -12,7 +14,9 @@ maps
 README
 t/0.t
 t/1.t
+t/ClutterBehaviourOpacity.t
 t/ClutterBehaviourPath.t
+t/ClutterBehaviourScale.t
 t/ClutterGroup.t
 t/ClutterLabel.t
 t/ClutterRectangle.t
