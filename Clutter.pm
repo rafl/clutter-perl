@@ -175,7 +175,17 @@ Gtk2::Pango, Gtk2::Gdk::Pixbuf and GStreamer.
 
 =head1 DIFFERENCES FROM C API
 
-FIXME
+In order to feel more Perl-ish, the Clutter API has been slightly
+changed for the Perl bindings.
+
+=over 4
+
+=item ClutterCloneTexture =E<gt> Clutter::Texture::Clone
+
+The C<ClutterCloneTexture> has been moved under the L<Clutter::Texture>
+package name, to reinforce the inheritance.
+
+=back
 
 =head1 AUTHOR
 

@@ -23,14 +23,15 @@ $group->show();
 
 my $rect = Clutter::Rectangle->new();
 $rect->set_position(0, 0);
-$rect->set_size($pixbuf->get_width(), $pixbuf->get_height());
+$rect->set_size($pixbuf->get_width()  + 5,
+                $pixbuf->get_height() + 5);
 $rect->set_color(Clutter::Color->new(0x33, 0x22, 0x22, 0xff));
 $rect->set_border_width(10);
 $rect->set_border_color(Clutter::Color->new(0xff, 0xcc, 0xcc, 0xff));
 $rect->show();
 
 my $hand = Clutter::Texture->new($pixbuf);
-$hand->set_position(0, 0);
+$hand->set_position(5, 5);
 $hand->show();
 
 $group->add($rect, $hand);

@@ -84,38 +84,21 @@ clutter_behaviour_path_new (class, alpha=NULL, knots=NULL)
     OUTPUT:
         RETVAL
 
+=for apidoc
+=for arg knot (__hide__)
+=for arg ... list of knots
+=cut
 void
-clutter_behaviour_path_append_knot (behaviour, knot)
+clutter_behaviour_path_append_knot (behaviour, knot, ...)
         ClutterBehaviourPath *behaviour
         ClutterKnot *knot
-
-void
-clutter_behavuour_path_append_knots (behaviour, knots)
-        ClutterBehaviourPath *behaviour
-        SV *knots
     PREINIT:
-        AV *av;
-        ClutterKnot *k;
-        gint n_knots, i;
+        int i;
     CODE:
-        if (!knots ||
-            !SvOK (knots) ||
-            !SvROK (knots) ||
-            SvTYPE (SvRV (knots)) != SVt_PVAV) {
-                croak ("knots must be a reference to an array of knots");
-        }
-        av = (AV *) SvRV (knots);
-        n_knots = av_len (av) + 1;
-        if (n_knots < 1) {
-                croak ("knots array is empty");
-        }
-        k = gperl_alloc_temp (sizeof (ClutterKnot) * n_knots);
-        for (i = 0; i < n_knots; i++) {
-                SV **svp = av_fetch (av, i, 0);
-                read_knot_from_sv (*svp, k + i);
-        }
-        for (i = 0; i < n_knots; i++) {
-                clutter_behaviour_path_append_knot (behaviour, &(k[i]));
+        clutter_behaviour_path_append_knot (behaviour, knot);
+        for (i = 2; i < items; i++) {
+                clutter_behaviour_path_append_knot (behaviour,
+                                                    SvClutterKnot (ST (i)));
         }
 
 void
