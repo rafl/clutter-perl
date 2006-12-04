@@ -1,5 +1,29 @@
 2006-12-04  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* xs/ClutterMedia.xs: Add the perl machinery needed
+	in order to implement a Clutter::Media interface in
+	pure perl.
+
+	* xs/ClutterBehaviourPath.xs: Wrap ClutterKnot as
+	an array of two elements; unwrap it from either an
+	array or an hash references. This allows us to use
+	the object created using the Clutter::Knot::new()
+	constructor or to use perl native objects for brevity.
+
+	Bind the clutter_knot_equal() function as a class
+	method.
+
+	Require an array of knots instead of an array
+	reference in both the Clutter::Behavior::Path
+	constructor and the add_knot() method.
+
+	* t/ClutterBehaviourPath.t: Update the test suite.
+
+	* Clutter.pm: Overload '==' for the Clutter::Knot
+	object, using the equal() class method.
+
+2006-12-04  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* Clutter.pm: Add the difference from the C library
 	to the Perl bindings to the Clutter pod.
 

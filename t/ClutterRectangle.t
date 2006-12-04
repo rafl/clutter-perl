@@ -1,4 +1,4 @@
-use Test::More tests => 5;
+use Test::More tests => 7;
 
 use Clutter;
 
@@ -13,6 +13,12 @@ is($rectangle->get_color->green, 0, 'check set color (green)');
 $rectangle->set_size(800, 600);
 is($rectangle->get_width, 800, 'check width');
 isnt($rectangle->get_height, 800, 'check height');
+
+$rectangle->set_border_width(10);
+is($rectangle->get_border_width, 10, 'check border width');
+
+$rectangle->set_border_color($color);
+is($rectangle->get_border_color->blue, 0, 'check set border color (blue)');
 
 __END__
 

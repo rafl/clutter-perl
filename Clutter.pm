@@ -126,6 +126,12 @@ sub sine
     return ($sine * Clutter::Alpha->MAX_ALPHA);
 }
 
+package Clutter::Knot;
+
+use overload
+    '==' => \&Clutter::Knot::equal,
+    fallback => 1;
+
 package Clutter;
 
 1;

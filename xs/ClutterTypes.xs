@@ -25,9 +25,7 @@
 
 #include "clutterperl.h"
 
-
 MODULE = Clutter::Types		PACKAGE = Clutter::Color
-
 
 ClutterColor_copy *
 new (class, red, green, blue, alpha)
