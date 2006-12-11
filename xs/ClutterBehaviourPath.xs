@@ -90,9 +90,13 @@ clutter_knot_equal (ClutterKnot *knot_a, ClutterKnot *knot_b)
 
 MODULE = Clutter::Behaviour::Path       PACKAGE = Clutter::Behaviour::Path      PREFIX = clutter_behaviour_path_
 
-
+=for apidoc
+=for signature behaviour = Clutter::Behaviour::Path->new ($alpha, ...)
+=for arg knot (__hide__)
+=for arg ... list of knots
+=cut
 ClutterBehaviour_noinc *
-clutter_behaviour_path_new (class, alpha, knot=NULL, ...)
+clutter_behaviour_path_new (class, alpha, knot, ...)
         ClutterAlpha_ornull *alpha
         ClutterKnot_ornull *knot
     PREINIT:

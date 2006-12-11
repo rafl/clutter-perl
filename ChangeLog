@@ -1,3 +1,14 @@
+2006-12-11  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* xs/ClutterBehaviour.xs: Add support for implementing
+	a Clutter::Behaviour in pure perl; update the callback
+	for the Clutter::Behaviour::actors_foreach() method;
+	bind Clutter::Behaviour::get_actors().
+
+	* examples/behaviour.pl: Show how the pure perl behaviour
+	works; update the path behaviour method call - don't use
+	an arrayref of arrayrefs: just append knots as arrayrefs.
+
 2006-12-04  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* xs/ClutterTypes.xs: Remove the virtual accessors:
