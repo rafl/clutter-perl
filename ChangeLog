@@ -1,5 +1,10 @@
 2006-12-11  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* examples/behaviour.pl: Implement a rather dummy
+	rotate behaviour; still needs work, but it's quite funny.
+
+2006-12-11  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* xs/ClutterBehaviour.xs: Add support for implementing
 	a Clutter::Behaviour in pure perl; update the callback
 	for the Clutter::Behaviour::actors_foreach() method;

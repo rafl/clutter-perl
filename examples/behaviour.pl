@@ -3,16 +3,86 @@ package Clutter::Ex::Behaviour::Rotate;
 use strict;
 use warnings;
 
+use Glib;
 use Clutter;
+
+# we need to register these enums first hand, so that the
+# object registering code can find them when defining the
+# properties of the Clutter::Ex::Behaviour::Rotate.
+sub BEGIN {
+    Glib::Type->register_enum(
+        'Clutter::Ex::RotateDirection',
+        'clockwise',
+        'anticlockwise',
+    );
+
+    Glib::Type->register_enum(
+        'Clutter::Ex::RotateAxis',
+        'x',
+        'y',
+        'z',
+    );
+}
 
 use Glib::Object::Subclass
     'Clutter::Behaviour',
     signals => { },
-    properties => [ ]
+    properties => [
+        Glib::ParamSpec->double(
+            'angle-start',
+            'Angle Start',
+            'Initial angle value',
+            0.0, 359.0, 0.0,
+            [ qw( readable writable ) ],
+        ),
+        Glib::ParamSpec->double(
+            'angle-end',
+            'Angle End',
+            'Final angle value',
+            0.0, 359.0, 0.0,
+            [ qw( readable writable ) ],
+        ),
+        Glib::ParamSpec->enum(
+            'direction',
+            'Direction',
+            'Direction of the rotation',
+            'Clutter::Ex::RotateDirection',
+            'clockwise',
+            [ qw( readable writable ) ],
+        ),
+        Glib::ParamSpec->enum(
+            'axis',
+            'Axis',
+            'Axis of the rotation',
+            'Clutter::Ex::RotateAxis',
+            'z',
+            [ qw( readable writable ) ],
+        ),
+    ]
     ;
 
+sub INIT_INSTANCE {
+    my ($self) = @_;
+
+    $self->{angle_start} =   0.0;
+    $self->{angle_end}   = 359.0;
+    $self->{direction}   = 'clockwise';
+    $self->{axis}        = 'z';
+}
+
 sub ALPHA_NOTIFY {
-    print 'alpha notify'
+    my ($self, $alpha_value) = @_;
+
+    my $angle = $alpha_value
+              * ($self->{angle_end} - $self->{angle_start})
+              / Clutter::Alpha->MAX_ALPHA;
+
+    my @actors = $self->get_actors();
+    return unless scalar @actors;
+
+    foreach my $actor (@actors) {
+        $actor->rotate_z($angle, $actor->get_x() - 100, $actor->get_y() - 100);
+    }
 }
 
 package main;
