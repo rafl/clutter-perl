@@ -1,5 +1,13 @@
 2006-12-13  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* xs/ClutterActor.xs: Wrap clutter_actor_show_all()
+	and clutter_actor_hide_all(); these currently clash
+	with clutter_group_show_all() and clutter_group_hide_all()
+	when using a Clutter::Group; will think on how to
+	resolve this.
+
+2006-12-13  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* xs/ClutterTypes.xs: Wrap clutter_color_equal().
 
 	* xs/ClutterBehaviourPath.xs: Use undef as default

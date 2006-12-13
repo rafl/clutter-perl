@@ -130,6 +130,8 @@ show (ClutterActor *actor)
 	Clutter::Actor::queue_redraw = 5
 	Clutter::Actor::destroy      = 6
 	Clutter::Actor::unparent     = 7
+        Clutter::Actor::show_all     = 8
+        Clutter::Actor::hide_all     = 9
     CODE:
         switch (ix) {
 		case 0: clutter_actor_show         (actor); break;
@@ -140,6 +142,8 @@ show (ClutterActor *actor)
 		case 5: clutter_actor_queue_redraw (actor); break;
 	        case 6: clutter_actor_destroy      (actor); break;
 		case 7: clutter_actor_unparent     (actor); break;
+		case 8: clutter_actor_show_all     (actor); break;
+		case 9: clutter_actor_hide_all     (actor); break;
 		default:
 			g_assert_not_reached ();
 	}
