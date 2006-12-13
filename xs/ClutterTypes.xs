@@ -109,6 +109,8 @@ values (ClutterColor *color)
 	PUSHs (sv_2mortal (newSViv (color->blue)));
 	PUSHs (sv_2mortal (newSViv (color->alpha)));
 
+gboolean
+clutter_color_equal (const ClutterColor *a, const ClutterColor *b)
 
 
 MODULE = Clutter::Types		PACKAGE = Clutter::Geometry

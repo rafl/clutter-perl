@@ -96,7 +96,7 @@ MODULE = Clutter::Behaviour::Path       PACKAGE = Clutter::Behaviour::Path      
 =for arg ... list of knots
 =cut
 ClutterBehaviour_noinc *
-clutter_behaviour_path_new (class, alpha, knot, ...)
+clutter_behaviour_path_new (class, alpha, knot=NULL, ...)
         ClutterAlpha_ornull *alpha
         ClutterKnot_ornull *knot
     PREINIT:

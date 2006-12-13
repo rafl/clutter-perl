@@ -126,6 +126,12 @@ sub sine
     return ($sine * Clutter::Alpha->MAX_ALPHA);
 }
 
+package Clutter::Color;
+
+use overload
+    '==' => \&Clutter::Color::equal,
+    fallback => 1;
+
 package Clutter::Knot;
 
 use overload
