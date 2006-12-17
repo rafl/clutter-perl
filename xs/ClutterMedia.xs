@@ -348,6 +348,73 @@ clutterperl_media_init (ClutterMediaInterface *iface)
 
 MODULE = Clutter::Media		PACKAGE = Clutter::Media	PREFIX = clutter_media_
 
+=for position DESCRIPTION
+
+=head1 DESCRIPTION
+
+FIXME
+
+=cut
+
+=for position post_methods
+
+=head1 CREATING A CUSTOM MEDIA OBJECT
+
+  package MyMedia;
+  use Clutter;
+  use Glib::Object::Subclass
+      'Glib::Object',
+      interfaces => [ qw( Clutter::Media ) ],
+      ;
+
+=head2 VIRTUAL METHODS
+
+In order to create a Clutter::Media object, an implementation of the following
+methods is required:
+
+=over
+
+=item SET_URI ($media, $uri)
+
+=item uri = GET_URI ($media)
+
+=item SET_PLAYING ($media, $is_playing)
+
+=item is_playing = GET_PLAYING ($media)
+
+=item SET_POSITION ($media, $position)
+
+=item position = GET_POSITION ($media)
+
+=item SET_VOLUME ($media, $volume)
+
+=item volume = GET_VOLUME ($media)
+
+=item boolean = CAN_SEEK ($media)
+
+=item double = GET_BUFFER_PERCENT ($media)
+
+=item duration = GET_DURATION ($media)
+
+=back
+
+=cut
+
+=for apidoc __hide__
+=cut
+void
+_ADD_INTERFACE (class, const char *target_class)
+    CODE:
+    {
+        static const GInterfaceInfo iface_info = {
+                (GInterfaceInitFunc) clutterperl_media_init,
+                NULL,
+                NULL,
+        };
+        GType gtype = gperl_object_type_from_package (target_class);
+        g_type_add_interface_static (gtype, CLUTTER_TYPE_MEDIA, &iface_info);
+    }
+
 void
 clutter_media_set_uri (ClutterMedia *media, const gchar *uri)
 

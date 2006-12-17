@@ -1,3 +1,9 @@
+2006-12-17  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* xs/ClutterMedia.xs: Add _ADD_INTERFACES function, which
+	should allow the implementation in pure perl of the
+	Clutter::Media interface.
+
 2006-12-13  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* xs/ClutterActor.xs: Wrap clutter_actor_show_all()
