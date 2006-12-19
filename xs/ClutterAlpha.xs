@@ -76,7 +76,7 @@ guint32
 clutter_alpha_get_alpha (ClutterAlpha *alpha)
 
 void
-clutter_alpha_set_func (ClutterAlpha *alpha, SV *func, SV *data)
+clutter_alpha_set_func (ClutterAlpha *alpha, SV *func, SV *data=NULL)
     PREINIT:
         GPerlCallback *callback;
     CODE:

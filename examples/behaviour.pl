@@ -39,7 +39,7 @@ use Glib::Object::Subclass
             'angle-end',
             'Angle End',
             'Final angle value',
-            0.0, 359.0, 0.0,
+            0.0, 359.0, 359.0,
             [ qw( readable writable ) ],
         ),
         Glib::ParamSpec->enum(

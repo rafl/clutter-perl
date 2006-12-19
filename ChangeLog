@@ -1,3 +1,17 @@
+2006-12-19  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* xs/ClutterAlpha.xs: Allow undef data by default in
+	Clutter::Alpha::set_func().
+
+	* xs/ClutterTypes.xs: Wrap the pixel packing functions;
+	wrap the HLS colospace conversion functions; fix the equal
+	functions.
+
+	* Clutter.pm: Fix examples in SYNOPSIS.
+
+	* examples/behaviour.pl: Fix default value for the angle-end
+	property of the Clutter::Ex::Behaviour::Rotate.
+
 2006-12-17  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* xs/ClutterMedia.xs: Add _ADD_INTERFACES function, which

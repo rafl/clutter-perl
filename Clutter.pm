@@ -31,8 +31,8 @@ our @ISA = qw(DynaLoader);
 # the version scheme is:
 #   CLUTTER_MAJOR
 #   dot
-#   CLUTTER_MINOR * 100 + CLUTTER_MICRO
-#   bindings release
+#   CLUTTER_MINOR * 100 + CLUTTER_MICRO * 10 + bindings release
+#
 # this scheme allocates enough space for ten releases
 # of the bindings for each point release of libclutter,
 # which should be enough even in case of brown paper
@@ -158,8 +158,8 @@ Clutter - Simple GL-based canvas library
   $stage->set_size(800, 600);
 
   my $label = Clutter::Label->new("Sans 30", "Clutter");
-  $label->set_position($stage->get_width / 2,
-                       $stage->get_height / 2);
+  $label->set_position($stage->get_width() / 2,
+                       $stage->get_height() / 2);
   $stage->add($label);
 
   $stage->show_all;

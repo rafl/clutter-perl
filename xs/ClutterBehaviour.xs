@@ -121,7 +121,7 @@ by providing a new implementation of the following method:
 =back
 
 This is called each time the value of the alpha function held by the
-Clutter::Alpha object bound to the behaviour changes.  You should update
+L<Clutter::Alpha> object bound to the behaviour changes.  You should update
 the property, or the properties, of the actors your behaviour controls
 using I<alpha_value>, scaled accordingly.
 
@@ -192,6 +192,8 @@ _INSTALL_OVERRIDES (const char *package)
                        g_type_name (gtype), gtype);
         }
         clutterperl_behaviour_class_init (klass);
+
+## allow chain up of the parent's alpha_notify vfunc
 
 =for apidoc Clutter::Behaviour::ALPHA_NOTIFY __hide__
 =cut
