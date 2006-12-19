@@ -160,6 +160,36 @@ equal (const ClutterColor *a, const ClutterColor *b)
     OUTPUT:
         RETVAL
 
+ClutterColor_copy *
+lighten (ClutterColor *color)
+    PREINIT:
+        ClutterColor lighter = { 0, };
+    CODE:
+        clutter_color_lighten (color, &lighter);
+        RETVAL = &lighter;
+    OUTPUT:
+        RETVAL
+
+ClutterColor_copy *
+darken (ClutterColor *color)
+    PREINIT:
+        ClutterColor darker = { 0, };
+    CODE:
+        clutter_color_darken (color, &darker);
+        RETVAL = &darker;
+    OUTPUT:
+        RETVAL
+
+ClutterColor_copy *
+shade (ClutterColor *color, gdouble factor)
+    PREINIT:
+        ClutterColor shade = { 0, };
+    CODE:
+        clutter_color_shade (color, &shade, factor);
+        RETVAL = &shade;
+    OUTPUT:
+        RETVAL
+
 
 MODULE = Clutter::Types		PACKAGE = Clutter::Geometry
 
