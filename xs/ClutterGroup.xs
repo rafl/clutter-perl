@@ -75,14 +75,14 @@ clutter_group_add (ClutterGroup *group, ClutterActor *actor, ...)
 void
 clutter_group_remove (ClutterGroup *group, ClutterActor *actor)
 
-void
-clutter_group_show_all (ClutterGroup *group)
-
-void
-clutter_group_hide_all (ClutterGroup *group)
-
-ClutterActor_noinc *
+ClutterActor *
 clutter_group_find_child_by_id (ClutterGroup *group, guint id)
+
+gint
+clutter_group_get_n_children (ClutterGroup *group)
+
+ClutterActor *
+clutter_group_get_nth_child (ClutterGroup *group, gint index)
 
 void
 clutter_group_raise (ClutterGroup *group, ClutterActor *actor, ClutterActor *sibling)

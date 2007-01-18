@@ -162,6 +162,12 @@ clutter_behaviour_get_actors (ClutterBehaviour *behaviour)
         }
         g_slist_free (actors);
 
+gint
+clutter_behaviour_get_n_actors (ClutterBehaviour *behaviour)
+
+ClutterActor *
+clutter_behaviour_get_nth_actor (ClutterBehaviour *behaviour, gint index)
+
 ClutterAlpha *
 clutter_behaviour_get_alpha (ClutterBehaviour *behaviour)
 

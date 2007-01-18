@@ -29,9 +29,10 @@ MODULE = Clutter::Label		PACKAGE = Clutter::Label	PREFIX = clutter_label_
 
 
 ClutterActor *
-clutter_label_new (class, font_name=NULL, text=NULL)
+clutter_label_new (class, font_name=NULL, text=NULL, color=NULL)
 	const gchar_ornull *font_name
 	const gchar_ornull *text
+        ClutterColor_ornull *color;
     CODE:
         RETVAL = clutter_label_new ();
 	if (font_name) {
@@ -40,6 +41,9 @@ clutter_label_new (class, font_name=NULL, text=NULL)
 	if (text) {
 		clutter_label_set_text (CLUTTER_LABEL (RETVAL), text);
 	}
+        if (color) {
+                clutter_label_set_color (CLUTTER_LABEL (RETVAL), color);
+        }
     OUTPUT:
     	RETVAL
 

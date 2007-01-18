@@ -202,8 +202,14 @@ clutter_actor_get_abs_position (ClutterActor *actor)
 	PUSHs (sv_2mortal (newSViv (x)));
 	PUSHs (sv_2mortal (newSViv (y)));
 
+void
+clutter_actor_set_width (ClutterActor *actor, guint width)
+
 guint
 clutter_actor_get_width (ClutterActor *actor)
+
+void
+clutter_actor_set_height (ClutterActor *actor, guint height)
 
 guint
 clutter_actor_get_height (ClutterActor *actor)

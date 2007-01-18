@@ -11,7 +11,7 @@ our %build_reqs = (
 	'perl-ExtUtils-PkgConfig' => '1.03',
 	'perl-Glib'               => '1.120', # for Glib::MakeHelper
 	'perl-Gtk2'               => '1.120',
-	'Clutter'                 => '0.1.1',
+	'Clutter'                 => '0.2.0',
 );
 
 # Writing a fake Makefile ensures that CPAN will pick up the correct
@@ -40,7 +40,7 @@ unless (eval "use ExtUtils::Depends '$build_reqs{'perl-ExtUtils-Depends'}';"
 mkdir 'build', 0777;
 
 our %pkgcfg = ExtUtils::PkgConfig->find(
-    'clutter-0.1 >= ' . $build_reqs{Clutter}
+    'clutter-0.2 >= ' . $build_reqs{Clutter}
 );
 
 
@@ -80,8 +80,8 @@ WriteMakefile(
 );
 
 
-#=pod
-#=unstable
+=pod
+=unstable
 
 print "
 WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
@@ -93,20 +93,20 @@ bugs to clutter AT openedhand DOT com as soon as possible.
 WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
 ";
 
-#=cut
+=cut
 
 sub MY::postamble
 {
-    return Glib::MakeHelper->postamble_clean ()
-         . Glib::MakeHelper->postamble_docs_full (
-	    DEPENDS => $clutter,
-	    DOCTYPES => 'doctypes',
-	    COPYRIGHT_FROM => 'copyright.pod',
-	 )
-	 . Glib::MakeHelper->postamble_rpms (
-	    'CLUTTER' => $build_reqs{'Clutter'},
-	    'PERL_EXTUTILS_DEPENDS' => $build_reqs{'perl-ExtUtils-Depends'},
-	    'PERL_EXTUTILS_PKGCONFIG' => $build_reqs{'perl-ExtUtils-PkgConfig'},
-	    'PERL_GLIB' => $build_reqs{'perl-Glib'},
-	 );
+    return Glib::MakeHelper->postamble_clean()
+         . Glib::MakeHelper->postamble_docs_full(
+            DEPENDS => $clutter,
+            DOCTYPES => 'doctypes',
+            COPYRIGHT_FROM => 'copyright.pod',
+           )
+         . Glib::MakeHelper->postamble_rpms(
+            'CLUTTER' => $build_reqs{'Clutter'},
+            'PERL_EXTUTILS_DEPENDS' => $build_reqs{'perl-ExtUtils-Depends'},
+            'PERL_EXTUTILS_PKGCONFIG' => $build_reqs{'perl-ExtUtils-PkgConfig'},
+            'PERL_GLIB' => $build_reqs{'perl-Glib'},
+           );
 }

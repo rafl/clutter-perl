@@ -190,6 +190,22 @@ shade (ClutterColor *color, gdouble factor)
     OUTPUT:
         RETVAL
 
+ClutterColor_copy *
+parse (const gchar *str)
+    PREINIT:
+        ClutterColor parsed = { 0, };
+    CODE:
+        clutter_color_parse (str, &parsed);
+        RETVAL = &parsed;
+    OUTPUT:
+        RETVAL
+
+gchar_own *
+to_string (ClutterColor *color)
+    CODE:
+        RETVAL = clutter_color_to_string (color);
+    OUTPUT:
+        RETVAL
 
 MODULE = Clutter::Types		PACKAGE = Clutter::Geometry
 

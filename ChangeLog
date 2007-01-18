@@ -1,3 +1,18 @@
+2007-01-18  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* Makefile.PL: Depend on clutter-0.2.
+
+	* README: Add informations on Clutter and installation
+	instructions.
+
+	* xs/ClutterActor.xs:
+	* xs/ClutterBehaviour.xs:
+	* xs/ClutterLabel.xs:
+	* xs/ClutterTypes.xs: Add last bits of new upstream API.
+
+	* xs/ClutterGroup.xs: Remove deprecated clutter_group_show_all()
+	and clutter_group_hide_all().
+
 2006-12-19  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* xs/ClutterTypes.xs: Wrap lighen, darken and shade
