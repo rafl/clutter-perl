@@ -40,6 +40,15 @@
 
   <release>
     <Version>
+      <name>Whip The Blankets</name>
+      <created>2007-01-18</created>
+      <branch></branch>
+      <revision>0.200</revision>
+    </Version>
+  </release>
+
+  <release>
+    <Version>
       <name>First Release</name>
       <created>2006-07-16</created>
       <branch></branch>
