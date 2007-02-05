@@ -1,3 +1,27 @@
+2007-02-05  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* Clutter.pm: Bump to VERSION 0.300, support Clutter 0.3.
+
+	(import): Support ':init' as well as '-init' and 'init'
+	argument to initialise Clutter when importing the module.
+
+	(square): Add pure-Perl square waveform generator function.
+
+	(pod:SYNOPSIS): Update the example code.
+
+	* xs/ClutterTypes.xs: Make Clutter::Color->parse() a
+	valid class method; add support for accessing the members
+	of Clutter::Knot.
+
+	* examples/behaviour.pl: Test ':init' as initialisation
+	pragma.
+
+	* examples/hello.pl: Add a simple hello world using the
+	same code of the SYNOPSIS.
+
+	* examples/*.pl: Add copyright and license terms for the
+	code in the examples.
+
 2007-01-18  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* Makefile.PL: Depend on clutter-0.2.

@@ -37,7 +37,7 @@ our @ISA = qw(DynaLoader);
 # of the bindings for each point release of libclutter,
 # which should be enough even in case of brown paper
 # bag releases. -- ebassi
-our $VERSION = '0.200';
+our $VERSION = '0.300';
 
 sub import {
     my $class = shift;
@@ -45,7 +45,7 @@ sub import {
     my $init = 0;
 
     foreach (@_) {
-	    if (/^-?init$/) {
+	    if (/^[-:]?init$/) {
             $init = 1;
         }
         else {
@@ -77,11 +77,11 @@ sub ramp
         return ($n_frames - $current_frame_num)
                * Clutter::Alpha->MAX_ALPHA
                / ($n_frames / 2);
-    } else {
-        return $current_frame_num
-               * Clutter::Alpha->MAX_ALPHA
-               / ($n_frames / 2);
     }
+
+    return $current_frame_num
+           * Clutter::Alpha->MAX_ALPHA
+           / ($n_frames / 2);
 }
 
 sub ramp_dec
@@ -121,9 +121,23 @@ sub sine
     my $n_frames = $timeline->get_n_frames();
 
     my $x = ($current_frame_num * pi2) / $n_frames;
-    my $sine = (sin ($x - (pip2)) + 1) * .5;
+    my $sine_val = (sin ($x - (pip2)) + 1) * .5;
 
-    return ($sine * Clutter::Alpha->MAX_ALPHA);
+    return ($sine_val * Clutter::Alpha->MAX_ALPHA);
+}
+
+sub square
+{
+    my $alpha = shift;
+    my $timeline = $alpha->get_timeline();
+
+    my $current_frame_num = $timeline->get_current_frame();
+    my $n_frames = $timeline->get_n_frames();
+
+    return Clutter::Alpha->MAX_ALPHA
+        if ($current_frame_num > ($n_frames / 2));
+
+    return 0;
 }
 
 package Clutter::Color;
@@ -152,20 +166,25 @@ Clutter - Simple GL-based canvas library
 
 =head1 SYNOPSIS
 
-  use Clutter '-init';
-
-  my $stage = Clutter::Stage->get_default;
+  use Clutter qw( :init );
+  
+  # create the main stage
+  my $stage = Clutter::Stage->get_default();
+  $stage->set_color(Clutter::Color->parse('DarkSlateGray'));
+  $stage->signal_connect('key-press-event' => sub { Clutter->main_quit() });
   $stage->set_size(800, 600);
-
-  my $label = Clutter::Label->new("Sans 30", "Clutter");
-  $label->set_position($stage->get_width() / 2,
-                       $stage->get_height() / 2);
+  
+  # add an actor and place it right in the middle
+  my $label = Clutter::Label->new("Sans 30", "Hello, Clutter!");
+  $label->set_color(Clutter::Color->new(0xff, 0xcc, 0xcc, 0xdd));
+  $label->set_position(($stage->get_width()  - $label->get_width())  / 2,
+                       ($stage->get_height() - $label->get_height()) / 2);
   $stage->add($label);
 
-  $stage->show_all;
-
-  Clutter->main;
-
+  $stage->show_all();
+  
+  Clutter->main();
+  
   0;
 
 =head1 DESCRIPTION
@@ -184,6 +203,14 @@ functionality.
 
 As well as OpenGL Clutter depends on and uses Glib, Glib::Object,
 Gtk2::Pango, Gtk2::Gdk::Pixbuf and GStreamer.
+
+For more informations about Clutter, visit:
+
+  http://www.clutter-project.org
+
+You can also subscribe to the Clutter mailing list by sending a
+blank message E<lt>clutter+subscribe AT o-hand.comE<gt>, then follow
+the instructions in resulting reply.
 
 =head1 DIFFERENCES FROM C API
 
@@ -207,18 +234,18 @@ Emmanuele Bassi E<lt>ebassi (AT) openedhand (DOT) comE<gt>
 
 Copyright (C) 2006  OpenedHand Ltd.
 
-This library is free software; you can redistribute it and/or
+This module is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public
 License as published by the Free Software Foundation; either
 version 2 of the License, or (at your option) any later version.
 
-This library is distributed in the hope that it will be useful,
+This module is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
-License along with this library; if not, write to the 
+License along with this module; if not, write to the 
 Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
 Boston, MA  02111-1307  USA.
 

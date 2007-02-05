@@ -1,3 +1,12 @@
+#!/usr/bin/perl
+
+# rects.pl: Example of actors API in Clutter
+# Copyright (C) 2007  OpenedHand, Ltd.
+# Author: Emmanuele Bassi
+#
+# This is free software. Permission to redistribute and/or modify it under
+# the same terms of Perl itself.
+
 use Glib;
 use Clutter '-init';
 

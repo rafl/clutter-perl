@@ -1,5 +1,12 @@
 package Clutter::Ex::Behaviour::Rotate;
 
+# behaviour.pl: Example showing the behaviours API in Clutter
+# Copyright (C) 2007  OpenedHand, Ltd.
+# Author: Emmanuele Bassi
+#
+# This is free software. Permission to redistribute and/or modify it under
+# the same terms of Perl itself.
+
 use strict;
 use warnings;
 
@@ -92,9 +99,7 @@ use warnings;
 
 use Glib qw( :constants );
 use Gtk2;
-use Clutter;
-
-Clutter->init();
+use Clutter qw( :init );
 
 my $stage = Clutter::Stage->get_default();
 $stage->set_color(Clutter::Color->new(0xcc, 0xcc, 0xcc, 0xff));
