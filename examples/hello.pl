@@ -11,10 +11,16 @@ use strict;
 use warnings;
 
 use Clutter qw( :init );
+use Clutter::Keysyms;
 
 my $stage = Clutter::Stage->get_default();
 $stage->set_color(Clutter::Color->parse('DarkSlateGray'));
-$stage->signal_connect('key-press-event' => sub { Clutter->main_quit() });
+$stage->signal_connect('button-press-event' => sub { Clutter->main_quit() });
+$stage->signal_connect('key-press-event'    => sub {
+    my ($stage, $event) = @_;
+
+    Clutter->main_quit() if ($event->keyval == $Clutter::Keysyms{Escape});
+});
 $stage->set_size(800, 600);
 
 my $label = Clutter::Label->new("Sans 30", "Hello, Clutter!");
