@@ -1,4 +1,15 @@
-2007-02-05  Emmanuele Bassi  <ebassi@openedhand.com>
+2007-04-25  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* Clutter.pm: Post-release bump to VERSION 0.231.
+
+	* MANIFEST:
+	* tools/genkeysyms.pl: Use Gtk2 script to autogenerate the
+	Clutter::Keysyms module containing the symbolic names for
+	the key symbols from the installed C header file.
+
+	* Makefile.PL: Add keysyms generation when building.
+
+2007-04-25  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* Clutter.pm: Bump to VERSION 0.230, support latest stable
 	release in 0.2.

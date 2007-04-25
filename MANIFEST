@@ -22,6 +22,7 @@ t/ClutterGroup.t
 t/ClutterLabel.t
 t/ClutterRectangle.t
 t/ClutterStage.t
+tools/genkeysyms.pl
 xs/Clutter.xs
 xs/ClutterActor.xs
 xs/ClutterAlpha.xs

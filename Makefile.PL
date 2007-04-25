@@ -59,6 +59,10 @@ our %pod_files = (
 Glib::CodeGen->parse_maps('clutterperl');
 Glib::CodeGen->write_boot(ignore => '^Clutter$');
 
+# this one turns the long list of #defines in gdkkeysyms.h into a large
+# hash of key names and values, %Gtk2::Gdk::Keysyms.
+system "$^X tools/genkeysyms.pl >\"build/Keysyms.pm\"";
+
 my $cwd = cwd();
 our $clutter = ExtUtils::Depends->new('Clutter', 'Gtk2');
 $clutter->set_inc($pkgcfg{cflags} . ' -I./build ');
