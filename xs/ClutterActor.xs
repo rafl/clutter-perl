@@ -26,6 +26,33 @@
 #include "clutterperl.h"
 
 static void
+clutterperl_actor_paint (ClutterActor *actor)
+{
+        HV *stash = gperl_object_stash_from_type (G_OBJECT_TYPE (actor));
+        GV *slot = gv_fetchmethod (stash, "PAINT");
+
+        if (slot && GvCV (slot)) {
+                dSP;
+
+                ENTER;
+                SAVETMPS;
+                PUSHMARK (SP);
+
+                EXTEND (SP, 1);
+                PUSHs (newSVClutterActor (actor));
+                
+                PUTBACK;
+
+                call_sv ((SV *) GvCV (slot), G_VOID | G_DISCARD);
+
+                SPAGAIN;
+
+                FREETMPS;
+                LEAVE;
+        }
+}
+
+static void
 clutterperl_actor_request_coords (ClutterActor    *actor,
                                   ClutterActorBox *box)
 {
@@ -97,6 +124,7 @@ clutterperl_actor_allocate_coords (ClutterActor    *actor,
 static void
 clutterperl_actor_class_init (ClutterActorClass *klass)
 {
+        klass->paint = clutterperl_actor_paint;
         klass->request_coords = clutterperl_actor_request_coords;
         klass->allocate_coords = clutterperl_actor_allocate_coords;
 }
@@ -124,10 +152,20 @@ for creating a new Glib::Obect (i.e., either L<Glib::Object::Subclass> or
 C<Glib::Type::register_object>).
 
 If you want to control the size allocation and request for the newly created
-actor class, you should provide a new implementation of the following
-methods:
+actor class, you should provide a new implementation of the following methods:
 
 =over
+
+=item PAINT ($actor)
+
+=over
+
+=item o $actor (Clutter::Actor)
+
+=back
+
+This is called each time the actor needs to be painted. You can call native
+GL calls using Perl bindings for the OpenGL API.
 
 =item (x1, y1, x2, y2) = REQUEST_COORDS ($actor)
 
@@ -480,11 +518,37 @@ _INSTALL_OVERRIDES (const char *package)
         }
         clutterperl_actor_class_init (klass);
 
+=for apidoc Clutter::Actor::PAINT __hide__
+=cut
+
 =for apidoc Clutter::Actor::REQUEST_COORDS __hide__
 =cut
 
 =for apidoc Clutter::Actor::ALLOCATE_COORDS __hide__
 =cut
+
+void
+PAINT (ClutterActor *actor)
+    PREINIT:
+        ClutterActorClass *klass;
+        GType thisclass, parent_class;
+        SV *saveddefsv;
+    CODE:
+        saveddefsv = newSVsv (DEFSV);
+        eval_pv ("$_ = caller;", 0);
+        thisclass = gperl_type_from_package (SvPV_nolen (DEFSV));
+        SvSetSV (DEFSV, saveddefsv);
+        if (!thisclass)
+                thisclass = G_OBJECT_TYPE (actor);
+        parent_class = g_type_parent (thisclass);
+        if (!g_type_is_a (parent_class, CLUTTER_TYPE_ACTOR)) {
+                croak ("parent of %s is not a Clutter::Actor",
+                       g_type_name (thisclass));
+        }
+        klass = g_type_class_peek (parent_class);
+        if (klass->paint) {
+                klass->paint (actor);
+        }
 
 void
 REQUEST_COORDS (ClutterActor *actor, ClutterActorBox *box)
