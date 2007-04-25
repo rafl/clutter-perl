@@ -1,6 +1,7 @@
 2007-02-05  Emmanuele Bassi  <ebassi@openedhand.com>
 
-	* Clutter.pm: Bump to VERSION 0.300, support Clutter 0.3.
+	* Clutter.pm: Bump to VERSION 0.230, support latest stable
+	release in 0.2.
 
 	(import): Support ':init' as well as '-init' and 'init'
 	argument to initialise Clutter when importing the module.
@@ -12,6 +13,14 @@
 	* xs/ClutterTypes.xs: Make Clutter::Color->parse() a
 	valid class method; add support for accessing the members
 	of Clutter::Knot.
+
+	* xs/ClutterGroup.xs: Extend the stack beforehand with the
+	size of the list returned by clutter_group_get_children(),
+	instead of using XPUSHs; bind clutter_group_remove_all().
+
+	* xs/ClutterActor.xs: Allow overriding the
+	ClutterActor::request_coords() and ClutterActor::allocate_coords()
+	vfuncs from Perl, and document how to do it.
 
 	* examples/behaviour.pl: Test ':init' as initialisation
 	pragma.

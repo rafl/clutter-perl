@@ -5,6 +5,7 @@ clutterperl.h
 copyright.pod
 doctypes
 examples/behaviour.pl
+examples/hello.pl
 examples/rects.pl
 examples/redhand.png
 Makefile.PL

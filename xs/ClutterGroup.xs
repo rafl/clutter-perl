@@ -49,12 +49,13 @@ clutter_group_get_children (ClutterGroup *group)
         GList *children = NULL, *l;
     PPCODE:
         children = clutter_group_get_children (group);
-	
-	for (l = children; l != NULL; l = l->next)
-		XPUSHs (sv_2mortal (newSVClutterActor (l->data)));
-	
-	if (children)
-		g_list_free (children);
+        if (children) {
+                EXTEND (SP, (int) g_list_length (children));
+                for (l = children; l != NULL; l = l->next) {
+                        PUSHs (sv_2mortal (newSVClutterActor (l->data)));
+                }
+                g_list_free (children);
+        }
 
 ## void
 ## clutter_group_add_many (ClutterGroup *group, ClutterActor *actor, ...)
@@ -74,6 +75,9 @@ clutter_group_add (ClutterGroup *group, ClutterActor *actor, ...)
 
 void
 clutter_group_remove (ClutterGroup *group, ClutterActor *actor)
+
+void
+clutter_group_remove_all (ClutterGroup *group)
 
 ClutterActor *
 clutter_group_find_child_by_id (ClutterGroup *group, guint id)

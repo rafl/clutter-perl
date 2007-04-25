@@ -11,7 +11,7 @@ our %build_reqs = (
 	'perl-ExtUtils-PkgConfig' => '1.03',
 	'perl-Glib'               => '1.120', # for Glib::MakeHelper
 	'perl-Gtk2'               => '1.120',
-	'Clutter'                 => '0.2.0',
+	'Clutter'                 => '0.2.3',
 );
 
 # Writing a fake Makefile ensures that CPAN will pick up the correct
@@ -50,7 +50,8 @@ our %pm_files = (
 );
 
 our %pod_files = (
-    'Clutter.pm' => '$(INST_MAN3DIR)/Clutter.$(MAN3EXT)',
+    'Clutter.pm'       => '$(INST_MAN3DIR)/Clutter.$(MAN3EXT)',
+
     Glib::MakeHelper->do_pod_files(@xs_files),
 );
 

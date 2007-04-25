@@ -37,7 +37,7 @@ our @ISA = qw(DynaLoader);
 # of the bindings for each point release of libclutter,
 # which should be enough even in case of brown paper
 # bag releases. -- ebassi
-our $VERSION = '0.300';
+our $VERSION = '0.230';
 
 sub import {
     my $class = shift;

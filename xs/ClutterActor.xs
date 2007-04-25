@@ -25,8 +25,141 @@
 
 #include "clutterperl.h"
 
+static void
+clutterperl_actor_request_coords (ClutterActor    *actor,
+                                  ClutterActorBox *box)
+{
+        HV *stash = gperl_object_stash_from_type (G_OBJECT_TYPE (actor));
+        GV *slot = gv_fetchmethod (stash, "REQUEST_COORDS");
+        gint n;
+
+        if (slot && GvCV (slot)) {
+                dSP;
+
+                ENTER;
+                SAVETMPS;
+                PUSHMARK (SP);
+
+                EXTEND (SP, 1);
+                PUSHs (newSVClutterActor (actor));
+
+                PUTBACK;
+
+                n = call_sv ((SV *) GvCV (slot), G_ARRAY);
+
+                SPAGAIN;
+
+                if (n < 4)
+                        croak("REQUEST_COORDS must return an array of 4 coordinates");
+
+                /* POPi takes things off the *end* of the stack! */
+                box->y2 = POPi;
+                box->x2 = POPi;
+                box->y1 = POPi;
+                box->x1 = POPi;
+
+                PUTBACK;
+
+                FREETMPS;
+                LEAVE;
+        }
+}
+
+static void
+clutterperl_actor_allocate_coords (ClutterActor    *actor,
+                                   ClutterActorBox *box)
+{
+        HV *stash = gperl_object_stash_from_type (G_OBJECT_TYPE (actor));
+        GV *slot = gv_fetchmethod (stash, "ALLOCATE_COORDS");
+
+        if (slot && GvCV (slot)) {
+                dSP;
+
+                ENTER;
+                SAVETMPS;
+                PUSHMARK (SP);
+
+                EXTEND (SP, 2);
+                PUSHs (newSVClutterActor (actor));
+                PUSHs (newSVClutterActorBox (box));
+
+                PUTBACK;
+
+                call_sv ((SV *) GvCV (slot), G_VOID | G_DISCARD);
+
+                SPAGAIN;
+
+                FREETMPS;
+                LEAVE;
+        }
+}
+
+static void
+clutterperl_actor_class_init (ClutterActorClass *klass)
+{
+        klass->request_coords = clutterperl_actor_request_coords;
+        klass->allocate_coords = clutterperl_actor_allocate_coords;
+}
+
 MODULE = Clutter::Actor		PACKAGE = Clutter::Actor	PREFIX = clutter_actor_
 
+=for position DESCRIPTION
+
+Clutter::Actor is the base class for actors. An actor in Clutter is a single
+entity on the L<Clutter::Stage>; it has style and positional attributes, which
+can be directly accessed and modified, or can be controlled using a subclass
+of L<Clutter::Behaviour>.
+
+=cut
+
+=for position post_enums
+
+=head1 DERIVING NEW ACTORS
+
+Clutter provides some default actors. You may derive a new actor from any of
+these, or directly from the Clutter::Actor class itself.
+
+The new actor must be a GObject, so you must follow the normal procedure
+for creating a new Glib::Obect (i.e., either L<Glib::Object::Subclass> or
+C<Glib::Type::register_object>).
+
+If you want to control the size allocation and request for the newly created
+actor class, you should provide a new implementation of the following
+methods:
+
+=over
+
+=item (x1, y1, x2, y2) = REQUEST_COORDS ($actor)
+
+=over
+
+=item o $actor (Clutter::Actor)
+
+=item o (x1, y1, x2, y2) (Clutter::ActorBox)
+
+=back
+
+This is called each time the user queries the actor for its coordinates and
+size. The returned array contains the upper left and lower right coordinates
+of the box surrounding the actor.
+
+=item  ALLOCATE_COORDS ($actor, $box)
+
+=over
+
+=item o $actor (Clutter::Actor)
+
+=item o $box (Clutter::ActorBox)
+
+=back
+
+This is called each time the actor is required to allocate its coordinates
+and size. The passed L<Clutter::ActorBox> contains the upper left and lower
+right coordinates of the box surrounding the actor.
+
+=back
+
+=cut
 
 =for apidoc Clutter::Actor::realized
 =for signature $actor->realized ($boolean)
@@ -324,3 +457,77 @@ clutter_actor_get_size (ClutterActor *actor)
 
 void
 clutter_actor_move_by (ClutterActor *actor, gint dx, gint dy)
+
+void
+_INSTALL_OVERRIDES (const char *package)
+    PREINIT:
+        GType gtype;
+        ClutterActorClass *klass;
+    CODE:
+        gtype = gperl_object_type_from_package (package);
+        if (!gtype) {
+                croak("package `%s' is not registered with Clutter-Perl",
+                      package);
+        }
+        if (!g_type_is_a (gtype, CLUTTER_TYPE_ACTOR)) {
+                croak("package `%s' (%s) is not a Clutter::Actor",
+                      package, g_type_name (gtype));
+        }
+        klass = g_type_class_peek (gtype);
+        if (!klass) {
+                croak("INTERNAL ERROR: can't peek a type class for `%s' (%d)",
+                      g_type_name (gtype), gtype);
+        }
+        clutterperl_actor_class_init (klass);
+
+=for apidoc Clutter::Actor::REQUEST_COORDS __hide__
+=cut
+
+=for apidoc Clutter::Actor::ALLOCATE_COORDS __hide__
+=cut
+
+void
+REQUEST_COORDS (ClutterActor *actor, ClutterActorBox *box)
+    PREINIT:
+        ClutterActorClass *klass;
+        GType thisclass, parent_class;
+        SV *saveddefsv;
+    CODE:
+        saveddefsv = newSVsv (DEFSV);
+        eval_pv ("$_ = caller;", 0);
+        thisclass = gperl_type_from_package (SvPV_nolen (DEFSV));
+        SvSetSV (DEFSV, saveddefsv);
+        if (!thisclass)
+                thisclass = G_OBJECT_TYPE (actor);
+        parent_class = g_type_parent (thisclass);
+        if (!g_type_is_a (parent_class, CLUTTER_TYPE_ACTOR)) {
+                croak ("parent of %s is not a Clutter::Actor",
+                       g_type_name (thisclass));
+        }
+        klass = g_type_class_peek (parent_class);
+        if (klass->request_coords) {
+                klass->request_coords (actor, box);
+        }
+
+void
+ALLOCATE_COORDS (ClutterActor *actor, ClutterActorBox *box)
+    PREINIT:
+        ClutterActorClass *klass;
+        GType thisclass, parent_class;
+        SV *saveddefsv;
+    CODE:
+        saveddefsv = newSVsv (DEFSV);
+        eval_pv ("$_ = caller;", 0);
+        thisclass = gperl_type_from_package (SvPV_nolen (DEFSV));
+        SvSetSV (DEFSV, saveddefsv);
+        if (!thisclass)
+                thisclass = G_OBJECT_TYPE (actor);
+        parent_class = g_type_parent (thisclass);
+        if (!g_type_is_a (parent_class, CLUTTER_TYPE_ACTOR)) {
+                croak ("parent of %s is not a Clutter::Actor",
+                       g_type_name (thisclass));
+        }
+        klass = g_type_class_peek (parent_class);
+        if (klass->allocate_coords) {
+                klass->allocate_coords (actor, box);
+        }
