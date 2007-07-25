@@ -134,6 +134,12 @@ void
 clutter_behaviour_remove (ClutterBehaviour *behaviour, ClutterActor *actor)
 
 void
+clutter_behaviour_remove_all (ClutterBehaviour *behaviour)
+
+gboolean
+clutter_behaviour_is_applied (ClutterBehaviour *behaviour, ClutterActor *actor)
+
+void
 clutter_behaviour_actors_foreach (behaviour, func, data)
         ClutterBehaviour *behaviour
         SV *func

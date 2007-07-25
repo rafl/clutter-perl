@@ -5,6 +5,8 @@ blib
 build
 \.c$
 \.svn
+\.git
+\.gitignore$
 \.cvsignore$
 Makefile$
 Makefile\.old$

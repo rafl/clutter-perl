@@ -54,7 +54,7 @@ MAJOR_VERSION ()
         RETVAL
 
 =for apidoc
-=signature (MAJOR, MINOR, MICRO) = Clutter->GET_VERSION_INFO
+=for signature (MAJOR, MINOR, MICRO) = Clutter->GET_VERSION_INFO
 Fetch as a list the version of clutter for which Clutter was built.
 =cut
 void
@@ -75,6 +75,29 @@ CHECK_VERSION (class, major, minor, micro)
         RETVAL = CLUTTER_CHECK_VERSION (major, minor, micro);
     OUTPUT:
         RETVAL
+
+=for apidoc
+=for signature flavour = Clutter->FLAVOUR
+
+Returns the backend (or I<flavour>) against which the underlying C
+library was compiled.
+=cut
+void
+FLAVOUR (class)
+    PPCODE:
+        XPUSHs (sv_2mortal (newSVpv (CLUTTER_FLAVOUR, 0)));
+        PERL_UNUSED_VAR (ax);
+
+=for apidoc
+=for signature cogl = Clutter->COGL
+
+Returns the OpenGL library used by the underlying C library.
+=cut
+void
+COGL (class)
+    PPCODE:
+        XPUSHs (sv_2mortal (newSVpv (CLUTTER_COGL, 0)));
+        PERL_UNUSED_VAR (ax);
 
 =for object Clutter::main
 =cut
@@ -107,3 +130,31 @@ guint
 clutter_main_level (class)
     C_ARGS:
         /* void */
+
+gboolean
+clutter_get_debug_enabled (class)
+    C_ARGS:
+        /* void */
+
+gboolean
+clutter_get_show_fps (class)
+    C_ARGS:
+        /* void */
+
+gulong
+clutter_get_timestamp (void)
+    C_ARGS:
+        /* void */
+
+MODULE = Clutter        PACKAGE = Clutter::Threads      PREFIX = clutter_threads_
+
+void
+clutter_threads_enter (void)
+    C_ARGS:
+        /* void */
+
+void
+clutter_threads_leave (void)
+    C_ARGS:
+        /* void */
+

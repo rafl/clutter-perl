@@ -98,3 +98,45 @@ MAX_ALPHA (class)
         RETVAL = CLUTTER_ALPHA_MAX_ALPHA;
     OUTPUT:
         RETVAL
+
+## compress every alpha functions Clutter provides in here; this saves
+## some space in the resulting shared object and also avoids pure perl
+## implementations which might end up slower and are definitely harder
+## to maintain. -- Emmanuele
+
+guint32
+ramp (ClutterAlpha *alpha)
+    ALIAS:
+        Clutter::Alpha::ramp           =  0
+        Clutter::Alpha::ramp_inc       =  1
+        Clutter::Alpha::ramp_dec       =  2
+        Clutter::Alpha::sine           =  3
+        Clutter::Alpha::sine_inc       =  4
+        Clutter::Alpha::sine_dec       =  5
+        Clutter::Alpha::sine_half      =  6
+        Clutter::Alpha::square         =  7
+        Clutter::Alpha::smoothstep_inc =  8
+        Clutter::Alpha::smoothstep_dec =  9
+        Clutter::Alpha::exp_inc        = 10
+        Clutter::Alpha::exp_dec        = 11
+    CODE:
+        switch (ix) {
+          case  0: RETVAL = clutter_ramp_func (alpha, NULL);           break;
+          case  1: RETVAL = clutter_ramp_inc_func (alpha, NULL);       break;
+          case  2: RETVAL = clutter_ramp_dec_func (alpha, NULL);       break;
+          case  3: RETVAL = clutter_sine_func (alpha, NULL);           break;
+          case  4: RETVAL = clutter_sine_inc_func (alpha, NULL);       break;
+          case  5: RETVAL = clutter_sine_dec_func (alpha, NULL);       break;
+          case  6: RETVAL = clutter_sine_half_func (alpha, NULL);      break;
+          case  7: RETVAL = clutter_square_func (alpha, NULL);         break;
+          case  8: RETVAL = clutter_smoothstep_inc_func (alpha, NULL); break;
+          case  9: RETVAL = clutter_smoothstep_dec_func (alpha, NULL); break;
+          case 10: RETVAL = clutter_exp_inc_func (alpha, NULL);        break;
+          case 11: RETVAL = clutter_exp_dec_func (alpha, NULL);        break;
+          default:
+            g_assert_not_reached ();
+            RETVAL = 0;
+            break;
+       }
+    OUTPUT:
+        RETVAL

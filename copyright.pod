@@ -1,4 +1,5 @@
 Copyright (C) 2006  OpenedHand Ltd.
 
-This software is licensed under the LGPL.  See L<Clutter> for the full
-copyright notice.
+This module is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public Library version 2.1, or under the
+terms of the Artistic License.  See L<Clutter> for the full copyright notice.

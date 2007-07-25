@@ -34,6 +34,11 @@ clutter_timeline_new (class, n_frames, fps)
     C_ARGS:
         n_frames, fps
 
+ClutterTimeline_noinc *
+clutter_timeline_clone (class, ClutterTimeline *timeline)
+    C_ARGS:
+        timeline
+
 guint
 clutter_timeline_get_speed (ClutterTimeline *timeline)
 
@@ -75,3 +80,10 @@ clutter_timeline_get_n_frames (ClutterTimeline *timeline)
 
 gboolean
 clutter_timeline_is_playing (ClutterTimeline *timeline)
+
+void
+clutter_timeline_set_delay (ClutterTimeline *timeline, guint msecs)
+
+guint
+clutter_timeline_get_delay (ClutterTimeline *timeline)
+

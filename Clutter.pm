@@ -37,7 +37,7 @@ our @ISA = qw(DynaLoader);
 # of the bindings for each point release of libclutter,
 # which should be enough even in case of brown paper
 # bag releases. -- ebassi
-our $VERSION = '0.230';
+our $VERSION = '0.300';
 
 sub import {
     my $class = shift;
@@ -63,93 +63,24 @@ XSLoader::load('Clutter', $VERSION);
 
 # Preloaded methods go here
 
-package Clutter::Alpha;
-
-sub ramp
-{
-    my $alpha = shift;
-    my $timeline = $alpha->get_timeline();
-
-    my $current_frame_num = $timeline->get_current_frame();
-    my $n_frames = $timeline->get_n_frames();
-
-    if ($current_frame_num > ($n_frames / 2)) {
-        return ($n_frames - $current_frame_num)
-               * Clutter::Alpha->MAX_ALPHA
-               / ($n_frames / 2);
-    }
-
-    return $current_frame_num
-           * Clutter::Alpha->MAX_ALPHA
-           / ($n_frames / 2);
-}
-
-sub ramp_dec
-{
-    my $alpha = shift;
-    my $timeline = $alpha->get_timeline();
-
-    my $current_frame_num = $timeline->get_current_frame();
-    my $n_frames = $timeline->get_n_frames();
-
-    return ($n_frames - $current_frame_num)
-           * Clutter::Alpha->MAX_ALPHA
-           / $n_frames;
-}
-
-sub ramp_inc
-{
-    my $alpha = shift;
-    my $timeline = $alpha->get_timeline();
-
-    my $current_frame_num = $timeline->get_current_frame();
-    my $n_frames = $timeline->get_n_frames();
-
-    return $current_frame_num
-           * Clutter::Alpha->MAX_ALPHA
-           / $n_frames;
-}
-
-sub sine
-{
-    use Math::Trig ':pi';
-
-    my $alpha = shift;
-    my $timeline = $alpha->get_timeline();
-
-    my $current_frame_num = $timeline->get_current_frame();
-    my $n_frames = $timeline->get_n_frames();
-
-    my $x = ($current_frame_num * pi2) / $n_frames;
-    my $sine_val = (sin ($x - (pip2)) + 1) * .5;
-
-    return ($sine_val * Clutter::Alpha->MAX_ALPHA);
-}
-
-sub square
-{
-    my $alpha = shift;
-    my $timeline = $alpha->get_timeline();
-
-    my $current_frame_num = $timeline->get_current_frame();
-    my $n_frames = $timeline->get_n_frames();
-
-    return Clutter::Alpha->MAX_ALPHA
-        if ($current_frame_num > ($n_frames / 2));
-
-    return 0;
-}
-
 package Clutter::Color;
 
 use overload
     '==' => \&Clutter::Color::equal,
+    '+' => \&Clutter::Color::add,
+    '-' => \&Clutter::Color::subtract,
     fallback => 1;
 
 package Clutter::Knot;
 
 use overload
     '==' => \&Clutter::Knot::equal,
+    fallback => 1;
+
+package Clutter::Vertex;
+
+use overload
+    '==' => \&Clutter::Vertex::equal,
     fallback => 1;
 
 package Clutter;
@@ -235,18 +166,19 @@ Emmanuele Bassi E<lt>ebassi (AT) openedhand (DOT) comE<gt>
 Copyright (C) 2006  OpenedHand Ltd.
 
 This module is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public
-License as published by the Free Software Foundation; either
-version 2 of the License, or (at your option) any later version.
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation, version 2.1;
+or, at your option, under the terms of The Artistic License.
 
 This module is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 You should have received a copy of the GNU Library General Public
 License along with this module; if not, write to the 
 Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
 Boston, MA  02111-1307  USA.
+
+For the terms of The Artistic License, see L<perlartistic>.
 
 =cut

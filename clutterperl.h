@@ -6,4 +6,6 @@
 
 #include "clutterperl-autogen.h"
 
+const char *clutterperl_event_get_package (ClutterEvent *event);
+
 #endif /* _CLUTTER_PERL_H_ */

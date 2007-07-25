@@ -38,3 +38,20 @@ clutter_behaviour_scale_new (class, alpha=NULL, scale_begin, scale_end, gravity)
         ClutterGravity gravity
     C_ARGS:
         alpha, scale_begin, scale_end, gravity
+
+=for apidoc
+=for signature (scale_begin, scale_end) = $scale->get_bounds
+=cut
+void
+clutter_behaviour_scale_get_bounds (ClutterBehaviourScale *scale)
+    PREINIT:
+        gdouble scale_begin, scale_end;
+    PPCODE:
+        clutter_behaviour_scale_get_bounds (scale, &scale_begin, &scale_end);
+        EXTEND (SP, 2);
+        PUSHs (sv_2mortal (newSVnv (scale_begin)));
+        PUSHs (sv_2mortal (newSVnv (scale_end)));
+
+ClutterGravity
+clutter_behaviour_scale_get_gravity (ClutterBehaviourScale *scale)
+

@@ -7,11 +7,12 @@ use ExtUtils::MakeMaker;
 
 # minimum required version of dependancies we need to build
 our %build_reqs = (
+    'perl-Math-Trig'          => 0,
 	'perl-ExtUtils-Depends'   => '0.2',
 	'perl-ExtUtils-PkgConfig' => '1.03',
-	'perl-Glib'               => '1.120', # for Glib::MakeHelper
-	'perl-Gtk2'               => '1.120',
-	'Clutter'                 => '0.2.3',
+	'perl-Glib'               => '1.140', # for Glib::MakeHelper
+	'perl-Gtk2'               => '1.140',
+	'Clutter'                 => '0.3.0',
 );
 
 # Writing a fake Makefile ensures that CPAN will pick up the correct
@@ -23,6 +24,7 @@ unless (eval "use ExtUtils::Depends '$build_reqs{'perl-ExtUtils-Depends'}';"
            . "use Glib '$build_reqs{'perl-Glib'}';"
            . "use Gtk2 '$build_reqs{'perl-Gtk2'}';"
            . "use Glib::MakeHelper;"
+           . "use Math::Trig;"
            . "1") {
    warn "$@\n";
    WriteMakefile(
@@ -40,8 +42,8 @@ unless (eval "use ExtUtils::Depends '$build_reqs{'perl-ExtUtils-Depends'}';"
 mkdir 'build', 0777;
 
 our %pkgcfg = ExtUtils::PkgConfig->find(
-    'clutter-0.2 >= ' . $build_reqs{Clutter}
-);
+        'clutter-0.3 >= ' . $build_reqs{Clutter},
+    );
 
 
 our @xs_files = <xs/*.xs>;
@@ -91,8 +93,8 @@ WriteMakefile(
 );
 
 
-=pod
-=unstable
+#=pod
+#=unstable
 
 print "
 WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
@@ -104,7 +106,7 @@ bugs to clutter AT openedhand DOT com as soon as possible.
 WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
 ";
 
-=cut
+#=cut
 
 sub MY::postamble
 {

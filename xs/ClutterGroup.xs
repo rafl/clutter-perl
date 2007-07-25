@@ -25,56 +25,12 @@
 
 #include "clutterperl.h"
 
-static void
-clutterperl_group_foreach_callback (ClutterActor  *actor,
-				    GPerlCallback *callback)
-{
-	gperl_callback_invoke (callback, NULL, actor);
-}
-
-
 MODULE = Clutter::Group		PACKAGE = Clutter::Group	PREFIX = clutter_group_
 
 ClutterActor *
 clutter_group_new (class)
     C_ARGS:
         /* void */
-
-=for apidoc
-=for signature list = $group->get_children
-=cut
-void
-clutter_group_get_children (ClutterGroup *group)
-    PREINIT:
-        GList *children = NULL, *l;
-    PPCODE:
-        children = clutter_group_get_children (group);
-        if (children) {
-                EXTEND (SP, (int) g_list_length (children));
-                for (l = children; l != NULL; l = l->next) {
-                        PUSHs (sv_2mortal (newSVClutterActor (l->data)));
-                }
-                g_list_free (children);
-        }
-
-## void
-## clutter_group_add_many (ClutterGroup *group, ClutterActor *actor, ...)
-
-=for apidoc
-=for arg actor (__hide__)
-=for arg ... list of actors
-=cut
-void
-clutter_group_add (ClutterGroup *group, ClutterActor *actor, ...)
-    PREINIT:
-        int i;
-    CODE:
-    	clutter_group_add (group, actor);
-	for (i = 2; i < items; i++)
-		clutter_group_add (group, SvClutterActor (ST (i)));
-
-void
-clutter_group_remove (ClutterGroup *group, ClutterActor *actor)
 
 void
 clutter_group_remove_all (ClutterGroup *group)
@@ -96,18 +52,3 @@ clutter_group_lower (ClutterGroup *group, ClutterActor *actor, ClutterActor *sib
 
 void
 clutter_group_sort_depth_order (ClutterGroup *group)
-
-void
-clutter_group_foreach (ClutterGroup *group, SV *callback, SV *callback_data=NULL)
-    PREINIT:
-    	GPerlCallback *real_callback;
-	GType param_types [1];
-    CODE:
-	param_types[0] = CLUTTER_TYPE_ACTOR;
-	real_callback = gperl_callback_new (callback, callback_data,
-                                            1, param_types,
-					    G_TYPE_NONE);
-	clutter_group_foreach (group,
-                               (ClutterCallback) clutterperl_group_foreach_callback,
-                               real_callback);
-	gperl_callback_destroy (real_callback);

@@ -27,15 +27,10 @@
 
 MODULE = Clutter::Stage		PACKAGE = Clutter::Stage	PREFIX = clutter_stage_
 
-ClutterActor_noinc *
+ClutterActor *
 clutter_stage_get_default (class)
     C_ARGS:
         /* void */
-
-## Window   clutter_stage_get_xwindow         (ClutterStage *stage);
-##
-## gboolean clutter_stage_set_xwindow_foreign (ClutterStage *stage,
-##                                             Window        xid);
 
 void
 clutter_stage_set_color (ClutterStage *stage, ClutterColor *color)
@@ -60,3 +55,56 @@ clutter_stage_snapshot (stage, x, y, width, height)
         gint y
         gint width
         gint height
+
+void
+clutter_stage_fullscreen (ClutterStage *stage)
+
+void
+clutter_stage_unfullscreen (ClutterStage *stage)
+
+void
+clutter_stage_show_cursor (ClutterStage *stage)
+
+void
+clutter_stage_hide_cursor (ClutterStage *stage)
+
+void
+clutter_stage_set_title (ClutterStage *stage, const gchar_ornull *title)
+
+const gchar *
+clutter_stage_get_title (ClutterStage *stage)
+
+void
+clutter_stage_event (ClutterStage *stage, ClutterEvent *event)
+
+=for apidoc
+=for signature (fovy, aspect, z_near, z_far) = $stage->get_perspective
+=cut
+void
+clutter_stage_get_perspective (ClutterStage *stage)
+    PREINIT:
+        ClutterPerspective persp;
+    PPCODE:
+        clutter_stage_get_perspectivex (stage, &persp);
+        EXTEND (SP, 4);
+        PUSHs (sv_2mortal (newSVnv (CLUTTER_FIXED_TO_DOUBLE (persp.fovy))));
+        PUSHs (sv_2mortal (newSVnv (CLUTTER_FIXED_TO_DOUBLE (persp.aspect))));
+        PUSHs (sv_2mortal (newSVnv (CLUTTER_FIXED_TO_DOUBLE (persp.z_near))));
+        PUSHs (sv_2mortal (newSVnv (CLUTTER_FIXED_TO_DOUBLE (persp.z_far))));
+
+void
+clutter_stage_set_perspective (stage, fovy, aspect, z_near, z_far)
+        ClutterStage *stage
+        double fovy
+        double aspect
+        double z_near
+        double z_far
+    PREINIT:
+        ClutterPerspective persp;
+    CODE:
+        persp.fovy = CLUTTER_FLOAT_TO_FIXED (fovy);
+        persp.aspect = CLUTTER_FLOAT_TO_FIXED (aspect);
+        persp.z_near = CLUTTER_FLOAT_TO_FIXED (z_near);
+        persp.z_far = CLUTTER_FLOAT_TO_FIXED (z_far);
+        clutter_stage_set_perspectivex (stage, &persp);
+

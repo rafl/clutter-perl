@@ -161,6 +161,26 @@ equal (const ClutterColor *a, const ClutterColor *b)
         RETVAL
 
 ClutterColor_copy *
+add (const ClutterColor *a, const ClutterColor *b)
+    PREINIT:
+        ClutterColor color = { 0, };
+    CODE:
+        clutter_color_add (a, b, &color);
+        RETVAL = &color;
+    OUTPUT:
+        RETVAL
+
+ClutterColor_copy *
+subtract (const ClutterColor *a, const ClutterColor *b)
+    PREINIT:
+        ClutterColor color = { 0, };
+    CODE:
+        clutter_color_subtract (a, b, &color);
+        RETVAL = &color;
+    OUTPUT:
+        RETVAL
+
+ClutterColor_copy *
 lighten (ClutterColor *color)
     PREINIT:
         ClutterColor lighter = { 0, };
@@ -297,10 +317,10 @@ MODULE = Clutter::Types		PACKAGE = Clutter::ActorBox
 
 ClutterActorBox_copy *
 new (class, x1, y1, x2, y2)
-	gint x1
-	gint y1
-	gint x2
-	gint y2
+	gint32 x1
+	gint32 y1
+	gint32 x2
+	gint32 y2
     PREINIT:
         ClutterActorBox box;
     CODE:
@@ -336,7 +356,7 @@ new (class, x1, y1, x2, y2)
 =for arg newvalue (integer)
 =cut
 
-gint
+gint32
 x1 (ClutterActorBox *box, SV *newvalue = 0)
     ALIAS:
         Clutter::ActorBox::y1 = 1
@@ -438,3 +458,82 @@ values (ClutterKnot *knot)
 	PUSHs (sv_2mortal (newSViv (knot->x)));
 	PUSHs (sv_2mortal (newSViv (knot->y)));
 
+MODULE = Clutter::Types		PACKAGE = Clutter::Vertex
+
+
+ClutterVertex_copy *
+new (class, x, y, z)
+	gint32 x
+	gint32 y
+        gint32 z
+    PREINIT:
+        ClutterVertex vertex;
+    CODE:
+        vertex.x = x;
+	vertex.y = y;
+        vertex.z = z;;
+    	RETVAL = &vertex;
+    OUTPUT:
+        RETVAL
+
+=for apidoc Clutter::Vertex::x
+=for signature integer = $vertex->x
+=for signature oldvalue = $vertex->x ($newvalue)
+=for arg newvalue (integer)
+=cut
+
+=for apidoc Clutter::Vertex::y
+=for signature integer = $vertex->y
+=for signature oldvalue = $vertex->y ($newvalue)
+=for arg newvalue (integer)
+=cut
+
+=for apidoc Clutter::Vertex::z
+=for signature integer = $vertex->z
+=for signature oldvalue = $vertex->z ($newvalue)
+=for arg newvalue (integer)
+=cut
+
+gint
+x (ClutterVertex *vertex, SV *newvalue = 0)
+    ALIAS:
+        Clutter::Vertex::y = 1
+        Clutter::Vertex::z = 2
+    CODE:
+        switch (ix) {
+		case 0: RETVAL = vertex->x; break;
+		case 1: RETVAL = vertex->y; break;
+		case 2: RETVAL = vertex->z; break;
+		default:
+			RETVAL = 0;
+			g_assert_not_reached ();
+	}
+	if (newvalue) {
+	        switch (ix) {
+			case 0: vertex->x = SvIV (newvalue); break;
+			case 1: vertex->y = SvIV (newvalue); break;
+			case 2: vertex->z = SvIV (newvalue); break;
+			default:
+				g_assert_not_reached ();
+		}
+	}
+    OUTPUT:
+        RETVAL
+
+=for apidoc
+=for signature (x, y, z) = $vertex->values
+=cut
+void
+values (ClutterVertex *vertex)
+    PPCODE:
+        EXTEND (SP, 3);
+	PUSHs (sv_2mortal (newSViv (vertex->x)));
+	PUSHs (sv_2mortal (newSViv (vertex->y)));
+	PUSHs (sv_2mortal (newSViv (vertex->z)));
+
+gboolean
+equal (const ClutterVertex *a, const ClutterVertex *b)
+    CODE:
+        RETVAL = (a->x == b->x && a->y == b->y && a->z == b->z);
+    OUTPUT:
+        RETVAL

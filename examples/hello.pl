@@ -19,7 +19,8 @@ $stage->signal_connect('button-press-event' => sub { Clutter->main_quit() });
 $stage->signal_connect('key-press-event'    => sub {
     my ($stage, $event) = @_;
 
-    Clutter->main_quit() if ($event->keyval == $Clutter::Keysyms{Escape});
+    Clutter->main_quit()
+        if ($event->keyval == $Clutter::Keysyms{Escape});
 });
 $stage->set_size(800, 600);
 

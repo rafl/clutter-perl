@@ -25,7 +25,7 @@
 
 #include "clutterperl.h"
 
-static const char *
+const char *
 clutterperl_event_get_package (ClutterEvent *event)
 {
   switch (event->type)
@@ -41,6 +41,8 @@ clutterperl_event_get_package (ClutterEvent *event)
       return "Clutter::Event::Key";
     case CLUTTER_MOTION:
       return "Clutter::Event::Motion";
+    case CLUTTER_SCROLL:
+      return "Clutter::Event::Scroll";
     default:
       {
         GEnumClass *class = g_type_class_ref (CLUTTER_TYPE_EVENT_TYPE);
@@ -79,6 +81,9 @@ clutterperl_event_set_time (ClutterEvent *event,
     case CLUTTER_KEY_RELEASE:
       event->key.time = time_;
       break;
+    case CLUTTER_SCROLL:
+      event->scroll.time = time_;
+      break;
     default:
       break;
     }
@@ -106,6 +111,9 @@ clutterperl_event_get_time (ClutterEvent *event)
     case CLUTTER_KEY_RELEASE:
       retval = event->key.time;
       break;
+    case CLUTTER_SCROLL:
+      retval = event->scroll.time;
+      break;
     default:
       break;
     }
@@ -114,8 +122,8 @@ clutterperl_event_get_time (ClutterEvent *event)
 }
 
 static void
-clutterperl_event_set_modifier_state (ClutterEvent *event,
-				      guint32       state)
+clutterperl_event_set_modifier_state (ClutterEvent        *event,
+				      ClutterModifierType  state)
 {
   if (!event)
     return;
@@ -134,15 +142,18 @@ clutterperl_event_set_modifier_state (ClutterEvent *event,
     case CLUTTER_KEY_RELEASE:
       event->key.modifier_state = state;
       break;
+    case CLUTTER_SCROLL:
+      event->scroll.modifier_state = state;
+      break;
     default:
       break;
     }
 }
 
-static guint32
+static ClutterModifierType
 clutterperl_event_get_modifier_state (ClutterEvent *event)
 {
-  guint32 retval = 0;
+  ClutterModifierType retval = 0;
 
   if (!event)
     return retval;
@@ -160,6 +171,9 @@ clutterperl_event_get_modifier_state (ClutterEvent *event)
     case CLUTTER_KEY_PRESS:
     case CLUTTER_KEY_RELEASE:
       retval = event->key.modifier_state;
+      break;
+    case CLUTTER_SCROLL:
+      retval = event->scroll.modifier_state;
       break;
     default:
       break;
@@ -219,6 +233,8 @@ MODULE = Clutter::Event		PACKAGE = Clutter::Event	PREFIX = clutter_event_
 
 =item * L<Clutter::Event::Motion>
 
+=item * L<Clutter::Event::Scroll>
+
 =back
 
 =cut
@@ -252,9 +268,10 @@ void
 DESTROY (sv)
 	SV * sv
     ALIAS:
-	Clutter::Event::Motion::DESTROY      =  1
-	Clutter::Event::Button::DESTROY      =  2
-	Clutter::Event::Key::DESTROY         =  3
+	Clutter::Event::Motion::DESTROY      = 1
+	Clutter::Event::Button::DESTROY      = 2
+	Clutter::Event::Key::DESTROY         = 3
+        Clutter::Event::Scroll::DESTROY      = 4
     CODE:
 	PERL_UNUSED_VAR (ix);
 	default_wrapper_class->destroy (sv);
@@ -293,9 +310,9 @@ clutter_event_get_time (event, ...)
         RETVAL
 
 =for apidoc Clutter::Event::set_state
-=for signature $event->set_state ($new_time)
+=for signature $event->set_state ($new_state)
 =for arg ... (hide)
-=for arg newstate (timestamp)
+=for arg newstate (Clutter::ModifierType)
 =cut
 
 =for apidoc Clutter::Event::state __hide__
@@ -325,6 +342,36 @@ clutter_event_get_state (event, ...)
     OUTPUT:
         RETVAL
 
+void
+clutter_event_get_coords (ClutterEvent_ornull *event)
+    PREINIT:
+        gint x, y;
+    PPCODE:
+        clutter_event_get_coords (event, &x, &y);
+        EXTEND (SP, 2);
+        PUSHs (sv_2mortal (newSViv (x)));
+        PUSHs (sv_2mortal (newSViv (y)));
+
+ClutterEvent_own_ornull *
+clutter_event_get (class)
+    ALIAS:
+        peek = 1
+    C_ARGS:
+        /* void */
+    CLEANUP:
+        PERL_UNUSED_VAR (ix);
+
+void
+clutter_event_put (class, event)
+        ClutterEvent *event
+    C_ARGS:
+        event
+
+gboolean
+clutter_events_pending (class)
+    C_ARGS:
+        /* void */
+
 ## Event types.
 ##   Nothing: No event occurred.
 ##   Motion: The mouse has moved.
@@ -332,6 +379,7 @@ clutter_event_get_state (event, ...)
 ##   ButtonRelease: A mouse button was release.
 ##   KeyPress: A key was pressed.
 ##   KeyRelease: A key was released.
+##   Scroll: Mouse scrolling
 
 ClutterEventType
 type (event)
@@ -430,7 +478,10 @@ BOOT:
 
 guint
 keyval (ClutterEvent *event, guint newvalue=0)
+    ALIAS:
+        Clutter::Event::Key::symbol = 1
     CODE:
+        PERL_UNUSED_VAR (ix);
 	RETVAL = event->key.keyval;
 	if (items == 2)
 	  event->key.keyval = newvalue;
@@ -445,3 +496,52 @@ hardware_keycode (ClutterEvent *event, guint16 newvalue=0)
 	  event->key.hardware_keycode = newvalue;
     OUTPUT:
 	RETVAL
+
+guint32
+unicode (ClutterEvent *event)
+    CODE:
+        RETVAL = clutter_keysym_to_unicode (event->key.keyval);
+    OUTPUT:
+        RETVAL
+
+
+MODULE = Clutter::Event         PACKAGE = Clutter::Event::Scroll
+
+=for position post_hierarchy
+
+=head1 HIERARCHY
+
+  Clutter::Event
+  +----Clutter::Event::Scroll
+
+=cut
+
+BOOT:
+        gperl_set_isa ("Clutter::Event::Scroll", "Clutter::Event");
+
+gdouble
+x (ClutterEvent *event, gint newvalue=0)
+    CODE:
+	RETVAL = event->scroll.x;
+	if (items == 2)
+	  event->scroll.x = newvalue;
+    OUTPUT:
+	RETVAL
+
+gdouble
+y (ClutterEvent *event, gint newvalue=0)
+    CODE:
+	RETVAL = event->scroll.y;
+	if (items == 2)
+	  event->scroll.y = newvalue;
+    OUTPUT:
+	RETVAL
+
+ClutterScrollDirection
+direction (ClutterEvent *event, ClutterScrollDirection newvalue=0)
+    CODE:
+        RETVAL = event->scroll.direction;
+        if (items == 2)
+          event->scroll.direction = newvalue;
+    OUTPUT:
+        RETVAL

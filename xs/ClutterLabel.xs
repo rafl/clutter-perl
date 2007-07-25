@@ -108,5 +108,5 @@ clutter_label_get_use_markup (ClutterLabel *label)
 void
 clutter_label_set_alignment (ClutterLabel *label, PangoAlignment alignment)
 
-gboolean
+PangoAlignment
 clutter_label_get_alignment (ClutterLabel *label)

@@ -27,6 +27,8 @@
 
 MODULE = Clutter::Texture PACKAGE = Clutter::Texture PREFIX = clutter_texture_
 
+=for enum ClutterTextureFlags
+=cut
 
 ClutterActor *
 clutter_texture_new (class, pixbuf=NULL)
@@ -39,8 +41,17 @@ clutter_texture_new (class, pixbuf=NULL)
     OUTPUT:
         RETVAL
 
+=for apidoc
+=for apidoc __gerror__
+=cut
 void
 clutter_texture_set_pixbuf (ClutterTexture *texture, GdkPixbuf *pixbuf)
+    PREINIT:
+        GError *error = NULL;
+    CODE:
+        clutter_texture_set_pixbuf (texture, pixbuf, &error);
+        if (error)
+                gperl_croak_gerror (NULL, error);
 
 GdkPixbuf_ornull *
 clutter_texture_get_pixbuf (ClutterTexture* texture)
@@ -117,3 +128,56 @@ clutter_texture_has_generated_tiles (ClutterTexture *texture)
 
 gboolean
 clutter_texture_is_tiled (ClutterTexture *texture)
+
+=for apidoc __gerror__
+=cut
+gboolean
+clutter_texture_set_from_rgb_data (texture, data, has_alpha, width, height, rowstride, bpp, flags)
+        ClutterTexture *texture
+        SV *data
+        gboolean has_alpha
+        gint width
+        gint height
+        gint rowstride
+        gint bpp
+        ClutterTextureFlags flags
+    PREINIT:
+        GError *error;
+    CODE:
+        if (!data || !SvPOK (data))
+                croak ("expecting a packed string for pixel data");
+        error = NULL;
+        RETVAL = clutter_texture_set_from_rgb_data (texture,
+                                                    (const guchar *) SvPV_nolen (data),
+                                                    has_alpha,
+                                                    width, height,
+                                                    rowstride, bpp,
+                                                    flags,
+                                                    &error);
+        if (error)
+                gperl_croak_gerror (NULL, error);
+    OUTPUT:
+        RETVAL
+
+=for apidoc __gerror__
+=cut
+gboolean
+clutter_texture_set_from_yuv_data (texture, data, width, height, flags)
+        ClutterTexture *texture
+        SV *data
+        gint width
+        gint height
+        ClutterTextureFlags flags
+    PREINIT:
+        GError *error;
+    CODE:
+        error = NULL;
+        RETVAL = clutter_texture_set_from_yuv_data (texture,
+                                                    (const guchar *) SvPV_nolen (data),
+                                                    width, height,
+                                                    flags,
+                                                    &error);
+        if (error)
+                gperl_croak_gerror (NULL, error);
+    OUTPUT:
+        RETVAL

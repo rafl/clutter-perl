@@ -1,3 +1,8 @@
+2007-07-25  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* *: Port to clutter-0.3 API. The actual changes are too many
+	to be listed here.
+
 2007-04-25  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* xs/ClutterActor.xs: Allow overriding the ClutterActor::paint()

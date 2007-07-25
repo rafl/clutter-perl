@@ -58,7 +58,34 @@ clutterperl_actor_request_coords (ClutterActor    *actor,
 {
         HV *stash = gperl_object_stash_from_type (G_OBJECT_TYPE (actor));
         GV *slot = gv_fetchmethod (stash, "REQUEST_COORDS");
-        gint n;
+
+        if (slot && GvCV (slot)) {
+                dSP;
+
+                ENTER;
+                SAVETMPS;
+                PUSHMARK (SP);
+
+                EXTEND (SP, 2);
+                PUSHs (newSVClutterActor (actor));
+                PUSHs (sv_2mortal (newSVClutterActorBox (box)));
+                
+                PUTBACK;
+                call_sv ((SV *) GvCV (slot), G_VOID | G_DISCARD);
+                SPAGAIN;
+
+                FREETMPS;
+                LEAVE;
+        }
+}
+
+static void
+clutterperl_actor_query_coords (ClutterActor    *actor,
+                                ClutterActorBox *box)
+{
+        HV *stash = gperl_object_stash_from_type (G_OBJECT_TYPE (actor));
+        GV *slot = gv_fetchmethod (stash, "QUERY_COORDS");
+        int count, i;
 
         if (slot && GvCV (slot)) {
                 dSP;
@@ -71,51 +98,21 @@ clutterperl_actor_request_coords (ClutterActor    *actor,
                 PUSHs (newSVClutterActor (actor));
 
                 PUTBACK;
-
-                n = call_sv ((SV *) GvCV (slot), G_ARRAY);
-
+                count = call_sv ((SV *) GvCV (slot), G_ARRAY);
                 SPAGAIN;
 
-                if (n < 4)
-                        croak("REQUEST_COORDS must return an array of 4 coordinates");
+                if (count != 4)
+                        croak ("QUERY_COORDS must return an array with "
+                               "four items -- (x1, y1, x2, y2)");
 
-                /* POPi takes things off the *end* of the stack! */
-                box->y2 = POPi;
-                box->x2 = POPi;
-                box->y1 = POPi;
-                box->x1 = POPi;
-
-                PUTBACK;
-
-                FREETMPS;
-                LEAVE;
-        }
-}
-
-static void
-clutterperl_actor_allocate_coords (ClutterActor    *actor,
-                                   ClutterActorBox *box)
-{
-        HV *stash = gperl_object_stash_from_type (G_OBJECT_TYPE (actor));
-        GV *slot = gv_fetchmethod (stash, "ALLOCATE_COORDS");
-
-        if (slot && GvCV (slot)) {
-                dSP;
-
-                ENTER;
-                SAVETMPS;
-                PUSHMARK (SP);
-
-                EXTEND (SP, 2);
-                PUSHs (newSVClutterActor (actor));
-                PUSHs (newSVClutterActorBox (box));
+                if (box) {
+                        box->y2 = POPi;
+                        box->x2 = POPi;
+                        box->y1 = POPi;
+                        box->x1 = POPi;
+                }
 
                 PUTBACK;
-
-                call_sv ((SV *) GvCV (slot), G_VOID | G_DISCARD);
-
-                SPAGAIN;
-
                 FREETMPS;
                 LEAVE;
         }
@@ -126,10 +123,26 @@ clutterperl_actor_class_init (ClutterActorClass *klass)
 {
         klass->paint = clutterperl_actor_paint;
         klass->request_coords = clutterperl_actor_request_coords;
-        klass->allocate_coords = clutterperl_actor_allocate_coords;
+        klass->query_coords = clutterperl_actor_query_coords;
+}
+
+static void
+clutterperl_actor_sink (GObject *object)
+{
+  /* if only we had a g_initially_unowned_sink() */
+  g_object_ref_sink (object);
+  g_object_unref (object);
 }
 
 MODULE = Clutter::Actor		PACKAGE = Clutter::Actor	PREFIX = clutter_actor_
+
+BOOT:
+        /* we need to use our own homegrown sink function, since we do not
+         * provide it inside the C library (you can use the usual GObject
+         * API in there) but we need a single entry point in the bindings.
+         * so, here it is where we register it
+         */
+        gperl_register_sink_func (CLUTTER_TYPE_ACTOR, clutterperl_actor_sink);
 
 =for position DESCRIPTION
 
@@ -167,21 +180,7 @@ actor class, you should provide a new implementation of the following methods:
 This is called each time the actor needs to be painted. You can call native
 GL calls using Perl bindings for the OpenGL API.
 
-=item (x1, y1, x2, y2) = REQUEST_COORDS ($actor)
-
-=over
-
-=item o $actor (Clutter::Actor)
-
-=item o (x1, y1, x2, y2) (Clutter::ActorBox)
-
-=back
-
-This is called each time the user queries the actor for its coordinates and
-size. The returned array contains the upper left and lower right coordinates
-of the box surrounding the actor.
-
-=item  ALLOCATE_COORDS ($actor, $box)
+=item REQUEST_COORDS ($actor, $box)
 
 =over
 
@@ -191,9 +190,21 @@ of the box surrounding the actor.
 
 =back
 
-This is called each time the actor is required to allocate its coordinates
-and size. The passed L<Clutter::ActorBox> contains the upper left and lower
-right coordinates of the box surrounding the actor.
+This is called each time the user requests the actor to update its coordinates
+and size. The I<box> contains the upper left and lower right coordinates of the
+box surrounding the actor.
+
+=item  (x1, y1, x2, y2) = QUERY_COORDS ($actor)
+
+=over
+
+=item o $actor (Clutter::Actor)
+
+=back
+
+This is called each time the actor is queried for its coordinates and size.
+The returned array must contains the upper left and lower right coordinates of
+the box surrounding the actor, in coordinates relative to the actor's parent.
 
 =back
 
@@ -322,8 +333,15 @@ show (ClutterActor *actor)
 void
 clutter_actor_request_coords (ClutterActor *actor, ClutterActorBox *box)
 
-void
-clutter_actor_allocate_coords (ClutterActor *actor, ClutterActorBox *box)
+ClutterActorBox_copy *
+clutter_actor_query_coords (ClutterActor *actor)
+    PREINIT:
+        ClutterActorBox box;
+    CODE:
+        clutter_actor_query_coords (actor, &box);
+        RETVAL = &box;
+    OUTPUT:
+        RETVAL
 
 void
 clutter_actor_set_geometry (ClutterActor *actor, ClutterGeometry *geom)
@@ -497,6 +515,46 @@ void
 clutter_actor_move_by (ClutterActor *actor, gint dx, gint dy)
 
 void
+clutter_actor_pick (ClutterActor *actor, ClutterColor *color)
+
+void
+clutter_actor_set_scale_with_gravity (actor, scale_x, scale_y, gravity)
+        ClutterActor *actor
+        gdouble scale_x
+        gdouble scale_y
+        ClutterGravity gravity
+
+=for apidoc
+=for signature vertices = $actor->get_vertices
+Returns an array of four Clutter::Vertex objects containing to the
+vertices of $actor
+=cut
+void
+clutter_actor_get_vertices (ClutterActor *actor)
+    PREINIT:
+        ClutterVertex vertices[4];
+    PPCODE:
+        clutter_actor_get_vertices (actor, vertices);
+        EXTEND (SP, 4);
+        PUSHs (sv_2mortal (newSVClutterVertex (&vertices[0])));
+        PUSHs (sv_2mortal (newSVClutterVertex (&vertices[1])));
+        PUSHs (sv_2mortal (newSVClutterVertex (&vertices[2])));
+        PUSHs (sv_2mortal (newSVClutterVertex (&vertices[3])));
+
+ClutterVertex_copy *
+clutter_actor_apply_transform_to_point (ClutterActor *actor, ClutterVertex *vertex)
+    PREINIT:
+        ClutterVertex transformed;
+    CODE:
+        clutter_actor_apply_transform_to_point (actor, vertex, &transformed);
+        RETVAL = &transformed;
+    OUTPUT:
+        RETVAL
+
+=for apidoc Clutter::Actor::_INSTALL_OVERRIDES __hide__
+=cut
+
+void
 _INSTALL_OVERRIDES (const char *package)
     PREINIT:
         GType gtype;
@@ -517,6 +575,8 @@ _INSTALL_OVERRIDES (const char *package)
                       g_type_name (gtype), gtype);
         }
         clutterperl_actor_class_init (klass);
+
+## allow chaining up to the parent's methods from a perl subclass
 
 =for apidoc Clutter::Actor::PAINT __hide__
 =cut
@@ -574,7 +634,7 @@ REQUEST_COORDS (ClutterActor *actor, ClutterActorBox *box)
         }
 
 void
-ALLOCATE_COORDS (ClutterActor *actor, ClutterActorBox *box)
+QUERY_COORDS (ClutterActor *actor, ClutterActorBox *box)
     PREINIT:
         ClutterActorClass *klass;
         GType thisclass, parent_class;
@@ -592,6 +652,6 @@ ALLOCATE_COORDS (ClutterActor *actor, ClutterActorBox *box)
                        g_type_name (thisclass));
         }
         klass = g_type_class_peek (parent_class);
-        if (klass->allocate_coords) {
-                klass->allocate_coords (actor, box);
+        if (klass->query_coords) {
+                klass->query_coords (actor, box);
         }
