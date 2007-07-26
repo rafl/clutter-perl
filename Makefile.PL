@@ -1,18 +1,20 @@
 use 5.008;
+
 use strict;
 use warnings;
+
 use Cwd;
 use File::Spec;
 use ExtUtils::MakeMaker;
 
 # minimum required version of dependancies we need to build
 our %build_reqs = (
-    'perl-Math-Trig'          => 0,
 	'perl-ExtUtils-Depends'   => '0.2',
 	'perl-ExtUtils-PkgConfig' => '1.03',
 	'perl-Glib'               => '1.140', # for Glib::MakeHelper
 	'perl-Gtk2'               => '1.140',
-	'Clutter'                 => '0.3.0',
+	'perl-Cairo'              => '1.00',
+    'Clutter'                 => '0.3.1',
 );
 
 # Writing a fake Makefile ensures that CPAN will pick up the correct
@@ -24,7 +26,6 @@ unless (eval "use ExtUtils::Depends '$build_reqs{'perl-ExtUtils-Depends'}';"
            . "use Glib '$build_reqs{'perl-Glib'}';"
            . "use Gtk2 '$build_reqs{'perl-Gtk2'}';"
            . "use Glib::MakeHelper;"
-           . "use Math::Trig;"
            . "1") {
    warn "$@\n";
    WriteMakefile(
@@ -41,12 +42,38 @@ unless (eval "use ExtUtils::Depends '$build_reqs{'perl-ExtUtils-Depends'}';"
 
 mkdir 'build', 0777;
 
-our %pkgcfg = ExtUtils::PkgConfig->find(
-        'clutter-0.3 >= ' . $build_reqs{Clutter},
-    );
+# Base module
+our %pkgcfg =
+    ExtUtils::PkgConfig->find('clutter-0.3 >= ' . $build_reqs{Clutter});
 
+our @xs_files = ();
 
-our @xs_files = <xs/*.xs>;
+my @names = Glib::MakeHelper->read_source_list_file ('xs_files');
+print "Loaded " . scalar(@names) . " xs files for Clutter\n";
+push @xs_files, @names;
+
+our $module_cflags = $pkgcfg{cflags};
+our $module_libs   = $pkgcfg{libs};
+
+# Integration libraries: Clutter::Gst
+my $have_clutter_gst = 0;
+eval {
+    our %gstpkgcfg =
+        ExtUtils::PkgConfig->find('clutter-gst-0.3');
+
+    $module_cflags .= ' ' . $gstpkgcfg{cflags} . '-DCLUTTERPERL_GST';
+    $module_libs   .= ' ' . $gstpkgcfg{libs};
+
+    $have_clutter_gst = 1;
+
+    my @names = Glib::MakeHelper->read_source_list_file ('xs_files_gst');
+    print "Loaded " . scalar(@names) . " xs files for Clutter::Gst\n";
+    push @xs_files, @names;
+};
+if ($@) {
+    warn("*** No clutter-gstreamer found, skipping Clutter::Gst");
+}
+
 our %pm_files = (
     'Clutter.pm' => '$(INST_LIBDIR)/Clutter.pm',
 
@@ -64,17 +91,20 @@ our %pod_files = (
 );
 
 # autogeneration
-Glib::CodeGen->parse_maps('clutterperl');
+Glib::CodeGen->parse_maps('clutterperl',
+                          input => [ 'maps', 'maps-gst', ]);
 Glib::CodeGen->write_boot(ignore => '^Clutter$');
 
 # this one turns the long list of #defines in gdkkeysyms.h into a large
 # hash of key names and values, %Gtk2::Gdk::Keysyms.
 system "$^X tools/genkeysyms.pl >\"build/Keysyms.pm\"";
 
+my @deps = $have_clutter_gst ? qw/Gtk2 GStreamer Glib/ : qw/Gtk2 Glib/;
+
 my $cwd = cwd();
-our $clutter = ExtUtils::Depends->new('Clutter', 'Gtk2');
-$clutter->set_inc($pkgcfg{cflags} . ' -I./build ');
-$clutter->set_libs($pkgcfg{libs});
+our $clutter = ExtUtils::Depends->new('Clutter', @deps);
+$clutter->set_inc($module_cflags . ' -I./build ');
+$clutter->set_libs($module_libs);
 $clutter->add_xs(@xs_files);
 $clutter->add_pm(%pm_files);
 $clutter->add_typemaps(map { File::Spec->catfile($cwd, $_) }

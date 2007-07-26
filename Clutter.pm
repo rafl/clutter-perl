@@ -45,15 +45,13 @@ sub import {
     my $init = 0;
 
     foreach (@_) {
-	    if (/^[-:]?init$/) {
-            $init = 1;
-        }
-        else {
-            $class->VERSION($_);
-        }
+	    if    (/^[-:]?init$/)     { $init = 1;           }
+        elsif (/^[-:]?gst-init$/) { $init = 2;           }
+        else                      { $class->VERSION($_); }
     }
 
-    Clutter->init() if $init;
+    Clutter->init()      if $init == 1;
+    Clutter::Gst->init() if $init == 2;
 }
 
 sub dl_load_flags { $^O eq 'darwin' ? 0x00 : 0x01 }

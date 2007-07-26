@@ -35,6 +35,7 @@ BOOT:
 #include "register.xsh"
 #include "boot.xsh"
 	gperl_handle_logs_for ("Clutter");
+        gperl_handle_logs_for ("ClutterGst");
 
 guint
 MAJOR_VERSION ()
