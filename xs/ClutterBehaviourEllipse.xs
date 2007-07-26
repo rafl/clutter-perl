@@ -3,7 +3,7 @@
 MODULE = Clutter::Behaviour::Ellipse    PACKAGE = Clutter::Behaviour::Ellipse   PREFIX = clutter_behaviour_ellipse_
 
 ClutterBehaviour_noinc *
-clutter_behaviour_ellipse_new (class, alpha=NULL, x, y, width, height, begin, end, tilt)
+clutter_behaviour_ellipse_new (class, alpha=NULL, x, y, width, height, begin, end)
         ClutterAlpha_ornull *alpha
         gint x
         gint y
@@ -11,9 +11,8 @@ clutter_behaviour_ellipse_new (class, alpha=NULL, x, y, width, height, begin, en
         gint height
         gdouble begin
         gdouble end
-        gdouble tilt
     C_ARGS:
-        alpha, x, y, width, height, begin, end, tilt
+        alpha, x, y, width, height, begin, end
 
 void
 clutter_behaviour_ellipse_set_center (ellipse, x, y)
@@ -45,6 +44,11 @@ void
 clutter_behaviour_ellipse_set_angle_tilt (ellipse, tilt)
         ClutterBehaviourEllipse *ellipse
         gdouble tilt
+
+void
+clutter_behaviour_ellipse_set_direction (ellipse, direction)
+        ClutterBehaviourEllipse *ellipse
+        ClutterRotateDirection direction
 
 =for apidoc
 =for signature (x, y) = $ellipse->get_center
@@ -93,3 +97,5 @@ clutter_behaviour_ellipse_get_angles (ClutterBehaviourEllipse *ellipse)
         PUSHs (sv_2mortal (newSVnv (end)));
         PUSHs (sv_2mortal (newSVnv (tilt)));
 
+ClutterRotateDirection
+clutter_behaviour_ellipse_get_direction (ClutterBehaviourEllipse *ellipse)
