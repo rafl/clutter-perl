@@ -42,11 +42,11 @@ unless (eval "use ExtUtils::Depends '$build_reqs{'perl-ExtUtils-Depends'}';"
 
 mkdir 'build', 0777;
 
+our @xs_files = ();
+
 # Base module
 our %pkgcfg =
     ExtUtils::PkgConfig->find('clutter-0.3 >= ' . $build_reqs{Clutter});
-
-our @xs_files = ();
 
 my @names = Glib::MakeHelper->read_source_list_file ('xs_files');
 print "Loaded " . scalar(@names) . " xs files for Clutter\n";
@@ -58,8 +58,7 @@ our $module_libs   = $pkgcfg{libs};
 # Integration libraries: Clutter::Gst
 my $have_clutter_gst = 0;
 eval {
-    our %gstpkgcfg =
-        ExtUtils::PkgConfig->find('clutter-gst-0.3');
+    our %gstpkgcfg = ExtUtils::PkgConfig->find('clutter-gst-0.3');
 
     $module_cflags .= ' ' . $gstpkgcfg{cflags} . '-DCLUTTERPERL_GST';
     $module_libs   .= ' ' . $gstpkgcfg{libs};
@@ -71,7 +70,7 @@ eval {
     push @xs_files, @names;
 };
 if ($@) {
-    warn("*** No clutter-gstreamer found, skipping Clutter::Gst");
+    warn("*** No clutter-gst found, skipping Clutter::Gst");
 }
 
 our %pm_files = (
@@ -91,17 +90,16 @@ our %pod_files = (
 );
 
 # autogeneration
-Glib::CodeGen->parse_maps('clutterperl',
-                          input => [ 'maps', 'maps-gst', ]);
+Glib::CodeGen->parse_maps('clutterperl', input => [ 'maps', 'maps-gst', ]);
 Glib::CodeGen->write_boot(ignore => '^Clutter$');
 
-# this one turns the long list of #defines in gdkkeysyms.h into a large
-# hash of key names and values, %Gtk2::Gdk::Keysyms.
+# this one turns the long list of #defines in clutter-keysyms.h into a
+# large hash of key names and values, %Clutter::Gdk::Keysyms.
 system "$^X tools/genkeysyms.pl >\"build/Keysyms.pm\"";
 
 my @deps = $have_clutter_gst ? qw/Gtk2 GStreamer Glib/ : qw/Gtk2 Glib/;
-
 my $cwd = cwd();
+
 our $clutter = ExtUtils::Depends->new('Clutter', @deps);
 $clutter->set_inc($module_cflags . ' -I./build ');
 $clutter->set_libs($module_libs);
@@ -151,5 +149,6 @@ sub MY::postamble
             'PERL_EXTUTILS_DEPENDS' => $build_reqs{'perl-ExtUtils-Depends'},
             'PERL_EXTUTILS_PKGCONFIG' => $build_reqs{'perl-ExtUtils-PkgConfig'},
             'PERL_GLIB' => $build_reqs{'perl-Glib'},
+            'PERL_GTK2' => $build_reqs{'perl-Gtk2'},
            );
 }
