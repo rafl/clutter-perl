@@ -8,6 +8,10 @@
 #include <clutter-gst/clutter-gst.h>
 #endif
 
+#ifdef CLUTTERPERL_CAIRO
+#include <clutter-cairo.h>
+#endif
+
 #include "clutterperl-autogen.h"
 
 const char *clutterperl_event_get_package (ClutterEvent *event);

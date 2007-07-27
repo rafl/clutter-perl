@@ -73,6 +73,19 @@ if ($@) {
     warn("*** No clutter-gst found, skipping Clutter::Gst");
 }
 
+# Integration libraries: Clutter::Texture::Cairo
+eval {
+    our %cairopkgcfg = ExtUtils::PkgConfig->find('clutter-cairo-0.3');
+
+    $module_cflags .= ' ' . $cairopkgcfg{cflags} . '-DCLUTTERPERL_CAIRO';
+    $module_libs   .= ' ' . $cairopkgcfg{libs};
+
+    push @xs_files, 'xs/ClutterCairo.xs';
+};
+if ($@) {
+    warn("*** No clutter-cairo found, skipping Clutter::Texture::Cairo");
+}
+
 our %pm_files = (
     'Clutter.pm' => '$(INST_LIBDIR)/Clutter.pm',
 
@@ -90,7 +103,7 @@ our %pod_files = (
 );
 
 # autogeneration
-Glib::CodeGen->parse_maps('clutterperl', input => [ 'maps', 'maps-gst', ]);
+Glib::CodeGen->parse_maps('clutterperl', input => [ 'maps', 'maps-gst', 'maps-cairo', ]);
 Glib::CodeGen->write_boot(ignore => '^Clutter$');
 
 # this one turns the long list of #defines in clutter-keysyms.h into a
