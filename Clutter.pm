@@ -26,7 +26,7 @@ use Glib;
 
 require DynaLoader;
 
-our @ISA = qw(DynaLoader);
+our @ISA = qw( DynaLoader );
 
 # the version scheme is:
 #   CLUTTER_MAJOR
@@ -152,6 +152,10 @@ changed for the Perl bindings.
 
 The C<ClutterCloneTexture> has been moved under the L<Clutter::Texture>
 package name, to reinforce the inheritance.
+
+=item ClutterCairo =E<gt> Clutter::Texture::Cairo
+
+As above, the name has been changed to reinforce the inheritance.
 
 =back
 
