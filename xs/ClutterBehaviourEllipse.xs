@@ -41,9 +41,17 @@ clutter_behaviour_ellipse_set_angle_end (ellipse, end)
         gdouble end
 
 void
-clutter_behaviour_ellipse_set_angle_tilt (ellipse, tilt)
+clutter_behaviour_ellipse_set_angle_tilt (ellipse, tilt, axis)
         ClutterBehaviourEllipse *ellipse
+        ClutterRotateAxis axis
         gdouble tilt
+
+void
+clutter_behaviour_ellipse_set_tilt (ellipse, tilt_x, tilt_y, tilt_z)
+        ClutterBehaviourEllipse *ellipse
+        gdouble tilt_x
+        gdouble tilt_y
+        gdouble tilt_z
 
 void
 clutter_behaviour_ellipse_set_direction (ellipse, direction)
@@ -76,26 +84,22 @@ gdouble
 clutter_behaviour_ellipse_get_angle_end (ClutterBehaviourEllipse *ellipse)
 
 gdouble
-clutter_behaviour_ellipse_get_angle_tilt (ClutterBehaviourEllipse *ellipse)
+clutter_behaviour_ellipse_get_angle_tilt (ClutterBehaviourEllipse *ellipse, ClutterRotateAxis axis)
 
 =for apidoc
-=for signature (begin, end, tilt) = $ellipse->get_angles
+=for signature (tilt_x, tilt_y, tilt_z) = $ellipse->get_tilt
 =cut
 void
-clutter_behaviour_ellipse_get_angles (ClutterBehaviourEllipse *ellipse)
+clutter_behaviour_ellipse_get_tilt (ClutterBehaviourEllipse *ellipse)
     PREINIT:
-        gdouble begin, end, tilt;
+        gdouble tilt_x, tilt_y, tilt_z;
     PPCODE:
-        begin = end = tilt = 0.0;
-        g_object_get (G_OBJECT (ellipse),
-                      "angle-begin", &begin,
-                      "angle-end", &end,
-                      "angle-tilt", &tilt,
-                      NULL);
+        tilt_x = tilt_y = tilt_z  = 0.0;
+        clutter_behaviour_ellipse_get_tilt (ellipse, &tilt_x, &tilt_y, &tilt_z);
         EXTEND (SP, 3);
-        PUSHs (sv_2mortal (newSVnv (begin)));
-        PUSHs (sv_2mortal (newSVnv (end)));
-        PUSHs (sv_2mortal (newSVnv (tilt)));
+        PUSHs (sv_2mortal (newSVnv (tilt_x)));
+        PUSHs (sv_2mortal (newSVnv (tilt_y)));
+        PUSHs (sv_2mortal (newSVnv (tilt_z)));
 
 ClutterRotateDirection
 clutter_behaviour_ellipse_get_direction (ClutterBehaviourEllipse *ellipse)
