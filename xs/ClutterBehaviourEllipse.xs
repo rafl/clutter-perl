@@ -31,6 +31,14 @@ clutter_behaviour_ellipse_set_height (ellipse, height)
         gint height
 
 void
+clutter_behaviour_ellipse_set_size (ellipse, width, height)
+        ClutterBehaviourEllipse *ellipse
+        gint width
+        gint height
+    CODE:
+        g_object_set (G_OBJECT (ellipse), "width", width, "height", height, NULL);
+
+void
 clutter_behaviour_ellipse_set_angle_begin (ellipse, begin)
         ClutterBehaviourEllipse *ellipse
         gdouble begin
@@ -39,6 +47,14 @@ void
 clutter_behaviour_ellipse_set_angle_end (ellipse, end)
         ClutterBehaviourEllipse *ellipse
         gdouble end
+
+void
+clutter_behaviour_ellipse_set_angles (ellipse, begin, end)
+        ClutterBehaviourEllipse *ellipse
+        gdouble begin
+        gdouble end
+    CODE:
+        g_object_set (G_OBJECT (ellipse), "angle-begin", begin, "angle-end", end, NULL);
 
 void
 clutter_behaviour_ellipse_set_angle_tilt (ellipse, tilt, axis)
@@ -77,11 +93,39 @@ clutter_behaviour_ellipse_get_width (ClutterBehaviourEllipse *ellipse)
 gint
 clutter_behaviour_ellipse_get_height (ClutterBehaviourEllipse *ellipse)
 
+=for apidoc
+=for signature (width, height) = $ellipse->get_size
+=cut
+void
+clutter_behaviour_ellipse_get_size (ClutterBehaviourEllipse *ellipse)
+    PREINIT:
+        gint width, height;
+    PPCODE:
+        width = height = 0;
+        g_object_get (G_OBJECT (ellipse), "width", &width, "height", &height, NULL);
+        EXTEND (SP, 2);
+        PUSHs (sv_2mortal (newSViv (width)));
+        PUSHs (sv_2mortal (newSViv (height)));
+
 gdouble
 clutter_behaviour_ellipse_get_angle_begin (ClutterBehaviourEllipse *ellipse)
 
 gdouble
 clutter_behaviour_ellipse_get_angle_end (ClutterBehaviourEllipse *ellipse)
+
+=for apidoc
+=for signature (begin, end) = $behaviour->get_angles
+=cut
+void
+clutter_behaviour_ellipse_get_angles (ClutterBehaviourEllipse *ellipse)
+    PREINIT:
+        gdouble begin, end;
+    PPCODE:
+        begin = end = 0;
+        g_object_get (G_OBJECT (ellipse), "angle-begin", &begin, "angle-end", &end, NULL);
+        EXTEND (SP, 2);
+        PUSHs (sv_2mortal (newSVnv (begin)));
+        PUSHs (sv_2mortal (newSVnv (end)));
 
 gdouble
 clutter_behaviour_ellipse_get_angle_tilt (ClutterBehaviourEllipse *ellipse, ClutterRotateAxis axis)
