@@ -61,4 +61,5 @@ xs/ClutterTypes.xs
 xs/ClutterUnits.xs
 xs/ClutterVBox.xs
 xs_files
+xs_files_cairo
 xs_files_gst

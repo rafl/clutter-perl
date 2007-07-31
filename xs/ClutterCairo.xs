@@ -21,6 +21,3 @@ clutter_cairo_create_context (ClutterCairo *texture)
         sv_setref_pv (RETVAL, "Clutter::Cairo::Context", (void *) cr);
     OUTPUT:
         RETVAL
-
-##void
-##clutter_cairo_set_source_color (cairo_t *cr, ClutterColor *color)

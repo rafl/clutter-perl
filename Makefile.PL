@@ -74,16 +74,21 @@ if ($@) {
 }
 
 # Integration libraries: Clutter::Texture::Cairo
+my $have_clutter_cairo = 0;
 eval {
     our %cairopkgcfg = ExtUtils::PkgConfig->find('clutter-cairo-0.3');
 
     $module_cflags .= ' ' . $cairopkgcfg{cflags} . '-DCLUTTERPERL_CAIRO';
     $module_libs   .= ' ' . $cairopkgcfg{libs};
 
-    push @xs_files, 'xs/ClutterCairo.xs';
+    $have_clutter_cairo = 1;
+
+    my @names = Glib::MakeHelper->read_source_list_file ('xs_files_cairo');
+    print "Loaded " . scalar(@names) . " xs files for Clutter::Cairo\n";
+    push @xs_files, @names;
 };
 if ($@) {
-    warn("*** No clutter-cairo found, skipping Clutter::Texture::Cairo");
+    warn("*** No clutter-cairo found, skipping Clutter::Cairo");
 }
 
 our %pm_files = (
@@ -110,7 +115,11 @@ Glib::CodeGen->write_boot(ignore => '^Clutter$');
 # large hash of key names and values, %Clutter::Gdk::Keysyms.
 system "$^X tools/genkeysyms.pl >\"build/Keysyms.pm\"";
 
-my @deps = $have_clutter_gst ? qw/Gtk2 GStreamer Glib/ : qw/Gtk2 Glib/;
+my @deps = qw/ Glib /;
+push @deps, 'GStreamer' if $have_clutter_gst   == 1;
+push @deps, 'Cairo'     if $have_clutter_cairo == 1;
+push @deps, 'Gtk2';     # default, because we need Gtk2::Gdk::Pixbuf
+
 my $cwd = cwd();
 
 our $clutter = ExtUtils::Depends->new('Clutter', @deps);
