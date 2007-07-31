@@ -109,13 +109,37 @@ clutter_init (class=NULL)
         GPerlArgv *pargv;
     CODE:
         pargv = gperl_argv_new ();
-	
 	RETVAL = clutter_init (&pargv->argc, &pargv->argv);
-
 	gperl_argv_update (pargv);
 	gperl_argv_free (pargv);
     OUTPUT:
         RETVAL
+
+#ifndef CLUTTERPERL_GST
+
+# /* in case we are not building Clutter without the GStreamer support
+#  * we need a stub for clutter_gst_init(), to warn the user if the
+#  * Clutter module was imported using the '-gst-init' parameter or if
+#  * there's an explicit call to Clutter::Gst->init()
+#  */
+
+ClutterInitError
+clutter_gst_init_dummy (class=NULL)
+    ALIAS:
+        Clutter::Gst::init = 0
+    PREINIT:
+        GPerlArgv *pargv;
+    CODE:
+        PERL_UNUSED_VAR (ax);
+        pargv = gperl_argv_new ();
+        g_warning ("Clutter was built without the support for GStreamer");
+        RETVAL = clutter_init (&pargv->argc, &pargv->argv);
+        gperl_argv_update (pargv); 
+        gperl_argv_free (pargv);
+    OUTPUT:
+        RETVAL
+
+#endif /* CLUTTERPERL_GST */
 
 void
 clutter_main (class)
