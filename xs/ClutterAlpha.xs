@@ -51,7 +51,17 @@ clutterperl_alpha_func (ClutterAlpha *alpha,
         return retval;
 }
 
+static void
+clutterperl_alpha_sink (GObject *object)
+{
+  g_object_ref_sink (object);
+  g_object_unref (object);
+}
+
 MODULE = Clutter::Alpha PACKAGE = Clutter::Alpha PREFIX = clutter_alpha_
+
+BOOT:
+        gperl_register_sink_func (CLUTTER_TYPE_ALPHA, clutterpelr_alpha_sink);
 
 ClutterAlpha *
 clutter_alpha_new (class, timeline=NULL, func=NULL, data=NULL)
