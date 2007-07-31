@@ -108,3 +108,9 @@ clutter_stage_set_perspective (stage, fovy, aspect, z_near, z_far)
         persp.z_far = CLUTTER_FLOAT_TO_FIXED (z_far);
         clutter_stage_set_perspectivex (stage, &persp);
 
+void
+clutter_stage_set_user_resizable (ClutterStage *stage, gboolean resizable)
+
+gboolean
+clutter_stage_get_user_resizable (ClutterStage *stage)
+
