@@ -7,4 +7,5 @@ clutter_gst_video_texture_new (class)
     C_ARGS:
         /* void */
 
-
+GstElement *
+clutter_gst_video_texture_get_playbin (ClutterGstVideoTexture *texture)

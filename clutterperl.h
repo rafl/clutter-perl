@@ -6,10 +6,12 @@
 
 #ifdef CLUTTERPERL_GST
 #include <clutter-gst/clutter-gst.h>
+#include <gst2perl.h>
 #endif
 
 #ifdef CLUTTERPERL_CAIRO
 #include <clutter-cairo.h>
+#include <cairo-perl.h>
 #endif
 
 #include "clutterperl-autogen.h"
