@@ -418,6 +418,23 @@ clutter_actor_rotate_x (ClutterActor *actor, gfloat angle, gint y, gint z)
 void
 clutter_actor_rotate_y (ClutterActor *actor, gfloat angle, gint x, gint z)
 
+gdouble
+clutter_actor_get_rxang (ClutterActor *actor)
+    ALIAS:
+        Clutter::Actor::get_ryang = 1
+        Clutter::Actor::get_rzang = 2
+    CODE:
+        switch (ix) {
+                case 0: RETVAL = clutter_actor_get_rxang (actor); break;
+                case 1: RETVAL = clutter_actor_get_ryang (actor); break;
+                case 2: RETVAL = clutter_actor_get_rzang (actor); break;
+                default:
+                        g_assert_not_reached ();
+                        RETVAL = 0.0;
+        }
+    OUTPUT:
+        RETVAL
+
 void
 clutter_actor_set_opacity (ClutterActor *actor, guint8 opacity)
 
