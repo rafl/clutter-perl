@@ -59,3 +59,18 @@ Gets the distance set using Clutter::Backend-E<gt>set_double_click_distance().
 =cut
 guint
 clutter_backend_get_double_click_distance (ClutterBackend *backend)
+
+=for apidoc
+Sets the resolution, in dpi, of the backend. The resolution is used when
+transforming the font size from points to pixels.
+
+Applications should never use this function.
+=cut
+void
+clutter_backend_set_resolution (ClutterBackend *backend, gdouble dpi)
+
+=for apidoc
+Gets the resolution, in dpi, of the backend.
+=cut
+gdouble
+clutter_backend_get_resolution (ClutterBackend *backend)
