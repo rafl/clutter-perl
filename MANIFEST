@@ -6,6 +6,7 @@ copyright.pod
 doctypes
 examples/behaviour.pl
 examples/boxes.pl
+examples/cairo.pl
 examples/hello.pl
 examples/rects.pl
 examples/redhand.png
