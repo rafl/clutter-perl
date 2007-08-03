@@ -3,9 +3,9 @@
 MODULE = Clutter::Behaviour::Ellipse    PACKAGE = Clutter::Behaviour::Ellipse   PREFIX = clutter_behaviour_ellipse_
 
 =for apidoc
-=for arg center an array containing the x and y coordinates
-=for arg size an array containing the width and height
-=for arg angles an array containing the initial and final angles
+=for arg center an array reference containing the x and y coordinates
+=for arg size an array reference containing the width and height of the ellipse
+=for arg angles an array reference containing the initial and final angles
 =cut
 ClutterBehaviour_noinc *
 clutter_behaviour_ellipse_new (class, alpha=NULL, center, size, direction, angles)
@@ -36,14 +36,11 @@ clutter_behaviour_ellipse_new (class, alpha=NULL, center, size, direction, angle
         if ((!SvRV (angles)) || (SvTYPE (SvRV (angles))) != SVt_PVAV)
                 croak("Invalid size, expecting an array of two floats");
         av = (AV *) SvRV (center);
-        x = AV_FETCH_IV (av, 0);
-        y = AV_FETCH_IV (av, 1);
+        x = AV_FETCH_IV (av, 0); y = AV_FETCH_IV (av, 1);
         av = (AV *) SvRV (size);
-        width = AV_FETCH_IV (av, 0);
-        height = AV_FETCH_IV (av, 1);
+        width = AV_FETCH_IV (av, 0); height = AV_FETCH_IV (av, 1);
         av = (AV *) SvRV (angles);
-        begin = AV_FETCH_NV (av, 0);
-        end = AV_FETCH_NV (av, 1);
+        begin = AV_FETCH_NV (av, 0); end = AV_FETCH_NV (av, 1);
 #undef AV_FETCH_IV
 #undef AV_FETCH_NV
         RETVAL = clutter_behaviour_ellipse_new (alpha,
