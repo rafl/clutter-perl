@@ -278,7 +278,7 @@ DESTROY (sv)
 
 =for apidoc Clutter::Event::set_time
 =for signature $event->set_time ($new_time)
-=for arg ... (hide)
+=for arg ... (__hide__)
 =for arg newtime (timestamp)
 =cut
 
@@ -288,7 +288,7 @@ DESTROY (sv)
 =for apidoc
 =for signature $timestamp = $event->get_time
 =for signature $timestamp = $event->time
-=for arg ... (hide)
+=for arg ... (__hide__)
 Get I<$event>'s time.  If that event type doesn't have a time, or if
 I<$event> is undef, returns 0.
 =cut	
@@ -311,7 +311,7 @@ clutter_event_get_time (event, ...)
 
 =for apidoc Clutter::Event::set_state
 =for signature $event->set_state ($new_state)
-=for arg ... (hide)
+=for arg ... (__hide__)
 =for arg newstate (Clutter::ModifierType)
 =cut
 
@@ -321,7 +321,7 @@ clutter_event_get_time (event, ...)
 =for apidoc
 =for signature $state = $event->get_state
 =for signature $state = $event->state
-=for arg ... (hide)
+=for arg ... (__hide__)
 Get I<$event>'s state.  If that event type doesn't have a modifier state,
 or if I<$event> is undef, returns 0.
 =cut	

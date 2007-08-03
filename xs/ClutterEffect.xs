@@ -55,7 +55,7 @@ clutterperl_knots_list_from_sv (SV *knots, gint *n_knots)
         if (!(knots && SvOK (knots)))
                 return NULL;
         
-        if ((!SvRV (knots)) || (SvTYPE (SvRV (knots)) |= SVt_PVAV))
+        if ((!SvRV (knots)) || (SvTYPE (SvRV (knots)) != SVt_PVAV))
                 croak("Invalid list of Clutter::Knot objects");
 
         av = (AV *) SvRV (knots);

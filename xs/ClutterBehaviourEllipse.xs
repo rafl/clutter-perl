@@ -2,17 +2,56 @@
 
 MODULE = Clutter::Behaviour::Ellipse    PACKAGE = Clutter::Behaviour::Ellipse   PREFIX = clutter_behaviour_ellipse_
 
+=for apidoc
+=for arg center an array containing the x and y coordinates
+=for arg size an array containing the width and height
+=for arg angles an array containing the initial and final angles
+=cut
 ClutterBehaviour_noinc *
-clutter_behaviour_ellipse_new (class, alpha=NULL, x, y, width, height, begin, end)
+clutter_behaviour_ellipse_new (class, alpha=NULL, center, size, direction, angles)
         ClutterAlpha_ornull *alpha
-        gint x
-        gint y
-        gint width
-        gint height
-        gdouble begin
-        gdouble end
-    C_ARGS:
-        alpha, x, y, width, height, begin, end
+        SV *center
+        SV *size
+        ClutterRotateDirection direction
+        SV *angles
+    PREINIT:
+        gint x, y, width, height;
+        gdouble begin, end;
+        AV *av;
+        SV **svp;
+    CODE:
+#define AV_FETCH_IV(_av,_index)                                         \
+        (((svp = av_fetch ((_av), (_index), FALSE)) && SvOK (*svp))     \
+         ? SvIV (*svp)                                                  \
+         : 0)
+#define AV_FETCH_NV(_av,_index)                                         \
+        (((svp = av_fetch ((_av), (_index), FALSE)) && SvOK (*svp))     \
+         ? SvNV (*svp)                                                  \
+         : 0.0)
+
+        if ((!SvRV (center)) || (SvTYPE (SvRV (center))) != SVt_PVAV)
+                croak("Invalid center, expecting an array of two integers");
+        if ((!SvRV (size)) || (SvTYPE (SvRV (size))) != SVt_PVAV)
+                croak("Invalid size, expecting an array of two integers");
+        if ((!SvRV (angles)) || (SvTYPE (SvRV (angles))) != SVt_PVAV)
+                croak("Invalid size, expecting an array of two floats");
+        av = (AV *) SvRV (center);
+        x = AV_FETCH_IV (av, 0);
+        y = AV_FETCH_IV (av, 1);
+        av = (AV *) SvRV (size);
+        width = AV_FETCH_IV (av, 0);
+        height = AV_FETCH_IV (av, 1);
+        av = (AV *) SvRV (angles);
+        begin = AV_FETCH_NV (av, 0);
+        end = AV_FETCH_NV (av, 1);
+#undef AV_FETCH_IV
+#undef AV_FETCH_NV
+        RETVAL = clutter_behaviour_ellipse_new (alpha,
+                                                x, y, width, height,
+                                                direction,
+                                                begin, end);
+    OUTPUT:
+        RETVAL
 
 void
 clutter_behaviour_ellipse_set_center (ellipse, x, y)
@@ -57,7 +96,7 @@ clutter_behaviour_ellipse_set_angles (ellipse, begin, end)
         g_object_set (G_OBJECT (ellipse), "angle-begin", begin, "angle-end", end, NULL);
 
 void
-clutter_behaviour_ellipse_set_angle_tilt (ellipse, tilt, axis)
+clutter_behaviour_ellipse_set_angle_tilt (ellipse, axis, tilt)
         ClutterBehaviourEllipse *ellipse
         ClutterRotateAxis axis
         gdouble tilt
@@ -122,13 +161,18 @@ clutter_behaviour_ellipse_get_angles (ClutterBehaviourEllipse *ellipse)
         gdouble begin, end;
     PPCODE:
         begin = end = 0;
-        g_object_get (G_OBJECT (ellipse), "angle-begin", &begin, "angle-end", &end, NULL);
+        g_object_get (G_OBJECT (ellipse),
+                      "angle-begin", &begin,
+                      "angle-end", &end,
+                      NULL);
         EXTEND (SP, 2);
         PUSHs (sv_2mortal (newSVnv (begin)));
         PUSHs (sv_2mortal (newSVnv (end)));
 
 gdouble
-clutter_behaviour_ellipse_get_angle_tilt (ClutterBehaviourEllipse *ellipse, ClutterRotateAxis axis)
+clutter_behaviour_ellipse_get_angle_tilt (ellipse, axis)
+        ClutterBehaviourEllipse *ellipse
+        ClutterRotateAxis axis
 
 =for apidoc
 =for signature (tilt_x, tilt_y, tilt_z) = $ellipse->get_tilt

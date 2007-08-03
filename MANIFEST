@@ -19,6 +19,7 @@ maps-gst
 README
 t/0.t
 t/1.t
+t/ClutterBehaviourEllipse.t
 t/ClutterBehaviourOpacity.t
 t/ClutterBehaviourPath.t
 t/ClutterBehaviourScale.t
