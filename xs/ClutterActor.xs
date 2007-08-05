@@ -26,6 +26,60 @@
 #include "clutterperl.h"
 
 static void
+clutterperl_actor_show_all (ClutterActor *actor)
+{
+        HV *stash = gperl_object_stash_from_type (G_OBJECT_TYPE (actor));
+        GV *slot = gv_fetchmethod (stash, "SHOW_ALL");
+
+        if (slot && GvCV (slot)) {
+                dSP;
+
+                ENTER;
+                SAVETMPS;
+                PUSHMARK (SP);
+
+                EXTEND (SP, 1);
+                PUSHs (newSVClutterActor (actor));
+                
+                PUTBACK;
+
+                call_sv ((SV *) GvCV (slot), G_VOID | G_DISCARD);
+
+                SPAGAIN;
+
+                FREETMPS;
+                LEAVE;
+        }
+}
+
+static void
+clutterperl_actor_hide_all (ClutterActor *actor)
+{
+        HV *stash = gperl_object_stash_from_type (G_OBJECT_TYPE (actor));
+        GV *slot = gv_fetchmethod (stash, "HIDE_ALL");
+
+        if (slot && GvCV (slot)) {
+                dSP;
+
+                ENTER;
+                SAVETMPS;
+                PUSHMARK (SP);
+
+                EXTEND (SP, 1);
+                PUSHs (newSVClutterActor (actor));
+                
+                PUTBACK;
+
+                call_sv ((SV *) GvCV (slot), G_VOID | G_DISCARD);
+
+                SPAGAIN;
+
+                FREETMPS;
+                LEAVE;
+        }
+}
+
+static void
 clutterperl_actor_paint (ClutterActor *actor)
 {
         HV *stash = gperl_object_stash_from_type (G_OBJECT_TYPE (actor));
@@ -121,6 +175,8 @@ clutterperl_actor_query_coords (ClutterActor    *actor,
 static void
 clutterperl_actor_class_init (ClutterActorClass *klass)
 {
+        klass->show_all = clutterperl_actor_show_all;
+        klass->hide_all = clutterperl_actor_hide_all;
         klass->paint = clutterperl_actor_paint;
         klass->request_coords = clutterperl_actor_request_coords;
         klass->query_coords = clutterperl_actor_query_coords;
@@ -169,17 +225,6 @@ actor class, you should provide a new implementation of the following methods:
 
 =over
 
-=item PAINT ($actor)
-
-=over
-
-=item o $actor (Clutter::Actor)
-
-=back
-
-This is called each time the actor needs to be painted. You can call native
-GL calls using Perl bindings for the OpenGL API.
-
 =item REQUEST_COORDS ($actor, $box)
 
 =over
@@ -205,6 +250,49 @@ box surrounding the actor.
 This is called each time the actor is queried for its coordinates and size.
 The returned array must contains the upper left and lower right coordinates of
 the box surrounding the actor, in coordinates relative to the actor's parent.
+
+=back
+
+Other overridable methods when deriving a C<Clutter::Actor> are:
+
+=over
+
+=item PAINT ($actor)
+
+=over
+
+=item o $actor (Clutter::Actor)
+
+=back
+
+This is called each time the actor needs to be painted. You can call native
+GL calls using Perl bindings for the OpenGL API. If you are implementing a
+containter actor, or if you are operating transformations on the actor while
+painting, you should push the GL matrix first with C<glPushMatrix>, paint and
+the pop it back with C<glPopMatrix>.
+
+=item SHOW_ALL ($actor)
+
+=over
+
+=item o $actor (Clutter::Actor)
+
+=back
+
+By default, calling C<show_all> and C<hide_all> on a L<Clutter::Group> will
+not recurse though its children. A recursive behaviour can be implemented by
+overriding this method. This method is also useful for composite actors, where
+some non-exposed children should be visible only if certain conditions arise.
+
+=item HIDE_ALL ($actor)
+
+=over
+
+=item o $actor (Clutter::Actor)
+
+=back
+
+See C<SHOW_ALL> above.
 
 =back
 
@@ -595,6 +683,12 @@ _INSTALL_OVERRIDES (const char *package)
 
 ## allow chaining up to the parent's methods from a perl subclass
 
+=for apidoc Clutter::Actor::SHOW_ALL __hide__
+=cut
+
+=for apidoc Clutter::Actor::HIDE_ALL __hide__
+=cut
+
 =for apidoc Clutter::Actor::PAINT __hide__
 =cut
 
@@ -603,6 +697,52 @@ _INSTALL_OVERRIDES (const char *package)
 
 =for apidoc Clutter::Actor::ALLOCATE_COORDS __hide__
 =cut
+
+void
+SHOW_ALL (ClutterActor *actor)
+    PREINIT:
+        ClutterActorClass *klass;
+        GType thisclass, parent_class;
+        SV *saveddefsv;
+    CODE:
+        saveddefsv = newSVsv (DEFSV);
+        eval_pv ("$_ = caller;", 0);
+        thisclass = gperl_type_from_package (SvPV_nolen (DEFSV));
+        SvSetSV (DEFSV, saveddefsv);
+        if (!thisclass)
+                thisclass = G_OBJECT_TYPE (actor);
+        parent_class = g_type_parent (thisclass);
+        if (!g_type_is_a (parent_class, CLUTTER_TYPE_ACTOR)) {
+                croak ("parent of %s is not a Clutter::Actor",
+                       g_type_name (thisclass));
+        }
+        klass = g_type_class_peek (parent_class);
+        if (klass->show_all) {
+                klass->show_all (actor);
+        }
+
+void
+HIDE_ALL (ClutterActor *actor)
+    PREINIT:
+        ClutterActorClass *klass;
+        GType thisclass, parent_class;
+        SV *saveddefsv;
+    CODE:
+        saveddefsv = newSVsv (DEFSV);
+        eval_pv ("$_ = caller;", 0);
+        thisclass = gperl_type_from_package (SvPV_nolen (DEFSV));
+        SvSetSV (DEFSV, saveddefsv);
+        if (!thisclass)
+                thisclass = G_OBJECT_TYPE (actor);
+        parent_class = g_type_parent (thisclass);
+        if (!g_type_is_a (parent_class, CLUTTER_TYPE_ACTOR)) {
+                croak ("parent of %s is not a Clutter::Actor",
+                       g_type_name (thisclass));
+        }
+        klass = g_type_class_peek (parent_class);
+        if (klass->hide_all) {
+                klass->hide_all (actor);
+        }
 
 void
 PAINT (ClutterActor *actor)
