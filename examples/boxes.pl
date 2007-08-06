@@ -35,19 +35,25 @@ $stage->signal_connect(button_press_event => \&button_press_cb);
 $stage->signal_connect(key_press_event    => \&key_press_cb);
 
 my $vbox = Clutter::VBox->new();
+$vbox->set_default_padding(10, 0, 10, 0);
 $vbox->set_position(100, 100);
-$vbox->set_spacing(10);
 
-for (1 .. 3) {
+for my $i (1 .. 3) {
     my $hbox = Clutter::HBox->new();
-    $hbox->set_spacing(10);
 
-    for (1 .. 3) {
+    for my $j (1 .. 3) {
         my $rect = Clutter::Rectangle->new();
         $rect->set_color(Clutter::Color->new(0xff, 0xff, 0xff, 0x99));
         $rect->set_size(100, 100);
 
-        $hbox->pack_start($rect);
+        my $padding = Clutter::Padding->new(
+            0,
+            Clutter::Units->FROM_INT(10),
+            0,
+            Clutter::Units->FROM_INT(10),
+        );
+
+        $hbox->pack($rect, 'start', $padding);
         $rect->show();
     }
 

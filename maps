@@ -32,9 +32,11 @@ CLUTTER_TYPE_INIT_ERROR         ClutterInitError        GEnum           Clutter:
 CLUTTER_TYPE_LABEL	        ClutterLabel	        GObject	        Clutter::Label
 CLUTTER_TYPE_LAYOUT             ClutterLayout           GInterface      Clutter::Layout
 CLUTTER_TYPE_LAYOUT_FLAGS       ClutterLayoutFlags      GFlags          Clutter::LayoutFlags
+CLUTTER_TYPE_MARGIN             ClutterMargin           GBoxed          Clutter::Margin
 CLUTTER_TYPE_MEDIA	        ClutterMedia	        GInterface	Clutter::Media
 CLUTTER_TYPE_MODIFIER_TYPE      ClutterModifierType     GFlags          Clutter::ModifierType
 CLUTTER_TYPE_PACK_TYPE          ClutterPackType         GEnum           Clutter::PackType
+CLUTTER_TYPE_PADDING            ClutterPadding          GBoxed          Clutter::Padding
 CLUTTER_TYPE_RECTANGLE	        ClutterRectangle        GObject	        Clutter::Rectangle
 CLUTTER_TYPE_ROTATE_AXIS        ClutterRotateAxis       GEnum           Clutter::RotateAxis
 CLUTTER_TYPE_ROTATE_DIRECTION   ClutterRotateDirection  GEnum           Clutter::RotateDirection
