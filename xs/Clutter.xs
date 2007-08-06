@@ -170,16 +170,3 @@ gulong
 clutter_get_timestamp (void)
     C_ARGS:
         /* void */
-
-MODULE = Clutter        PACKAGE = Clutter::Threads      PREFIX = clutter_threads_
-
-void
-clutter_threads_enter (void)
-    C_ARGS:
-        /* void */
-
-void
-clutter_threads_leave (void)
-    C_ARGS:
-        /* void */
-
