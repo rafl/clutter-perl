@@ -40,7 +40,10 @@ This module requires these other modules and libraries:
   perl >= 5.8.0
   Glib >= 1.120 (Perl module)
   Gtk2 >= 1.120 (Perl module)
-  Clutter >= 0.2.0 (C library)
+  Clutter >= 0.4.0 (C library)
+  ClutterGst >= 0.4.0 (C library)
+  ClutterGtk >= 0.4.0 (C library)
+  ClutterCairo >= 0.4.0 (C library)
 
 In order to build it from source, you'll also need:
 

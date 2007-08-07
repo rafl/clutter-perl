@@ -1,3 +1,9 @@
+2007-08-07  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* README:
+	* Clutter.pm:
+	* Makefile.PL: Bump up requirements and version to 0.400
+
 2007-08-03  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* AUTHORS:
