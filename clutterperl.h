@@ -18,4 +18,7 @@
 
 const char *clutterperl_event_get_package (ClutterEvent *event);
 
+ClutterBoxChild *SvClutterBoxChild    (SV              *data);
+SV *             newSVClutterBoxChild (ClutterBoxChild *child);
+
 #endif /* _CLUTTER_PERL_H_ */

@@ -59,6 +59,8 @@ for my $i (1 .. 3) {
 
     $vbox->add($hbox);
     $hbox->show();
+
+    print Dumper($vbox->query_child($hbox));
 }
 
 $stage->add($vbox);
