@@ -14,7 +14,7 @@ our %build_reqs = (
 	'perl-Glib'               => '1.140', # for Glib::MakeHelper
 	'perl-Gtk2'               => '1.140',
 	'perl-Cairo'              => '1.00',
-    'Clutter'                 => '0.3.1',
+    'Clutter'                 => '0.4.0',
 );
 
 # Writing a fake Makefile ensures that CPAN will pick up the correct
@@ -46,7 +46,7 @@ our @xs_files = ();
 
 # Base module
 our %pkgcfg =
-    ExtUtils::PkgConfig->find('clutter-0.3 >= ' . $build_reqs{Clutter});
+    ExtUtils::PkgConfig->find('clutter-0.4 >= ' . $build_reqs{Clutter});
 
 my @names = Glib::MakeHelper->read_source_list_file ('xs_files');
 print "Loaded " . scalar(@names) . " xs files for Clutter\n";
@@ -58,7 +58,7 @@ our $module_libs   = $pkgcfg{libs};
 # Integration libraries: Clutter::Gst
 my $have_clutter_gst = 0;
 eval {
-    our %gstpkgcfg = ExtUtils::PkgConfig->find('clutter-gst-0.3');
+    our %gstpkgcfg = ExtUtils::PkgConfig->find('clutter-gst-0.4');
 
     $module_cflags .= ' ' . $gstpkgcfg{cflags} . '-DCLUTTERPERL_GST';
     $module_libs   .= ' ' . $gstpkgcfg{libs};
@@ -76,7 +76,7 @@ if ($@) {
 # Integration libraries: Clutter::Texture::Cairo
 my $have_clutter_cairo = 0;
 eval {
-    our %cairopkgcfg = ExtUtils::PkgConfig->find('clutter-cairo-0.3');
+    our %cairopkgcfg = ExtUtils::PkgConfig->find('clutter-cairo-0.4');
 
     $module_cflags .= ' ' . $cairopkgcfg{cflags} . '-DCLUTTERPERL_CAIRO';
     $module_libs   .= ' ' . $cairopkgcfg{libs};
