@@ -1,5 +1,10 @@
 2007-08-08  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* t/ClutterAlpha.t:
+	* t/ClutterTimeline.t: Add tests.
+
+2007-08-08  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* xs/ClutterBox.xs: Remove unused variable to fix a compiler warning.
 
 2007-08-08  Emmanuele Bassi  <ebassi@openedhand.com>
