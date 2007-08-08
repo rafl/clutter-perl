@@ -1,4 +1,9 @@
-2007-08-08  Emmanuele Bassi  <ebasso@openedhand.com>
+2007-08-08  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* Clutter.pm:
+	* README: Release 0.401.
+
+2007-08-08  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* clutterperl.h:
 	* xs_files_gtk:
