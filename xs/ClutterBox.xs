@@ -156,7 +156,6 @@ newSVClutterBoxChild (ClutterBoxChild *box_child)
 {
         HV *h;
         SV *sv;
-        HV *stash;
 
         if (!box_child)
                 return newSVsv (&PL_sv_undef);
