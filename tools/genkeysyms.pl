@@ -2,7 +2,7 @@
 
 # genkeysyms.pl - adapted from the script in the Gtk2 perl bindings.
 
-@dirs = map {s/-I//; $_} grep /-I/, split /\s+/, `pkg-config clutter-0.3 --cflags`;
+@dirs = map {s/-I//; $_} grep /-I/, split /\s+/, `pkg-config clutter-0.4 --cflags`;
 #print join("\n", @dirs, "\n");
 foreach (@dirs) {
 	if (-f "$_/clutter/clutter-keysyms.h") {

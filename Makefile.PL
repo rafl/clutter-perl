@@ -71,7 +71,7 @@ eval {
     push @xs_files, @names;
 };
 if ($@) {
-    warn("*** No clutter-gst found, skipping Clutter::Gst");
+    warn("*** No clutter-gst found, skipping Clutter::Gst\n");
 }
 
 # Integration libraries: Clutter::Texture::Cairo
@@ -89,7 +89,7 @@ eval {
     push @xs_files, @names;
 };
 if ($@) {
-    warn("*** No clutter-cairo found, skipping Clutter::Cairo");
+    warn("*** No clutter-cairo found, skipping Clutter::Cairo\n");
 }
 
 # Integration libraries: Gtk2::ClutterEmbed
@@ -107,7 +107,7 @@ eval {
     push @xs_files, @names;
 };
 if ($@) {
-    warn("*** No clutter-gtk found, skipping Clutter::Cairo");
+    warn("*** No clutter-gtk found, skipping Clutter::Cairo\n");
 }
 
 
@@ -137,7 +137,7 @@ push @input_maps, 'maps-gtk'   if $have_clutter_gtk   == 1;
 
 # autogeneration
 Gtk2::CodeGen->parse_maps('clutterperl', input => \@input_maps);
-Gtk2::CodeGen->write_boot(xs_files => @xs_files);
+Gtk2::CodeGen->write_boot(xs_files => \@xs_files);
 
 # this one turns the long list of #defines in clutter-keysyms.h into a
 # large hash of key names and values, %Clutter::Gdk::Keysyms.
