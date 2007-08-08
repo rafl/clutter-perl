@@ -41,7 +41,7 @@
   <release>
     <Version>
       <name>Spherical Lune</name>
-      <created>2007-08-07</created>
+      <created>2007-08-08</created>
       <file-release rdf:resource="http://www.clutter-project.org/sources/clutter-perl/0.4/clutter-perl-0.4.1.tar.gz"/>
       <branch></branch>
       <revision>0.401</revision>
