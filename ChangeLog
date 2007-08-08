@@ -1,5 +1,11 @@
 2007-08-08  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* t/ClutterBox.t:
+	* t/ClutterHBox.t:
+	* t/ClutterVBox.t: Add tests for Clutter::Box and subclasses.
+
+2007-08-08  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* t/ClutterAlpha.t:
 	* t/ClutterTimeline.t: Add tests.
 
