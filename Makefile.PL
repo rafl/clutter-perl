@@ -107,7 +107,7 @@ eval {
     push @xs_files, @names;
 };
 if ($@) {
-    warn("*** No clutter-gtk found, skipping Clutter::Cairo\n");
+    warn("*** No clutter-gtk found, skipping Clutter::Gtk\n");
 }
 
 
