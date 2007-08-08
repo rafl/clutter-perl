@@ -16,6 +16,7 @@ MANIFEST.SKIP
 maps
 maps-cairo
 maps-gst
+maps-gtk
 README
 t/0.t
 t/1.t
@@ -27,7 +28,9 @@ t/ClutterGroup.t
 t/ClutterLabel.t
 t/ClutterRectangle.t
 t/ClutterStage.t
+t/GtkClutterEmbed.t
 tools/genkeysyms.pl
+tools/TestHelper.pm
 xs/Clutter.xs
 xs/ClutterActor.xs
 xs/ClutterAlpha.xs
@@ -51,6 +54,7 @@ xs/ClutterGroup.xs
 xs/ClutterGst.xs
 xs/ClutterGstAudio.xs
 xs/ClutterGstVideoTexture.xs
+xs/ClutterGtk.xs
 xs/ClutterHBox.xs
 xs/ClutterLabel.xs
 xs/ClutterLayout.xs
@@ -65,3 +69,4 @@ xs/ClutterVBox.xs
 xs_files
 xs_files_cairo
 xs_files_gst
+xs_files_gtk

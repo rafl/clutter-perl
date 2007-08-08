@@ -23,6 +23,7 @@ use strict;
 use warnings;
 
 use Glib;
+use Gtk2;
 
 require DynaLoader;
 

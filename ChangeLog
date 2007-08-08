@@ -1,3 +1,24 @@
+2007-08-08  Emmanuele Bassi  <ebasso@openedhand.com>
+
+	* clutterperl.h:
+	* xs_files_gtk:
+	* maps-gtk:
+	* Makefile.PL: Add support for the clutter-gtk integration
+	library, and dinamically generate the boot functions map.
+
+	* xs/ClutterGtk.xs: Add wrappers for the GtkClutter widget
+	and call the class Gtk2::ClutterEmbed.
+
+	* Clutter.pm: Require Gtk2.
+
+	* tools/TestHelper.pm: Add a Test::More wrapper module which
+	should check whether we have a suitable environment for
+	running the tests or not.
+
+	* t/*.t: Update the tests to use Clutter::TestHelper.
+
+	* MANIFEST: Update.
+
 2007-08-07  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* README:

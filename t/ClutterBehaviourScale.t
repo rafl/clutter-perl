@@ -1,7 +1,4 @@
-use Test::More tests => 5;
-use Clutter;
-
-Clutter->init();
+use Clutter::TestHelper tests => 5;
 
 my $behaviour = Clutter::Behaviour::Scale->new(undef, 0, 0, 'center');
 isa_ok($behaviour, 'Clutter::Behaviour::Scale', 'is a scale');

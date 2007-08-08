@@ -1,7 +1,4 @@
-use Test::More tests => 12;
-use Clutter;
-
-Clutter->init();
+use Clutter::TestHelper tests => 12;
 
 my $behaviour = Clutter::Behaviour::Path->new(undef);
 isa_ok($behaviour, 'Clutter::Behaviour::Path', 'is a path');

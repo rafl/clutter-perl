@@ -1,7 +1,4 @@
-use Test::More tests => 4;
-use Clutter;
-
-Clutter->init();
+use Clutter::TestHelper tests => 4;
 
 my $behaviour = Clutter::Behaviour::Opacity->new(undef, 0, 0);
 isa_ok($behaviour, 'Clutter::Behaviour::Opacity', 'is an opacity');

@@ -1,6 +1,4 @@
-use Test::More tests => 7;
-
-use Clutter;
+use Clutter::TestHelper tests => 7;
 
 my $rectangle = Clutter::Rectangle->new; 
 isa_ok($rectangle, 'Clutter::Actor', 'is an actor');

@@ -14,6 +14,10 @@
 #include <cairo-perl.h>
 #endif
 
+#ifdef CLUTTERPERL_GTK
+#include <clutter-gtk/clutter-gtk.h>
+#endif
+
 #include "clutterperl-autogen.h"
 
 const char *clutterperl_event_get_package (ClutterEvent *event);
