@@ -189,6 +189,7 @@ clutterperl_box_pack_child (ClutterBox      *box,
         GV *slot = gv_fetchmethod (stash, "PACK_CHILD");
 
         if (slot && GvCV (slot)) {
+                int count;
                 dSP;
 
                 ENTER;
@@ -200,10 +201,19 @@ clutterperl_box_pack_child (ClutterBox      *box,
                 PUSHs (newSVClutterBoxChild (child));
 
                 PUTBACK;
-
-                call_sv ((SV *) GvCV (slot), G_VOID | G_DISCARD);
-
+                count = call_sv ((SV *) GvCV (slot), G_ARRAY);
                 SPAGAIN;
+
+                if (count != 4)
+                        croak("PACK_CHILD must return an array with "
+                              "four items -- (x1, y1, x2, y2)");
+
+                if (child) {
+                        child->child_coords.y2 = POPi;
+                        child->child_coords.x2 = POPi;
+                        child->child_coords.y1 = POPi;
+                        child->child_coords.x1 = POPi;
+                }
 
                 FREETMPS;
                 LEAVE;
@@ -249,6 +259,70 @@ clutterperl_box_class_init (ClutterBoxClass *klass)
 MODULE = Clutter::Box   PACKAGE = Clutter::Box  PREFIX = clutter_box_
 
 =for enum Clutter::PackType
+=cut
+
+=for position post_enums
+
+=head1 DERIVING NEW BOXES
+
+Clutter already provides some C<Clutter::Box> implementations, like
+L<Clutter::HBox> and L<Clutter::VBox>. You may derive a new actor from any
+of these, or directly from the L<Clutter::Box> class itself.
+
+The new actor must be a GObject, so you must follow the normal procedure
+for creating a new Glib::Obect (i.e., either L<Glib::Object::Subclass> or
+C<Glib::Type::register_object>).
+
+When deriving a new C<Clutter::Box> you must provide an implementation for
+these methods:
+
+=over
+
+=item (x1, y1, x2, y2) = PACK_CHILD ($box, $box_child)
+
+=over
+
+=item o $box (Clutter::Box)
+
+=item o $box_child (Clutter::BoxChild)
+
+=back
+
+This method is called each time a new child has been packed into a box.
+C<Clutter::BoxChild> is a blessed hash reference containing these keys:
+
+=over
+
+=item actor => Clutter::Actor 
+
+the newly added child
+
+=item pack_type => Clutter::PackType
+
+type of packing to be performed
+
+=item padding => Clutter::Padding
+
+padding around the newly added child
+
+=back
+
+The method must return the coordinates of the newly added child.
+
+=item  UNPACK_CHILD ($box, $box_child)
+
+=over
+
+=item o $box (Clutter::Box)
+
+=item o $box_child (Clutter::BoxChild)
+
+=back
+
+This method is called each time a child has been removed from the box.
+
+=back
+
 =cut
 
 void
@@ -352,7 +426,8 @@ PACK_CHILD (ClutterBox *box, SV *child)
         GType thisclass, parent_class;
         SV *saveddefsv;
         ClutterBoxChild *box_child;
-    CODE:
+        ClutterActorBox child_coords = { 0, };
+    PPCODE:
         saveddefsv = newSVsv (DEFSV);
         eval_pv ("$_ = caller;", 0);
         thisclass = gperl_type_from_package (SvPV_nolen (DEFSV));
@@ -368,8 +443,17 @@ PACK_CHILD (ClutterBox *box, SV *child)
         if (klass->pack_child) {
                 box_child = SvClutterBoxChild (child);
                 klass->pack_child (box, box_child);
+                /* we must return the child_coords, so that we can safely do
+                 *   return $self->SUPER::PACK_CHILD ($box, $child)
+                 * in our subclasses
+                 */
+                child_coords.x1 = box_child->child_coords.x1;
+                child_coords.y1 = box_child->child_coords.y1;
+                child_coords.x2 = box_child->child_coords.x2;
+                child_coords.y2 = box_child->child_coords.y2;
                 g_slice_free (ClutterBoxChild, box_child);
         }
+        XPUSHs (sv_2mortal (newSVClutterActorBox (&child_coords)));
 
 void
 UNPACK_CHILD (ClutterBox *box, SV *child)

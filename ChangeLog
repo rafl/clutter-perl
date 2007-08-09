@@ -1,3 +1,11 @@
+2007-08-09  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* xs/ClutterBox.xs: Document how to subclass a Clutter::Box.
+	Change the way Clutter::Box::PACK_CHILD() works: we pass a
+	Clutter::BoxChild with a zero-filled child_coords and we expect
+	the child coordinates as a return value. Much more perl-ish
+	than modifying the passed hashref.
+
 2007-08-08  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* t/ClutterBox.t:
