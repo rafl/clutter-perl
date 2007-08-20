@@ -25,20 +25,24 @@
 
 #include "clutterperl.h"
 
-static void
+static gint
 clutterperl_call_method (GType       gtype,
                          const char *method,
                          gint        flags)
 {
         HV *stash;
         GV *slot;
+        gint retval = 0;
 
         stash = gperl_object_stash_from_type (gtype);
         slot = gv_fetchmethod (stash, method);
 
-        if (slot && GvCV (slot)) {
-                call_sv ((SV *) GvCV (slot), flags);
-        }
+        if (slot && GvCV (slot)) 
+                retval = call_sv ((SV *) GvCV (slot), flags);
+        else
+                retval = -1;
+
+        return retval;
 }
 
 static ClutterLayoutFlags
@@ -90,7 +94,7 @@ clutterperl_layout_width_for_height (ClutterLayout *layout,
   clutterperl_call_method (G_OBJECT_TYPE (layout), "WIDTH_FOR_HEIGHT", G_SCALAR);
 
   SPAGAIN;
-        
+
   ret_width = POPi; if (width) *width = ret_width;
         
   PUTBACK;
@@ -119,7 +123,7 @@ clutterperl_layout_height_for_width (ClutterLayout *layout,
   clutterperl_call_method (G_OBJECT_TYPE (layout), "HEIGHT_FOR_WIDTH", G_SCALAR);
 
   SPAGAIN;
-        
+
   ret_height = POPi; if (height) *height = ret_height;
         
   PUTBACK;
@@ -134,6 +138,7 @@ clutterperl_layout_natural_request (ClutterLayout *layout,
                                     ClutterUnit   *height)
 {
   ClutterUnit ret_width, ret_height;
+  gint count;
   dSP;
   ENTER;
   SAVETMPS;
@@ -143,10 +148,16 @@ clutterperl_layout_natural_request (ClutterLayout *layout,
 
   PUTBACK;
         
-  clutterperl_call_method (G_OBJECT_TYPE (layout), "NATURAL_REQUEST", G_ARRAY);
+  count = clutterperl_call_method (G_OBJECT_TYPE (layout),
+                                   "NATURAL_REQUEST",
+                                   G_ARRAY);
 
   SPAGAIN;
   
+  if (count != 2)
+        croak("NATURAL_REQUEST must return an array with two "
+              "items -- (width, height)");
+
   ret_width  = POPi; if (width)  *width  = ret_width;
   ret_height = POPi; if (height) *height = ret_height;
         
@@ -156,6 +167,51 @@ clutterperl_layout_natural_request (ClutterLayout *layout,
   LEAVE;
 }
 
+static gboolean
+clutterperl_layout_tune_request (ClutterLayout *layout,
+                                 ClutterUnit    given_width,
+                                 ClutterUnit    given_height,
+                                 ClutterUnit   *width,
+                                 ClutterUnit   *height)
+{
+  ClutterUnit ret_width, ret_height;
+  gboolean retval = FALSE;
+  gint ret_done;
+  gint count;
+  dSP;
+  ENTER;
+  SAVETMPS;
+  PUSHMARK (SP);
+
+  EXTEND (SP, 3);
+  PUSHs (sv_2mortal (newSVGObject (G_OBJECT (layout))));
+  PUSHs (sv_2mortal (newSViv (given_width)));
+  PUSHs (sv_2mortal (newSViv (given_height)));
+
+  PUTBACK;
+
+  count = clutterperl_call_method (G_OBJECT_TYPE (layout),
+                                   "TUNE_REQUEST",
+                                   G_ARRAY);
+
+  SPAGAIN;
+  
+  if (count != 3)
+        croak("TUNE_REQUESTS must return an array with three "
+              "items -- (done, width, height)");
+
+  ret_done   = POPi;  retval = ret_done;
+  ret_width  = POPi; if (width)  *width  = ret_width;
+  ret_height = POPi; if (height) *height = ret_height;
+
+  PUTBACK;
+
+  FREETMPS;
+  LEAVE;
+
+  return retval;
+}
+
 static void
 clutterperl_layout_init (ClutterLayoutIface *iface)
 {
@@ -163,6 +219,7 @@ clutterperl_layout_init (ClutterLayoutIface *iface)
   iface->width_for_height = clutterperl_layout_width_for_height;
   iface->height_for_width = clutterperl_layout_height_for_width;
   iface->natural_request = clutterperl_layout_natural_request;
+  iface->tune_request = clutterperl_layout_tune_request;
 }
 
 MODULE = Clutter::Layout        PACKAGE = Clutter::Layout       PREFIX = clutter_layout_
@@ -197,7 +254,12 @@ FIXME
 
 =item (width, height) = NATURAL_REQUEST ($layout)
 
+=item (done, width, height) = TUNE_REQUEST ($layout, $given_width, $given_height)
+
 =back
+
+Both I<width> and I<height> are in device independent units (see
+L<Clutter::Units> for the conversion functions).
 
 =cut
 

@@ -9,24 +9,25 @@ use ExtUtils::MakeMaker;
 
 # minimum required version of dependancies we need to build
 our %build_reqs = (
-	'perl-ExtUtils-Depends'   => '0.2',
-	'perl-ExtUtils-PkgConfig' => '1.03',
-	'perl-Glib'               => '1.140', # for Glib::MakeHelper
-	'perl-Gtk2'               => '1.140',
-	'perl-Cairo'              => '1.00',
-    'Clutter'                 => '0.4.0',
+    'perl-ExtUtils-Depends'   => '0.2',
+    'perl-ExtUtils-PkgConfig' => '1.03',
+    'perl-Glib'               => '1.140', # for Glib::MakeHelper
+    'perl-Gtk2'               => '1.140',
+    'perl-Cairo'              => '1.00',
+    'Clutter'                 => '0.5.0',
 );
 
 # Writing a fake Makefile ensures that CPAN will pick up the correct
 # dependencies and install them.
 unless (eval "use ExtUtils::Depends '$build_reqs{'perl-ExtUtils-Depends'}';"
            . "use ExtUtils::PkgConfig '$build_reqs{'perl-ExtUtils-PkgConfig'}';"
-           . "use Gtk2::CodeGen;"
            # just seeing if Glib is available isn't enough, make sure
            # it's recent enough, too 
            . "use Glib '$build_reqs{'perl-Glib'}';"
            . "use Gtk2 '$build_reqs{'perl-Gtk2'}';"
            . "use Glib::MakeHelper;"
+           # we need Gtk2::CodeGen because we use GtkObject in ClutterGtk
+           . "use Gtk2::CodeGen;"
            . "1") {
    warn "$@\n";
    WriteMakefile(
@@ -47,7 +48,7 @@ our @xs_files = ();
 
 # Base module
 our %pkgcfg =
-    ExtUtils::PkgConfig->find('clutter-0.4 >= ' . $build_reqs{Clutter});
+    ExtUtils::PkgConfig->find('clutter-0.5 >= ' . $build_reqs{Clutter});
 
 my @names = Glib::MakeHelper->read_source_list_file ('xs_files');
 print "Loaded " . scalar(@names) . " xs files for Clutter\n";
@@ -57,9 +58,9 @@ our $module_cflags = $pkgcfg{cflags};
 our $module_libs   = $pkgcfg{libs};
 
 # Integration libraries: Clutter::Gst
-my $have_clutter_gst = 0;
+our $have_clutter_gst = 0;
 eval {
-    our %gstpkgcfg = ExtUtils::PkgConfig->find('clutter-gst-0.4');
+    my %gstpkgcfg = ExtUtils::PkgConfig->find('clutter-gst-0.4');
 
     $module_cflags .= ' ' . $gstpkgcfg{cflags} . '-DCLUTTERPERL_GST';
     $module_libs   .= ' ' . $gstpkgcfg{libs};
@@ -75,9 +76,9 @@ if ($@) {
 }
 
 # Integration libraries: Clutter::Texture::Cairo
-my $have_clutter_cairo = 0;
+our $have_clutter_cairo = 0;
 eval {
-    our %cairopkgcfg = ExtUtils::PkgConfig->find('clutter-cairo-0.4');
+    my %cairopkgcfg = ExtUtils::PkgConfig->find('clutter-cairo-0.4');
 
     $module_cflags .= ' ' . $cairopkgcfg{cflags} . '-DCLUTTERPERL_CAIRO';
     $module_libs   .= ' ' . $cairopkgcfg{libs};
@@ -93,9 +94,9 @@ if ($@) {
 }
 
 # Integration libraries: Gtk2::ClutterEmbed
-my $have_clutter_gtk = 0;
+our $have_clutter_gtk = 0;
 eval {
-    our %gtkpkgcfg = ExtUtils::PkgConfig->find('clutter-gtk-0.4');
+    my %gtkpkgcfg = ExtUtils::PkgConfig->find('clutter-gtk-0.4');
 
     $module_cflags .= ' ' . $gtkpkgcfg{cflags} . '-DCLUTTERPERL_GTK';
     $module_libs   .= ' ' . $gtkpkgcfg{libs};
@@ -130,6 +131,7 @@ our %pod_files = (
     Glib::MakeHelper->do_pod_files(@xs_files),
 );
 
+# typemaps generation files
 my @input_maps = qw/ maps /;
 push @input_maps, 'maps-gst'   if $have_clutter_gst   == 1;
 push @input_maps, 'maps-cairo' if $have_clutter_cairo == 1;
@@ -171,7 +173,7 @@ WriteMakefile(
 );
 
 
-=pod
+#=pod
 #=unstable
 
 print "
@@ -184,7 +186,7 @@ bugs to clutter AT openedhand DOT com as soon as possible.
 WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
 ";
 
-=cut
+#=cut
 
 sub MY::postamble
 {

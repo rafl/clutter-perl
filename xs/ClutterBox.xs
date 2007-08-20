@@ -444,7 +444,7 @@ PACK_CHILD (ClutterBox *box, SV *child)
                 box_child = SvClutterBoxChild (child);
                 klass->pack_child (box, box_child);
                 /* we must return the child_coords, so that we can safely do
-                 *   return $self->SUPER::PACK_CHILD ($box, $child)
+                 *   return $self->SUPER::PACK_CHILD ($child)
                  * in our subclasses
                  */
                 child_coords.x1 = box_child->child_coords.x1;

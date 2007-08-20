@@ -1,1 +1,2 @@
 GTK_TYPE_CLUTTER        GtkClutter      GtkObject       Gtk2::ClutterEmbed
+GTK_TYPE_CLUTTER        GtkClutter      GtkObject       Gtk2::ClutterEmbed

@@ -791,12 +791,13 @@ REQUEST_COORDS (ClutterActor *actor, ClutterActorBox *box)
         }
 
 void
-QUERY_COORDS (ClutterActor *actor, ClutterActorBox *box)
+QUERY_COORDS (ClutterActor *actor)
     PREINIT:
         ClutterActorClass *klass;
         GType thisclass, parent_class;
         SV *saveddefsv;
-    CODE:
+        ClutterActorBox box = { 0, };
+    PPCODE:
         saveddefsv = newSVsv (DEFSV);
         eval_pv ("$_ = caller;", 0);
         thisclass = gperl_type_from_package (SvPV_nolen (DEFSV));
@@ -810,5 +811,10 @@ QUERY_COORDS (ClutterActor *actor, ClutterActorBox *box)
         }
         klass = g_type_class_peek (parent_class);
         if (klass->query_coords) {
-                klass->query_coords (actor, box);
+                klass->query_coords (actor, &box);
         }
+        /* allow doing:
+         *   return $self->SUPER::QUERY_COORDS();
+         * in Perl subclasses
+         */
+        XPUSHs (sv_2mortal (newSVClutterActorBox (&box)));

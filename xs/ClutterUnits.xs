@@ -2,6 +2,30 @@
 
 MODULE = Clutter::Units         PACKAGE = Clutter::Units
 
+=for position DESCRIPTION
+
+=head1 DESCRIPTION
+
+Clutter uses device independent units, internally, to provide sub-pixel
+positioning. While the public API does not always expose this for convenience
+of the developer, when writing new L<Clutter::Actor> classes or when
+implementing low-level interfaces like L<Clutter::Layout> you will be
+exposed to this kind of units.
+
+The following package methods are useful for converting device dependent
+units, like pixels and percentages, into device independent units and vice
+versa.
+
+B<Note>: this is true for Clutter 0.4. In Clutter 0.6 (and relative Perl
+bindings) the public API will always return device independent units as
+well, and will be care of the developer to convert it to device units,
+like pixels, font units, etc.
+
+=cut
+
+=for apidoc
+Converts an integer value, like pixels, into a device independent unit.
+=cut
 gint32
 FROM_INT (class=NULL, gint value)
     CODE:
@@ -9,6 +33,9 @@ FROM_INT (class=NULL, gint value)
     OUTPUT:
         RETVAL
 
+=for apidoc
+Converts a device independent unit into an integer value, like pixels.
+=cut
 gint
 TO_INT (class=NULL, gint32 units)
     CODE:
@@ -16,6 +43,10 @@ TO_INT (class=NULL, gint32 units)
     OUTPUT:
         RETVAL
 
+=for apidoc
+Converts a floating point value, like a percentage, into a device independent
+unit
+=cut
 gint32
 FROM_FLOAT (class=NULL, gdouble value)
     CODE:
@@ -23,6 +54,10 @@ FROM_FLOAT (class=NULL, gdouble value)
     OUTPUT:
         RETVAL
 
+=for apidoc
+Converts a device independent unit into a floating point value, like a
+percentage
+=cut
 gdouble
 TO_FLOAT (class=NULL, gint32 units)
     CODE:

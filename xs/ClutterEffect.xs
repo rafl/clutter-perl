@@ -40,8 +40,10 @@ clutterperl_effect_complete (ClutterActor *actor,
 {
         GPerlCallback *callback = data;
 
-        gperl_callback_invoke (callback, NULL, actor);
-        gperl_callback_destroy (callback);
+        if (callback) {
+                gperl_callback_invoke (callback, NULL, actor);
+                gperl_callback_destroy (callback);
+        }
 }
 
 #if 0
@@ -124,12 +126,85 @@ scale (class, template, actor, start, end, gravity, func=NULL, data=NULL)
     OUTPUT:
         RETVAL
 
+ClutterTimeline_noinc *
+rotate_x (class, template, actor, begin, end, y=0, z=0, direction, func=NULL, data=NULL)
+        ClutterEffectTemplate *template
+        ClutterActor *actor
+        gboolean begin
+        gboolean end
+        gint y
+        gint z
+        ClutterRotateDirection direction
+        SV *func
+        SV *data
+    PREINIT:
+        GPerlCallback *cb = NULL;
+    CODE:
+        if (func)
+                cb = clutterperl_effect_complete_func_create (func, data);
+        RETVAL = clutter_effect_rotate_x (template, actor,
+                                          begin, end,
+                                          y, z,
+                                          direction,
+                                          clutterperl_effect_complete, cb);
+    OUTPUT:
+        RETVAL
+
+ClutterTimeline_noinc *
+rotate_y (class, template, actor, begin, end, x=0, z=0, direction, func=NULL, data=NULL)
+        ClutterEffectTemplate *template
+        ClutterActor *actor
+        gboolean begin
+        gboolean end
+        gint x
+        gint z
+        ClutterRotateDirection direction
+        SV *func
+        SV *data
+    PREINIT:
+        GPerlCallback *cb = NULL;
+    CODE:
+        if (func)
+                cb = clutterperl_effect_complete_func_create (func, data);
+        RETVAL = clutter_effect_rotate_y (template, actor,
+                                          begin, end,
+                                          x, z,
+                                          direction,
+                                          clutterperl_effect_complete, cb);
+    OUTPUT:
+        RETVAL
+
+ClutterTimeline_noinc *
+rotate_z (class, template, actor, begin, end, x=0, y=0, direction, func=NULL, data=NULL)
+        ClutterEffectTemplate *template
+        ClutterActor *actor
+        gboolean begin
+        gboolean end
+        gint x
+        gint y
+        ClutterRotateDirection direction
+        SV *func
+        SV *data
+    PREINIT:
+        GPerlCallback *cb = NULL;
+    CODE:
+        if (func)
+                cb = clutterperl_effect_complete_func_create (func, data);
+        RETVAL = clutter_effect_rotate_z (template, actor,
+                                          begin, end,
+                                          x, y,
+                                          direction,
+                                          clutterperl_effect_complete, cb);
+    OUTPUT:
+        RETVAL
+
 MODULE = Clutter::Effect PACKAGE = Clutter::EffectTemplate PREFIX = clutter_effect_template_
 
 =for object Clutter::Effect Simple animation functions
 =cut
 
 =for position DESCRIPTION
+
 =head1 DESCRIPTION
 
 Clutter::Effect contains a set of functions for simple, one-off animations

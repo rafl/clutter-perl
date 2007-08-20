@@ -1,3 +1,61 @@
+2007-08-10  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* xs/ClutterEffect.xs: Call the Perl callback only if there
+	is one; add Clutter::Effect->rotate_[xyz]() package methods.
+
+2007-08-10  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* xs/ClutterEffect.xs: Fix title for the description section.
+
+2007-08-10  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* xs/ClutterLayoyt.xs: Allow pure Perl implementations of the
+	ClutterLayoyt::tune-request() virtual function. Document
+	the arguments and return values of the Clutter::Layout methods.
+
+2007-08-10  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* xs/ClutterUnits.xs: Explain what Clutter::Units are and
+	when you need to use them.
+
+2007-08-09  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* xs/ClutterActor.xs: Rework QUERY_COORDS() so that it can be
+	used as a fallback when subclassing, like:
+
+	  return $self->SUPER::QUERY_COORDS()
+	
+	just like Clutter::Box::PACK_CHILD().
+	
+	* t/ClutterActor.t: Add Clutter::Actor subclassing tests.
+
+2007-08-09  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* Clutter.pm: Post-release bump to 0.403
+
+2007-08-09  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* Clutter.pm:
+	* README:
+	* NEWS: Bump up version, and release 0.402
+
+2007-08-09  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* Makefile.PL: Clean up a bit the Makefile.PL
+
+2007-08-09  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* xs/Clutter.xs: Add ->SUPPORTED_MODULES(), a module method that
+	returns a list of supported modules against which Clutter was
+	compiled.
+
+	* tools/TestHelper.pm: Add the sub_module option, that allows
+	to skip all the tests if Clutter wasn't compiled against the
+	desired sub-module.
+
+	* t/GtkClutterEmbed.t: Depend on being compiled against
+	clutter-gtk.
+
 2007-08-09  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* xs/ClutterBox.xs: Document how to subclass a Clutter::Box.
