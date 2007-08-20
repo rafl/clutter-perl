@@ -88,6 +88,25 @@ MODULE = Clutter::Effect        PACKAGE = Clutter::Effect
 =cut
 
 ClutterTimeline_noinc *
+depth (class, template, actor, start, end, func=NULL, data=NULL)
+        ClutterEffectTemplate *template
+        ClutterActor *actor
+        gint start
+        gint end
+        SV *func
+        SV *data
+    PREINIT:
+        GPerlCallback *cb = NULL;
+    CODE:
+        if (func)
+                cb = clutterperl_effect_complete_func_create (func, data);
+        RETVAL = clutter_effect_depth (template, actor,
+                                       start, end,
+                                       clutterperl_effect_complete, cb);
+    OUTPUT:
+        RETVAL
+
+ClutterTimeline_noinc *
 fade (class, template, actor, start, end, func=NULL, data=NULL)
         ClutterEffectTemplate *template
         ClutterActor *actor

@@ -25,6 +25,73 @@
 
 #include "clutterperl.h"
 
+static gboolean
+clutterperl_threads_cb (gpointer data)
+{
+  GPerlCallback *callback = data;
+  GValue ret_value = { 0, };
+  gboolean retval = FALSE;
+
+  g_value_init (&ret_value, callback->return_type);
+
+  gperl_callback_invoke (callback, &ret_value);
+  
+  retval = g_value_get_boolean (&ret_value);
+  g_value_unset (&ret_value);
+
+  return retval;
+}
+
+MODULE = Clutter        PACKAGE = Clutter::Threads      PREFIX = clutter_threads_
+
+void
+clutter_threads_init (class)
+    ALIAS:
+        enter = 1
+        leave = 2
+    CODE:
+        switch (ix) {
+                case 0: clutter_threads_init ();  break;
+                case 1: clutter_threads_enter (); break;
+                case 2: clutter_threads_leave (); break;
+                default:
+                        g_assert_not_reached ();
+                        break;
+        }
+
+guint
+clutter_threads_add_idle (class, callback, data=NULL, priority=G_PRIORITY_DEFAULT_IDLE)
+        SV *callback
+        SV *data
+        gint priority
+    PREINIT:
+        GPerlCallback *cb;
+    CODE:
+        cb = gperl_callback_new (callback, data, 0, NULL, G_TYPE_BOOLEAN);
+        RETVAL = clutter_threads_add_idle_full (priority,
+                                                clutterperl_threads_cb,
+                                                cb,
+                                                (GDestroyNotify) gperl_callback_destroy);
+    OUTPUT:
+        RETVAL
+
+guint
+clutter_threads_add_timeout (class, interval, callback, data=NULL, priority=G_PRIORITY_DEFAULT_IDLE)
+        guint interval
+        SV *callback
+        SV *data
+        gint priority
+    PREINIT:
+        GPerlCallback *cb;
+    CODE:
+        cb = gperl_callback_new (callback, data, 0, NULL, G_TYPE_BOOLEAN);
+        RETVAL = clutter_threads_add_timeout_full (priority,
+                                                   interval,
+                                                   clutterperl_threads_cb,
+                                                   cb,
+                                                   (GDestroyNotify) gperl_callback_destroy);
+    OUTPUT:
+        RETVAL
 
 MODULE = Clutter	PACKAGE = Clutter	PREFIX = clutter_
 
@@ -35,7 +102,10 @@ BOOT:
 #include "register.xsh"
 #include "boot.xsh"
 	gperl_handle_logs_for ("Clutter");
-        gperl_handle_logs_for ("ClutterGst");
+        gperl_handle_logs_for ("Clutter-Gst");
+        gperl_handle_logs_for ("Clutter-Gtk");
+        gperl_handle_logs_for ("Clutter-Cairo");
+
 
 guint
 MAJOR_VERSION ()
@@ -205,3 +275,4 @@ gulong
 clutter_get_timestamp (void)
     C_ARGS:
         /* void */
+

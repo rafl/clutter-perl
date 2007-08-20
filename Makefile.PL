@@ -50,7 +50,7 @@ our @xs_files = ();
 our %pkgcfg =
     ExtUtils::PkgConfig->find('clutter-0.5 >= ' . $build_reqs{Clutter});
 
-my @names = Glib::MakeHelper->read_source_list_file ('xs_files');
+my @names = Glib::MakeHelper->read_source_list_file('xs_files');
 print "Loaded " . scalar(@names) . " xs files for Clutter\n";
 push @xs_files, @names;
 
@@ -60,7 +60,7 @@ our $module_libs   = $pkgcfg{libs};
 # Integration libraries: Clutter::Gst
 our $have_clutter_gst = 0;
 eval {
-    my %gstpkgcfg = ExtUtils::PkgConfig->find('clutter-gst-0.4');
+    my %gstpkgcfg = ExtUtils::PkgConfig->find('clutter-gst-0.5');
 
     $module_cflags .= ' ' . $gstpkgcfg{cflags} . '-DCLUTTERPERL_GST';
     $module_libs   .= ' ' . $gstpkgcfg{libs};
@@ -78,7 +78,7 @@ if ($@) {
 # Integration libraries: Clutter::Texture::Cairo
 our $have_clutter_cairo = 0;
 eval {
-    my %cairopkgcfg = ExtUtils::PkgConfig->find('clutter-cairo-0.4');
+    my %cairopkgcfg = ExtUtils::PkgConfig->find('clutter-cairo-0.5');
 
     $module_cflags .= ' ' . $cairopkgcfg{cflags} . '-DCLUTTERPERL_CAIRO';
     $module_libs   .= ' ' . $cairopkgcfg{libs};
@@ -96,7 +96,7 @@ if ($@) {
 # Integration libraries: Gtk2::ClutterEmbed
 our $have_clutter_gtk = 0;
 eval {
-    my %gtkpkgcfg = ExtUtils::PkgConfig->find('clutter-gtk-0.4');
+    my %gtkpkgcfg = ExtUtils::PkgConfig->find('clutter-gtk-0.5');
 
     $module_cflags .= ' ' . $gtkpkgcfg{cflags} . '-DCLUTTERPERL_GTK';
     $module_libs   .= ' ' . $gtkpkgcfg{libs};

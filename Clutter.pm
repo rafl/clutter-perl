@@ -43,16 +43,28 @@ our $VERSION = '0.500';
 sub import {
     my $class = shift;
 
-    my $init = 0;
+    # Clutter::Gst->init() is a wrapper around the GStreamer init and
+    # Clutter init calls, so using gst-init or init is equivalent for
+    # us. in case Clutter::Gst wasn't compiled in, Clutter::Gst->init()
+    # will expand to Clutter->init() anyway.
+
+    # Clutter::Threads->init() must be called before calling Clutter->init(),
+    # but we don't want to force the order of the options passed, so we store
+    # the choices and call everything in the correct order later.
+
+    my $init         = 0;
+    my $threads_init = 0;
 
     foreach (@_) {
-	    if    (/^[-:]?init$/)     { $init = 1;           }
-        elsif (/^[-:]?gst-init$/) { $init = 2;           }
-        else                      { $class->VERSION($_); }
+        if    (/^[-:]?init$/)        { $init = 1;           }
+        elsif (/^[-:]?gst-init$/)    { $init = 2;           }
+        elsif (/^[-:]?threas-init$/) { $threads_init = 0;   }
+        else                         { $class->VERSION($_); }
     }
 
-    Clutter->init()      if $init == 1;
-    Clutter::Gst->init() if $init == 2;
+    Clutter::Threads->init() if $threads_init;
+    Clutter->init()          if $init == 1;
+    Clutter::Gst->init()     if $init == 2;
 }
 
 sub dl_load_flags { $^O eq 'darwin' ? 0x00 : 0x01 }

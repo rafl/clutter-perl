@@ -21,6 +21,7 @@ NEWS
 README
 t/0.t
 t/1.t
+t/ClutterActor.t
 t/ClutterAlpha.t
 t/ClutterBehaviourEllipse.t
 t/ClutterBehaviourOpacity.t

@@ -16,8 +16,10 @@ sub button_press_cb {
     print "*** Button ", $event->button, " pressed at ", $x, ", ", $y, "\n";
 
     my $actor = $stage->get_actor_at_pos ($x, $y);
+    my $parent = $actor->get_parent();
+    return unless $parent and $parent->isa('Clutter::Box');
 
-    print Dumper($actor);
+    print Dumper($parent->query_child($actor));
 }
 
 sub key_press_cb {
@@ -60,7 +62,6 @@ for my $i (1 .. 3) {
     $vbox->add($hbox);
     $hbox->show();
 
-    print Dumper($vbox->query_child($hbox));
 }
 
 $stage->add($vbox);
