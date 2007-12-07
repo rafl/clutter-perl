@@ -1,5 +1,11 @@
 2007-12-07  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* xs_files: Add CLUTTER_TYPE_SCORE
+
+	* xs/ClutterScore.xs: Add bindings for ClutterScore.
+
+2007-12-07  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* *: Sync up with upstream C API changes. As much as I hate
 	doing huge commits, this is the only way to keep the bindings
 	in a sane state.
