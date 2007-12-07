@@ -1,6 +1,14 @@
 2007-12-07  Emmanuele Bassi  <ebassi@openedhand.com>
 
-	* xs_files: Add CLUTTER_TYPE_SCORE
+	* xs_files: Add ClutterScript.xs
+
+	* xs/ClutterScript.xs: Add bindings for ClutterScript.
+
+	* Clutter.pm: Implement Clutter::Script::connect_signals().
+
+2007-12-07  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* xs_files: Add ClutterScore.xs
 
 	* xs/ClutterScore.xs: Add bindings for ClutterScore.
 

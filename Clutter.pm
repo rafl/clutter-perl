@@ -92,6 +92,82 @@ use overload
     '==' => \&Clutter::Vertex::equal,
     fallback => 1;
 
+package Clutter::Script;
+
+sub _do_connect {
+  my ($object,
+      $signal_name,
+      $user_data,
+      $connect_object,
+      $flags,
+      $handler) = @_;
+
+  my $func = ($flags & 'after') ? 'signal_connect_after' : 'signal_connect';
+
+  # we get connect_object when we're supposed to call
+  # signal_connect_object, which ensures that the data (an object)
+  # lives as long as the signal is connected.  the bindings take
+  # care of that for us in all cases, so we only have signal_connect.
+  # if we get a connect_object, just use that instead of user_data.
+  $object->$func($signal_name => $handler,
+                 $connect_object ? $connect_object : $user_data);
+}
+
+sub connect_signals {
+  my $script    = shift;
+  my $user_data = shift;
+
+  # $script->connect_signals ($user_data)
+  # $script->connect_signals ($user_data, $package)
+  if ($#_ <= 0) {
+    my $package = shift;
+
+    $package = caller unless defined $package;
+
+    $script->connect_signals_full(sub {
+      my ($script,
+          $object,
+          $signal_name,
+          $handler_name,
+          $connect_object,
+          $flags) = @_;
+
+      no strict qw/refs/;
+
+      my $handler = $handler_name;
+      if (ref $package) {
+        $handler = sub { $package->$handler_name(@_) };
+      } else {
+        if ($package && $handler !~ /::/) {
+          $handler = $package.'::'.$handler_name;
+        }
+      }
+
+      _do_connect ($object, $signal_name, $user_data, $connect_object,
+                   $flags, $handler);
+    });
+  }
+
+  # $script->connect_signals ($user_data, %handlers)
+  else {
+    my %handlers = @_;
+
+    $script->connect_signals_full(sub {
+      my ($script,
+          $object,
+          $signal_name,
+          $handler_name,
+          $connect_object,
+          $flags) = @_;
+
+      return unless exists $handlers{$handler_name};
+
+      _do_connect ($object, $signal_name, $user_data, $connect_object,
+                   $flags, $handlers{$handler_name});
+    });
+  }
+}
+
 package Clutter;
 
 1;

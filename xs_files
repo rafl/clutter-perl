@@ -20,6 +20,7 @@ xs/ClutterLabel.xs
 xs/ClutterMedia.xs
 xs/ClutterRectangle.xs
 xs/ClutterScore.xs
+xs/ClutterScript.xs
 xs/ClutterStage.xs
 xs/ClutterTexture.xs
 xs/ClutterTimeline.xs
