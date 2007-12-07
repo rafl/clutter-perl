@@ -1,5 +1,15 @@
 2007-12-07  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* MANIFEST: Update
+
+	* xs/ClutterScript.xs: Actually add ClutterScript bindings
+	to the repository.
+
+	* examples/script.pl: Example code for both ClutterScript
+	and ClutterScore.
+
+2007-12-07  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* xs_files: Add ClutterScript.xs
 
 	* xs/ClutterScript.xs: Add bindings for ClutterScript.

@@ -9,6 +9,7 @@ examples/cairo.pl
 examples/hello.pl
 examples/rects.pl
 examples/redhand.png
+examples/script.pl
 Makefile.PL
 MANIFEST			This list of files
 MANIFEST.SKIP
@@ -60,12 +61,13 @@ xs/ClutterGtk.xs
 xs/ClutterLabel.xs
 xs/ClutterMedia.xs
 xs/ClutterRectangle.xs
+xs/ClutterScore.xs
+xs/ClutterScript.xs
 xs/ClutterStage.xs
 xs/ClutterTexture.xs
 xs/ClutterTimeline.xs
 xs/ClutterTypes.xs
 xs/ClutterUnits.xs
-xs/ClutterUtils.xs
 xs_files
 xs_files_cairo
 xs_files_gst
