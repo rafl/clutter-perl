@@ -1,4 +1,5 @@
 ## GError domains
+CLUTTER_SCRIPT_ERROR            CLUTTER_TYPE_SCRIPT_ERROR       GError  Clutter::Script::Error
 CLUTTER_TEXTURE_ERROR           CLUTTER_TYPE_TEXTURE_ERROR      GError  Clutter::Texture::Error
 
 ## Types
@@ -15,7 +16,6 @@ CLUTTER_TYPE_BEHAVIOUR_PATH     ClutterBehaviourPath    GObject         Clutter:
 CLUTTER_TYPE_BEHAVIOUR_ROTATE   ClutterBehaviourRotate  GObject         Clutter::Behaviour::Rotate
 CLUTTER_TYPE_BEHAVIOUR_SCALE    ClutterBehaviourScale   GObject         Clutter::Behaviour::Scale
 CLUTTER_TYPE_BEHAVIOUR          ClutterBehaviour        GObject         Clutter::Behaviour
-CLUTTER_TYPE_BOX                ClutterBox              GObject         Clutter::Box
 CLUTTER_TYPE_CLONE_TEXTURE	ClutterCloneTexture	GObject         Clutter::Texture::Clone
 CLUTTER_TYPE_CONTAINER          ClutterContainer        GInterface      Clutter::Container
 CLUTTER_TYPE_COLOR	        ClutterColor	        GBoxed	        Clutter::Color
@@ -26,24 +26,21 @@ CLUTTER_TYPE_EVENT	        ClutterEvent	        GBoxed	        Clutter::Event
 CLUTTER_TYPE_GEOMETRY	        ClutterGeometry	        GBoxed	        Clutter::Geometry
 CLUTTER_TYPE_GRAVITY            ClutterGravity          GEnum           Clutter::Gravity
 CLUTTER_TYPE_GROUP	        ClutterGroup	        GObject	        Clutter::Group
-CLUTTER_TYPE_HBOX               ClutterHBox             GObject         Clutter::HBox
 CLUTTER_TYPE_KNOT               ClutterKnot             GBoxed          Clutter::Knot
 CLUTTER_TYPE_INIT_ERROR         ClutterInitError        GEnum           Clutter::InitError
 CLUTTER_TYPE_LABEL	        ClutterLabel	        GObject	        Clutter::Label
-CLUTTER_TYPE_LAYOUT             ClutterLayout           GInterface      Clutter::Layout
-CLUTTER_TYPE_LAYOUT_FLAGS       ClutterLayoutFlags      GFlags          Clutter::LayoutFlags
-CLUTTER_TYPE_MARGIN             ClutterMargin           GBoxed          Clutter::Margin
 CLUTTER_TYPE_MEDIA	        ClutterMedia	        GInterface	Clutter::Media
 CLUTTER_TYPE_MODIFIER_TYPE      ClutterModifierType     GFlags          Clutter::ModifierType
-CLUTTER_TYPE_PACK_TYPE          ClutterPackType         GEnum           Clutter::PackType
-CLUTTER_TYPE_PADDING            ClutterPadding          GBoxed          Clutter::Padding
 CLUTTER_TYPE_RECTANGLE	        ClutterRectangle        GObject	        Clutter::Rectangle
 CLUTTER_TYPE_ROTATE_AXIS        ClutterRotateAxis       GEnum           Clutter::RotateAxis
 CLUTTER_TYPE_ROTATE_DIRECTION   ClutterRotateDirection  GEnum           Clutter::RotateDirection
 CLUTTER_TYPE_SCROLL_DIRECTION   ClutterScrollDirection  GEnum           Clutter::ScrollDirection
+CLUTTER_TYPE_SCORE              ClutterScore            GObject         Clutter::Score
+CLUTTER_TYPE_SCRIPT             ClutterScript           GObject         Clutter::Script
 CLUTTER_TYPE_STAGE	        ClutterStage	        GObject	        Clutter::Stage
+CLUTTER_TYPE_STAGE_STATE        ClutterStageState       GFlags          Clutter::StageState
 CLUTTER_TYPE_TEXTURE	        ClutterTexture	        GObject	        Clutter::Texture
 CLUTTER_TYPE_TEXTURE_FLAGS      ClutterTextureFlags     GFlags          Clutter::TextureFlags
+CLUTTER_TYPE_TIMELINE_DIRECTION ClutterTimelineDirection GEnum          Clutter::TimelineDirection
 CLUTTER_TYPE_TIMELINE	        ClutterTimeline	        GObject	        Clutter::Timeline
-CLUTTER_TYPE_VBOX               ClutterVBox             GObject         Clutter::VBox
 CLUTTER_TYPE_VERTEX             ClutterVertex           GBoxed          Clutter::Vertex

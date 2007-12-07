@@ -1,3 +1,17 @@
+2007-12-07  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* *: Sync up with upstream C API changes. As much as I hate
+	doing huge commits, this is the only way to keep the bindings
+	in a sane state.
+
+	Missing bits:
+	  - ClutterTimeoutPool: still need to think of a nice way to
+	    wrap it up in Perl
+	  - ClutterScore
+	  - ClutterScript
+	  - ClutterShader: this will have to wait until the dust
+	    settles upstream
+
 2007-08-17  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* Clutter.pm: Bump to 0.500.

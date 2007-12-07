@@ -110,3 +110,9 @@ clutter_label_set_alignment (ClutterLabel *label, PangoAlignment alignment)
 
 PangoAlignment
 clutter_label_get_alignment (ClutterLabel *label)
+
+void
+clutter_label_set_justify (ClutterLabel *label, gboolean justify)
+
+gboolean
+clutter_label_get_justify (ClutterLabel *label)

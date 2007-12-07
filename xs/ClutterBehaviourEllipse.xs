@@ -16,7 +16,7 @@ clutter_behaviour_ellipse_new (class, alpha=NULL, center, size, direction, angle
         SV *angles
     PREINIT:
         gint x, y, width, height;
-        gdouble begin, end;
+        gdouble start, end;
         AV *av;
         SV **svp;
     CODE:
@@ -40,13 +40,13 @@ clutter_behaviour_ellipse_new (class, alpha=NULL, center, size, direction, angle
         av = (AV *) SvRV (size);
         width = AV_FETCH_IV (av, 0); height = AV_FETCH_IV (av, 1);
         av = (AV *) SvRV (angles);
-        begin = AV_FETCH_NV (av, 0); end = AV_FETCH_NV (av, 1);
+        start = AV_FETCH_NV (av, 0); end = AV_FETCH_NV (av, 1);
 #undef AV_FETCH_IV
 #undef AV_FETCH_NV
         RETVAL = clutter_behaviour_ellipse_new (alpha,
                                                 x, y, width, height,
                                                 direction,
-                                                begin, end);
+                                                start, end);
     OUTPUT:
         RETVAL
 
@@ -75,9 +75,9 @@ clutter_behaviour_ellipse_set_size (ellipse, width, height)
         g_object_set (G_OBJECT (ellipse), "width", width, "height", height, NULL);
 
 void
-clutter_behaviour_ellipse_set_angle_begin (ellipse, begin)
+clutter_behaviour_ellipse_set_angle_start (ellipse, start)
         ClutterBehaviourEllipse *ellipse
-        gdouble begin
+        gdouble start
 
 void
 clutter_behaviour_ellipse_set_angle_end (ellipse, end)
@@ -85,12 +85,15 @@ clutter_behaviour_ellipse_set_angle_end (ellipse, end)
         gdouble end
 
 void
-clutter_behaviour_ellipse_set_angles (ellipse, begin, end)
+clutter_behaviour_ellipse_set_angles (ellipse, start, end)
         ClutterBehaviourEllipse *ellipse
-        gdouble begin
+        gdouble start
         gdouble end
     CODE:
-        g_object_set (G_OBJECT (ellipse), "angle-begin", begin, "angle-end", end, NULL);
+        g_object_set (G_OBJECT (ellipse),
+                      "angle-start", start,
+                      "angle-end", end,
+                      NULL);
 
 void
 clutter_behaviour_ellipse_set_angle_tilt (ellipse, axis, tilt)
@@ -144,26 +147,26 @@ clutter_behaviour_ellipse_get_size (ClutterBehaviourEllipse *ellipse)
         PUSHs (sv_2mortal (newSViv (height)));
 
 gdouble
-clutter_behaviour_ellipse_get_angle_begin (ClutterBehaviourEllipse *ellipse)
+clutter_behaviour_ellipse_get_angle_start (ClutterBehaviourEllipse *ellipse)
 
 gdouble
 clutter_behaviour_ellipse_get_angle_end (ClutterBehaviourEllipse *ellipse)
 
 =for apidoc
-=for signature (begin, end) = $behaviour->get_angles
+=for signature (start, end) = $behaviour->get_angles
 =cut
 void
 clutter_behaviour_ellipse_get_angles (ClutterBehaviourEllipse *ellipse)
     PREINIT:
-        gdouble begin, end;
+        gdouble start, end;
     PPCODE:
-        begin = end = 0;
+        start = end = 0;
         g_object_get (G_OBJECT (ellipse),
-                      "angle-begin", &begin,
+                      "angle-start", &start,
                       "angle-end", &end,
                       NULL);
         EXTEND (SP, 2);
-        PUSHs (sv_2mortal (newSVnv (begin)));
+        PUSHs (sv_2mortal (newSVnv (start)));
         PUSHs (sv_2mortal (newSVnv (end)));
 
 gdouble
@@ -179,7 +182,7 @@ clutter_behaviour_ellipse_get_tilt (ClutterBehaviourEllipse *ellipse)
     PREINIT:
         gdouble tilt_x, tilt_y, tilt_z;
     PPCODE:
-        tilt_x = tilt_y = tilt_z  = 0.0;
+        tilt_x = tilt_y = tilt_z = 0.0;
         clutter_behaviour_ellipse_get_tilt (ellipse, &tilt_x, &tilt_y, &tilt_z);
         EXTEND (SP, 3);
         PUSHs (sv_2mortal (newSVnv (tilt_x)));

@@ -114,3 +114,53 @@ clutter_stage_set_user_resizable (ClutterStage *stage, gboolean resizable)
 gboolean
 clutter_stage_get_user_resizable (ClutterStage *stage)
 
+void
+clutter_stage_set_use_fog (ClutterStage *stage, gboolean use_fog)
+
+gboolean
+clutter_stage_get_use_fog (ClutterStage *stage)
+
+void
+clutter_stage_set_fog (stage, density, z_near, z_far)
+        ClutterStage *stage
+        gdouble density
+        gdouble z_near
+        gdouble z_far
+    PREINIT:
+        ClutterFog fog = { 0, };
+    CODE:
+        fog.density = CLUTTER_FLOAT_TO_FIXED (density);
+        fog.z_near  = CLUTTER_FLOAT_TO_FIXED (z_near);
+        fog.z_far   = CLUTTER_FLOAT_TO_FIXED (z_far);
+        clutter_stage_set_fogx (stage, &fog);
+
+=for apidoc
+=for signature (density, z_near, z_far) = $stage->get_fog
+=cut
+void
+clutter_stage_get_fog (ClutterStage *stage)
+    PREINIT:
+        ClutterFog fog = { 0, };
+    PPCODE:
+        clutter_stage_get_fogx (stage, &fog);
+        EXTEND (SP, 3);
+        PUSHs (sv_2mortal (newSVnv (CLUTTER_FIXED_TO_DOUBLE (fog.density))));
+        PUSHs (sv_2mortal (newSVnv (CLUTTER_FIXED_TO_DOUBLE (fog.z_near))));
+        PUSHs (sv_2mortal (newSVnv (CLUTTER_FIXED_TO_DOUBLE (fog.z_far))));
+
+gdouble
+clutter_stage_get_resolution (ClutterStage *stage)
+    PREINIT:
+        ClutterFixed res;
+    CODE:
+        res = clutter_stage_get_resolutionx (stage);
+        RETVAL = CLUTTER_FIXED_TO_DOUBLE (res);
+    OUTPUT:
+        RETVAL
+
+void
+clutter_stage_set_key_focus (ClutterStage *stage, ClutterActor_ornull *actor)
+
+ClutterActor *
+clutter_stage_get_key_focus (ClutterStage *stage)
+

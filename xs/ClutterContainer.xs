@@ -93,7 +93,77 @@ clutterperl_container_foreach (ClutterContainer *container,
                                ClutterCallback   callback,
                                gpointer          callback_data)
 {
+  dSP;
 
+  ENTER;
+  SAVETMPS;
+  PUSHMARK (SP);
+
+  /* FIXME - retrieve the SVs with the callback and the data from
+   * callback_data (which is always going to be a GPerlCallback
+   */
+  XPUSHs (sv_2mortal (newSVClutterActor (CLUTTER_ACTOR (container))));
+
+  PUTBACK;
+
+  clutterperl_call_method (G_OBJECT_TYPE (container),
+                           "FOREACH",
+                           G_VOID | G_DISCARD);
+
+  FREETMPS;
+  LEAVE;
+}
+
+static void
+clutterperl_container_raise (ClutterContainer *container,
+                             ClutterActor     *child,
+                             ClutterActor     *sibling)
+{
+  dSP;
+
+  ENTER;
+  SAVETMPS;
+  PUSHMARK (SP);
+
+  EXTEND (SP, 3);
+  PUSHs (sv_2mortal (newSVClutterActor (CLUTTER_ACTOR (container))));
+  PUSHs (sv_2mortal (newSVClutterActor (child)));
+  PUSHs (sv_2mortal (newSVClutterActor (sibling)));
+
+  PUTBACK;
+
+  clutterperl_call_method (G_OBJECT_TYPE (container),
+                           "RAISE",
+                           G_VOID | G_DISCARD);
+
+  FREETMPS;
+  LEAVE;
+}
+
+static void
+clutterperl_container_lower (ClutterContainer *container,
+                             ClutterActor     *child,
+                             ClutterActor     *sibling)
+{
+  dSP;
+
+  ENTER;
+  SAVETMPS;
+  PUSHMARK (SP);
+
+  EXTEND (SP, 3);
+  PUSHs (sv_2mortal (newSVClutterActor (CLUTTER_ACTOR (container))));
+  PUSHs (sv_2mortal (newSVClutterActor (child)));
+  PUSHs (sv_2mortal (newSVClutterActor (sibling)));
+
+  PUTBACK;
+
+  clutterperl_call_method (G_OBJECT_TYPE (container),
+                           "LOWER",
+                           G_VOID | G_DISCARD);
+
+  FREETMPS;
+  LEAVE;
 }
 
 static void
@@ -102,6 +172,8 @@ clutterperl_container_init (ClutterContainerIface *iface)
   iface->add = clutterperl_container_add;
   iface->remove = clutterperl_container_remove;
   iface->foreach = clutterperl_container_foreach;
+  iface->raise = clutterperl_container_raise;
+  iface->lower = clutterperl_container_lower;
 }
 
 static void
@@ -143,9 +215,47 @@ following methods is required:
 
 =item ADD ($container, $actor)
 
+=over
+
+=item o $container (Clutter::Container)
+
+=item o $actor (Clutter::Actor)
+
+=back
+
 =item REMOVE ($container, $actor)
 
-=item FOREACH ($container, $callback, $callback_data)
+=over
+
+=item o $container (Clutter::Container)
+
+=item o $actor (Clutter::Actor)
+
+=back
+
+=item RAISE ($container, $child, $sibling)
+
+=over
+
+=item o $container (Clutter::Container)
+
+=item o $child (Clutter::Actor)
+
+=item o $sibling (Clutter::Actor)
+
+=back
+
+=item LOWER ($container, $child, $sibling)
+
+=over
+
+=item o $container (Clutter::Container)
+
+=item o $child (Clutter::Actor)
+
+=item o $sibling (Clutter::Actor)
+
+=back
 
 =back
 
@@ -221,3 +331,19 @@ clutter_container_foreach (container, callback, callback_data=NULL)
                                    real_callback);
 	gperl_callback_destroy (real_callback);
 
+ClutterActor_ornull *
+clutter_container_find_child_by_name (container, name)
+        ClutterContainer *container
+        const gchar *name
+
+void
+clutter_container_raise_child (container, actor, sibling)
+        ClutterContainer *container
+        ClutterActor *actor
+        ClutterActor *sibling
+
+void
+clutter_container_lower_child (container, actor, sibling)
+        ClutterContainer *container
+        ClutterActor *actor
+        ClutterActor *sibling

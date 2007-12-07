@@ -26,8 +26,7 @@ use Glib;
 use Gtk2;
 
 require DynaLoader;
-
-our @ISA = qw( DynaLoader );
+our @ISA = qw( DynaLoader Exporter );
 
 # the version scheme is:
 #   CLUTTER_MAJOR
@@ -56,10 +55,10 @@ sub import {
     my $threads_init = 0;
 
     foreach (@_) {
-        if    (/^[-:]?init$/)        { $init = 1;           }
-        elsif (/^[-:]?gst-init$/)    { $init = 2;           }
-        elsif (/^[-:]?threas-init$/) { $threads_init = 0;   }
-        else                         { $class->VERSION($_); }
+        if    (/^[-:]?init$/)         { $init = 1;           }
+        elsif (/^[-:]?gst-init$/)     { $init = 2;           }
+        elsif (/^[-:]?threads-init$/) { $threads_init = 1;   }
+        else                          { $class->VERSION($_); }
     }
 
     Clutter::Threads->init() if $threads_init;
@@ -69,8 +68,7 @@ sub import {
 
 sub dl_load_flags { $^O eq 'darwin' ? 0x00 : 0x01 }
 
-require XSLoader;
-XSLoader::load('Clutter', $VERSION);
+Clutter->bootstrap($VERSION);
 
 # Preloaded methods go here
 
@@ -169,6 +167,11 @@ package name, to reinforce the inheritance.
 =item ClutterCairo =E<gt> Clutter::Texture::Cairo
 
 As above, the name has been changed to reinforce the inheritance.
+
+=item GtkClutter =E<gt> Gtk2::ClutterEmbed
+
+Move the GTK+ widget into the Gtk2 namespace and use the ClutterEmbed
+name.
 
 =back
 

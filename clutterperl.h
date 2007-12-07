@@ -20,9 +20,10 @@
 
 #include "clutterperl-autogen.h"
 
+G_BEGIN_DECLS
+
 const char *clutterperl_event_get_package (ClutterEvent *event);
 
-ClutterBoxChild *SvClutterBoxChild    (SV              *data);
-SV *             newSVClutterBoxChild (ClutterBoxChild *child);
+G_END_DECLS
 
 #endif /* _CLUTTER_PERL_H_ */

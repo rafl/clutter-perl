@@ -33,7 +33,6 @@ clutterperl_event_get_package (ClutterEvent *event)
     case CLUTTER_NOTHING:
       return "Clutter::Event";
     case CLUTTER_BUTTON_PRESS:
-    case CLUTTER_2BUTTON_PRESS:
     case CLUTTER_BUTTON_RELEASE:
       return "Clutter::Event::Button";
     case CLUTTER_KEY_PRESS:
@@ -43,6 +42,11 @@ clutterperl_event_get_package (ClutterEvent *event)
       return "Clutter::Event::Motion";
     case CLUTTER_SCROLL:
       return "Clutter::Event::Scroll";
+    case CLUTTER_ENTER:
+    case CLUTTER_LEAVE:
+      return "Clutter::Event::Crossing";
+    case CLUTTER_STAGE_STATE:
+      return "Clutter::Event::StageState";
     default:
       {
         GEnumClass *class = g_type_class_ref (CLUTTER_TYPE_EVENT_TYPE);
@@ -73,7 +77,6 @@ clutterperl_event_set_time (ClutterEvent *event,
       event->motion.time = time_;
       break;
     case CLUTTER_BUTTON_PRESS:
-    case CLUTTER_2BUTTON_PRESS:
     case CLUTTER_BUTTON_RELEASE:
       event->button.time = time_;
       break;
@@ -83,6 +86,13 @@ clutterperl_event_set_time (ClutterEvent *event,
       break;
     case CLUTTER_SCROLL:
       event->scroll.time = time_;
+      break;
+    case CLUTTER_ENTER:
+    case CLUTTER_LEAVE:
+      event->crossing.time = time_;
+      break;
+    case CLUTTER_STAGE_STATE:
+      event->stage_state.time = time_;
       break;
     default:
       break;
@@ -103,7 +113,6 @@ clutterperl_event_get_time (ClutterEvent *event)
       retval = event->motion.time;
       break;
     case CLUTTER_BUTTON_PRESS:
-    case CLUTTER_2BUTTON_PRESS:
     case CLUTTER_BUTTON_RELEASE:
       retval = event->button.time;
       break;
@@ -113,6 +122,13 @@ clutterperl_event_get_time (ClutterEvent *event)
       break;
     case CLUTTER_SCROLL:
       retval = event->scroll.time;
+      break;
+    case CLUTTER_ENTER:
+    case CLUTTER_LEAVE:
+      retval = event->crossing.time;
+      break;
+    case CLUTTER_STAGE_STATE:
+      retval = event->stage_state.time;
       break;
     default:
       break;
@@ -134,7 +150,6 @@ clutterperl_event_set_modifier_state (ClutterEvent        *event,
       event->motion.modifier_state = state;
       break;
     case CLUTTER_BUTTON_PRESS:
-    case CLUTTER_2BUTTON_PRESS:
     case CLUTTER_BUTTON_RELEASE:
       event->button.modifier_state = state;
       break;
@@ -164,7 +179,6 @@ clutterperl_event_get_modifier_state (ClutterEvent *event)
       retval = event->motion.modifier_state;
       break;
     case CLUTTER_BUTTON_PRESS:
-    case CLUTTER_2BUTTON_PRESS:
     case CLUTTER_BUTTON_RELEASE:
       retval = event->button.modifier_state;
       break;
@@ -182,6 +196,11 @@ clutterperl_event_get_modifier_state (ClutterEvent *event)
   return retval;
 }
 
+static ClutterActor *
+clutterperl_event_get_source (ClutterEvent *event)
+{
+  return event->any.source;
+}
 
 /* initialized in the boot section */
 static GPerlBoxedWrapperClass clutter_event_wrapper_class;
@@ -235,6 +254,10 @@ MODULE = Clutter::Event		PACKAGE = Clutter::Event	PREFIX = clutter_event_
 
 =item * L<Clutter::Event::Scroll>
 
+=item * L<Clutter::Event::Crossing>
+
+=item * L<Clutter::Event::StageState>
+
 =back
 
 =cut
@@ -272,6 +295,8 @@ DESTROY (sv)
 	Clutter::Event::Button::DESTROY      = 2
 	Clutter::Event::Key::DESTROY         = 3
         Clutter::Event::Scroll::DESTROY      = 4
+        Clutter::Event::Crossing::DESTROY    = 5
+        Clutter::Event::StageState::DESTROY  = 6
     CODE:
 	PERL_UNUSED_VAR (ix);
 	default_wrapper_class->destroy (sv);
@@ -352,6 +377,16 @@ clutter_event_get_coords (ClutterEvent_ornull *event)
         PUSHs (sv_2mortal (newSViv (x)));
         PUSHs (sv_2mortal (newSViv (y)));
 
+ClutterActor_ornull *
+clutter_event_get_source (ClutterEvent *event)
+    ALIAS:
+        Clutter::Event::source = 1
+    CODE:
+        PERL_UNUSED_VAR (ix);
+        RETVAL = clutter_event_get_source (event);
+    OUTPUT:
+        RETVAL
+
 ClutterEvent_own_ornull *
 clutter_event_get (class)
     ALIAS:
@@ -380,6 +415,8 @@ clutter_events_pending (class)
 ##   KeyPress: A key was pressed.
 ##   KeyRelease: A key was released.
 ##   Scroll: Mouse scrolling
+##   Crossing: Enter/Leave events
+##   StageStage: Stage state changes
 
 ClutterEventType
 type (event)
@@ -431,7 +468,6 @@ MODULE = Clutter::Event		PACKAGE = Clutter::Event::Button
   +----Clutter::Event::Button
 
 =cut
-
 BOOT:
 	gperl_set_isa ("Clutter::Event::Button", "Clutter::Event");
 
@@ -461,6 +497,15 @@ button (ClutterEvent *event, guint newvalue=0)
 	  event->button.button = newvalue;
     OUTPUT:
 	RETVAL
+
+guint
+click_count (ClutterEvent *event, guint newvalue=0)
+    CODE:
+        RETVAL = event->button.click_count;
+        if (items == 2)
+          event->button.click_count = newvalue;
+    OUTPUT:
+        RETVAL
 
 MODULE = Clutter::Event		PACKAGE = Clutter::Event::Key
 
@@ -519,7 +564,7 @@ MODULE = Clutter::Event         PACKAGE = Clutter::Event::Scroll
 BOOT:
         gperl_set_isa ("Clutter::Event::Scroll", "Clutter::Event");
 
-gdouble
+gint
 x (ClutterEvent *event, gint newvalue=0)
     CODE:
 	RETVAL = event->scroll.x;
@@ -528,7 +573,7 @@ x (ClutterEvent *event, gint newvalue=0)
     OUTPUT:
 	RETVAL
 
-gdouble
+gint
 y (ClutterEvent *event, gint newvalue=0)
     CODE:
 	RETVAL = event->scroll.y;
@@ -545,3 +590,77 @@ direction (ClutterEvent *event, ClutterScrollDirection newvalue=0)
           event->scroll.direction = newvalue;
     OUTPUT:
         RETVAL
+
+MODULE = Clutter::Event         PACKAGE = Clutter::Event::Crossing
+
+=for position post_hierarchy
+
+=head1 HIERARCHY
+
+  Clutter::Event
+  +----Clutter::Event::Crossing
+
+=cut
+
+BOOT:
+        gperl_set_isa ("Clutter::Event::Crossing", "Clutter::Event");
+
+gint
+x (ClutterEvent *event, gint newvalue=0)
+    CODE:
+	RETVAL = event->crossing.x;
+	if (items == 2)
+	  event->crossing.x = newvalue;
+    OUTPUT:
+	RETVAL
+
+gint
+y (ClutterEvent *event, gint newvalue=0)
+    CODE:
+	RETVAL = event->crossing.y;
+	if (items == 2)
+	  event->crossing.y = newvalue;
+    OUTPUT:
+	RETVAL
+
+ClutterActor_ornull *
+related (ClutterEvent *event, ClutterActor_ornull *newvalue=NULL)
+    CODE:
+        RETVAL = event->crossing.related;
+        if (items == 2)
+          event->crossing.related = newvalue;
+    OUTPUT:
+        RETVAL
+
+MODULE = Clutter::Event         PACKAGE = Clutter::Event::StageState
+
+=for position post_hierarchy
+
+=head1 HIERARCHY
+
+  Clutter::Event
+  +----Clutter::Event::StageState
+
+=cut
+
+BOOT:
+        gperl_set_isa ("Clutter::Event::StageState", "Clutter::Event");
+
+ClutterStageState
+changed_mask (ClutterEvent *event, ClutterStageState newvalue=0)
+    CODE:
+	RETVAL = event->stage_state.changed_mask;
+	if (items == 2)
+	  event->stage_state.changed_mask = newvalue;
+    OUTPUT:
+	RETVAL
+
+ClutterStageState
+new_state (ClutterEvent *event, ClutterStageState newvalue=0)
+    CODE:
+	RETVAL = event->stage_state.new_state;
+	if (items == 2)
+	  event->stage_state.new_state = newvalue;
+    OUTPUT:
+	RETVAL
+

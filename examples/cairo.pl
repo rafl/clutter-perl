@@ -25,8 +25,10 @@ sub main {
     $cr->stroke();
     $cr = undef;
 
-    $texture->rotate_y(45.0, $texture->get_width()  / 2,
-                             $texture->get_height() / 2);
+    $texture->set_rotation('y-axis', 45.0,
+                           $texture->get_width()  / 2,
+                           0,
+                           $texture->get_height() / 2);
     
     $stage->add($texture);
     $texture->show();

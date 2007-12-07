@@ -35,15 +35,33 @@ clutter_timeline_new (class, n_frames, fps)
         n_frames, fps
 
 ClutterTimeline_noinc *
+clutter_timeline_new_for_duration (class, msecs)
+        guint msecs
+    C_ARGS:
+        msecs
+
+ClutterTimeline_noinc *
 clutter_timeline_clone (class, ClutterTimeline *timeline)
     C_ARGS:
         timeline
+
+guint
+clutter_timeline_get_duration (ClutterTimeline *timeline)
+
+void
+clutter_timeline_set_duration (ClutterTimeline *timeline, guint msecs)
 
 guint
 clutter_timeline_get_speed (ClutterTimeline *timeline)
 
 void
 clutter_timeline_set_speed (ClutterTimeline *timeline, guint fps)
+
+ClutterTimelineDirection
+clutter_timeline_get_direction (ClutterTimeline *timeline)
+
+void
+clutter_timeline_set_direction (ClutterTimeline *timeline, ClutterTimelineDirection direction)
 
 void
 clutter_timeline_start (ClutterTimeline *timeline)
@@ -86,4 +104,22 @@ clutter_timeline_set_delay (ClutterTimeline *timeline, guint msecs)
 
 guint
 clutter_timeline_get_delay (ClutterTimeline *timeline)
+
+gdouble
+clutter_timeline_get_progress (ClutterTimeline *timeline)
+
+=for apidoc
+=for signature frames = $timeline->get_delta
+=for signature (frames, msecs) = $timeline->get_delta
+=cut
+void
+clutter_timeline_get_delta (ClutterTimeline *timeline)
+    PREINIT:
+        guint frames, msecs;
+    PPCODE:
+        frames = clutter_timeline_get_delta (timeline, &msecs);
+        XPUSHs (sv_2mortal (newSVuv (frames)));
+        if (GIMME_V == G_ARRAY) {
+                XPUSHs (sv_2mortal (newSVuv (msecs)));
+        }
 

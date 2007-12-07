@@ -237,7 +237,7 @@ clutter_gst_init_dummy (class=NULL)
     CODE:
         PERL_UNUSED_VAR (ax);
         pargv = gperl_argv_new ();
-        g_warning ("Clutter was built without the support for GStreamer");
+        g_warning ("Clutter was built without support for GStreamer");
         RETVAL = clutter_init (&pargv->argc, &pargv->argv);
         gperl_argv_update (pargv); 
         gperl_argv_free (pargv);
@@ -262,17 +262,77 @@ clutter_main_level (class)
         /* void */
 
 gboolean
-clutter_get_debug_enabled (class)
+clutter_get_debug_enabled (class=NULL)
     C_ARGS:
         /* void */
 
 gboolean
-clutter_get_show_fps (class)
+clutter_get_show_fps (class=NULL)
     C_ARGS:
         /* void */
 
 gulong
-clutter_get_timestamp (void)
+clutter_get_timestamp (class=NULL)
+    C_ARGS:
+        /* void */
+
+void
+clutter_set_motion_events_enabled (class=NULL, gboolean enable)
+    C_ARGS:
+        enable
+
+gboolean
+clutter_get_motion_events_enabled (class=NULL)
+    C_ARGS:
+        /* void */
+
+void
+clutter_set_motion_events_frequency (class=NULL, guint frequency)
+    C_ARGS:
+        frequency
+
+guint
+clutter_get_motion_events_frequency (class=NULL)
+    C_ARGS:
+        /* void */
+
+void
+clutter_set_default_frame_rate (class=NULL, guint frame_rate)
+    C_ARGS:
+        frame_rate
+
+guint
+clutter_get_default_frame_rate (class=NULL)
+    C_ARGS:
+        /* void */
+
+void
+clutter_grab_pointer (class=NULL, ClutterActor *actor)
+    C_ARGS:
+        actor
+
+void
+clutter_ungrab_pointer (class=NULL)
+    C_ARGS:
+        /* void */
+
+void
+clutter_grab_keyboard (class=NULL, ClutterActor *actor)
+    C_ARGS:
+        actor
+
+void
+clutter_ungrab_keyboard (class=NULL)
+    C_ARGS:
+        /* void */
+
+ClutterActor_ornull *
+clutter_get_pointer_grab (class=NULL)
+    C_ARGS:
+        /* void */
+
+ClutterActor_ornull *
+clutter_get_keyboard_grab (class=NULL)
     C_ARGS:
         /* void */
 

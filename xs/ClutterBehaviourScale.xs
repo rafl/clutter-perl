@@ -31,25 +31,25 @@ MODULE = Clutter::Behaviour::Scale    PACKAGE = Clutter::Behaviour::Scale   PREF
 =cut
 
 ClutterBehaviour_noinc *
-clutter_behaviour_scale_new (class, alpha=NULL, scale_begin, scale_end, gravity)
+clutter_behaviour_scale_new (class, alpha=NULL, scale_start, scale_end, gravity)
         ClutterAlpha_ornull *alpha
-        gdouble scale_begin
+        gdouble scale_start
         gdouble scale_end
         ClutterGravity gravity
     C_ARGS:
-        alpha, scale_begin, scale_end, gravity
+        alpha, scale_start, scale_end, gravity
 
 =for apidoc
-=for signature (scale_begin, scale_end) = $scale->get_bounds
+=for signature (scale_start, scale_end) = $scale->get_bounds
 =cut
 void
 clutter_behaviour_scale_get_bounds (ClutterBehaviourScale *scale)
     PREINIT:
-        gdouble scale_begin, scale_end;
+        gdouble scale_start, scale_end;
     PPCODE:
-        clutter_behaviour_scale_get_bounds (scale, &scale_begin, &scale_end);
+        clutter_behaviour_scale_get_bounds (scale, &scale_start, &scale_end);
         EXTEND (SP, 2);
-        PUSHs (sv_2mortal (newSVnv (scale_begin)));
+        PUSHs (sv_2mortal (newSVnv (scale_start)));
         PUSHs (sv_2mortal (newSVnv (scale_end)));
 
 ClutterGravity

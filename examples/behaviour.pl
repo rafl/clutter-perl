@@ -88,7 +88,10 @@ sub ALPHA_NOTIFY {
     return unless scalar @actors;
 
     foreach my $actor (@actors) {
-        $actor->rotate_z($angle, $actor->get_x() - 100, $actor->get_y() - 100);
+        $actor->set_rotation('z-axis', $angle,
+                             $actor->get_x() - 100,
+                             $actor->get_y() - 100,
+                             0);
     }
 }
 

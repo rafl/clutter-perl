@@ -12,7 +12,7 @@ isa_ok($behaviour, 'Clutter::Behaviour::Ellipse', 'is an ellipse');
 isa_ok($behaviour, 'Clutter::Behaviour', 'is a behaviour');
 
 ok(eq_array($behaviour->get_center(), [ 0, 0 ]), 'center');
-is(int($behaviour->get_angle_begin()), 0, 'angle begin');
+is(int($behaviour->get_angle_start()), 0, 'angle start');
 is(int($behaviour->get_angle_end()), 360, 'angle end');
 my @angles = $behaviour->get_angles();
 is(@angles, 2, 'two angles');

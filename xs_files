@@ -10,16 +10,13 @@ xs/ClutterBehaviourOpacity.xs
 xs/ClutterBehaviourPath.xs
 xs/ClutterBehaviourRotate.xs
 xs/ClutterBehaviourScale.xs
-xs/ClutterBox.xs
 xs/ClutterCloneTexture.xs
 xs/ClutterContainer.xs
 xs/ClutterEffect.xs
 xs/ClutterEntry.xs
 xs/ClutterEvent.xs
 xs/ClutterGroup.xs
-xs/ClutterHBox.xs
 xs/ClutterLabel.xs
-xs/ClutterLayout.xs
 xs/ClutterMedia.xs
 xs/ClutterRectangle.xs
 xs/ClutterStage.xs
@@ -27,4 +24,3 @@ xs/ClutterTexture.xs
 xs/ClutterTimeline.xs
 xs/ClutterTypes.xs
 xs/ClutterUnits.xs
-xs/ClutterVBox.xs

@@ -64,3 +64,72 @@ TO_FLOAT (class=NULL, gint32 units)
         RETVAL = CLUTTER_UNITS_TO_FLOAT (units);
     OUTPUT:
         RETVAL
+
+gint32
+FROM_DEVICE (class=NULL, gint value)
+    CODE:
+        RETVAL = CLUTTER_UNITS_FROM_DEVICE (value);
+    OUTPUT:
+        RETVAL
+
+gint
+TO_DEVICE (class=NULL, gint32 units)
+    CODE:
+        RETVAL = CLUTTER_UNITS_TO_DEVICE (units);
+
+gint32
+FROM_PANGO_UNIT (class=NULL, gint value)
+    CODE:
+        RETVAL = CLUTTER_UNITS_FROM_PANGO_UNIT (value);
+    OUTPUT:
+        RETVAL
+
+gint
+TO_PANGO_UNIT (class=NULL, gint32 units)
+    CODE:
+        RETVAL = CLUTTER_UNITS_TO_PANGO_UNIT (units);
+    OUTPUT:
+        RETVAL
+
+gint32
+FROM_STAGE_WIDTH_PERCENTAGE (class=NULL, gint percent)
+    CODE:
+        RETVAL = CLUTTER_UNITS_FROM_STAGE_WIDTH_PERCENTAGE (percent);
+    OUTPUT:
+        RETVAL
+
+gint32
+FROM_STAGE_HEIGHT_PERCENTAGE (class=NULL, gint percent)
+    CODE:
+        RETVAL = CLUTTER_UNITS_FROM_STAGE_HEIGHT_PERCENTAGE (percent);
+    OUTPUT:
+        RETVAL
+
+gint32
+FROM_PARENT_WIDTH_PERCENTAGE (class=NULL, ClutterActor *actor, gint percent)
+    CODE:
+        RETVAL = CLUTTER_UNITS_FROM_PARENT_WIDTH_PERCENTAGE (actor, percent);
+    OUTPUT:
+        RETVAL
+
+gint32
+FROM_PARENT_HEIGHT_PERCENTAGE (class=NULL, ClutterActor *actor, gint percent)
+    CODE:
+        RETVAL = CLUTTER_UNITS_FROM_PARENT_HEIGHT_PERCENTAGE (actor, percent);
+    OUTPUT:
+        RETVAL
+
+gint32
+FROM_MM (class=NULL, gint millimeters)
+    CODE:
+        RETVAL = CLUTTER_UNITS_FROM_MM (millimeters);
+    OUTPUT:
+        RETVAL
+
+gint32
+FROM_POINTS (class=NULL, gint points)
+    CODE:
+        RETVAL = CLUTTER_UNITS_FROM_POINTS (points);
+    OUTPUT:
+        RETVAL
+

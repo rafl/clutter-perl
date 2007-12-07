@@ -34,3 +34,31 @@ clutter_behaviour_opacity_new (class, alpha=NULL, opacity_start, opacity_end)
         guint8 opacity_end
     C_ARGS:
         alpha, opacity_start, opacity_end
+
+void
+clutter_behaviour_opacity_set_bounds (behaviour, start, end)
+        ClutterBehaviourOpacity *behaviour
+        guint8 start
+        guint8 end
+    CODE:
+        g_object_set (G_OBJECT (behaviour),
+                      "opacity-start", start,
+                      "opacity-end", end,
+                      NULL);
+
+=for apidoc
+=for signature (start, end) = $behaviour->get_bounds
+=cut
+void
+clutter_behaviour_opacity_get_bounds (ClutterBehaviourOpacity *behaviour)
+    PREINIT:
+        guint8 start, end;
+    PPCODE:
+        g_object_get (G_OBJECT (behaviour),
+                      "opacity-start", &start,
+                      "opacity-end", &end,
+                      NULL);
+        EXTEND (SP, 2);
+        PUSHs (sv_2mortal (newSVuv (start)));
+        PUSHs (sv_2mortal (newSVuv (end)));
+

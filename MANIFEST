@@ -5,7 +5,6 @@ clutterperl.h
 copyright.pod
 doctypes
 examples/behaviour.pl
-examples/boxes.pl
 examples/cairo.pl
 examples/hello.pl
 examples/rects.pl
@@ -27,14 +26,11 @@ t/ClutterBehaviourEllipse.t
 t/ClutterBehaviourOpacity.t
 t/ClutterBehaviourPath.t
 t/ClutterBehaviourScale.t
-t/ClutterBox.t
 t/ClutterGroup.t
-t/ClutterHBox.t
 t/ClutterLabel.t
 t/ClutterRectangle.t
 t/ClutterStage.t
 t/ClutterTimeline.t
-t/ClutterVBox.t
 t/GtkClutterEmbed.t
 tools/genkeysyms.pl
 tools/TestHelper.pm
@@ -50,7 +46,6 @@ xs/ClutterBehaviourOpacity.xs
 xs/ClutterBehaviourPath.xs
 xs/ClutterBehaviourRotate.xs
 xs/ClutterBehaviourScale.xs
-xs/ClutterBox.xs
 xs/ClutterCairo.xs
 xs/ClutterCloneTexture.xs
 xs/ClutterContainer.xs
@@ -62,9 +57,7 @@ xs/ClutterGst.xs
 xs/ClutterGstAudio.xs
 xs/ClutterGstVideoTexture.xs
 xs/ClutterGtk.xs
-xs/ClutterHBox.xs
 xs/ClutterLabel.xs
-xs/ClutterLayout.xs
 xs/ClutterMedia.xs
 xs/ClutterRectangle.xs
 xs/ClutterStage.xs
@@ -72,7 +65,7 @@ xs/ClutterTexture.xs
 xs/ClutterTimeline.xs
 xs/ClutterTypes.xs
 xs/ClutterUnits.xs
-xs/ClutterVBox.xs
+xs/ClutterUtils.xs
 xs_files
 xs_files_cairo
 xs_files_gst
