@@ -1,5 +1,9 @@
 2007-12-07  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* xs/ClutterScript.xs: Fix documentation
+
+2007-12-07  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* MANIFEST: Update
 
 	* xs/ClutterScript.xs: Actually add ClutterScript bindings

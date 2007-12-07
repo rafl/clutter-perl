@@ -124,8 +124,8 @@ clutter_script_load_from_data (ClutterScript *script, const gchar *data)
 
 =for apidoc
 =for signature objects = $script->get_object ($name, ...)
-=for arg name (string)
-=for arg ... __hide__
+=for arg name (string) first object's name
+=for arg ... list of object names
 =cut
 void
 clutter_script_get_object (ClutterScript *script, const gchar *name, ...)
@@ -145,9 +145,6 @@ clutter_script_unmerge_objects (ClutterScript *script, guint merge_id)
 
 void
 clutter_script_ensure_objects (ClutterScript *script)
-
-const gchar_ornull *
-clutter_get_script_id (GObject *gobject)
 
 #if 0 /* evil hack to convince Glib::GenPod to output docs for connect_signals */
 
@@ -200,4 +197,16 @@ clutter_script_connect_signals_full (ClutterScript *script, SV *func, SV *user_d
                                              clutterperl_script_connect_func,
                                              callback);
 	gperl_callback_destroy (callback);
+
+MODULE = Clutter::Script        PACKAGE = Clutter
+
+=for object Clutter::main
+=cut
+
+const gchar_ornull *
+get_script_id (GObject *gobject)
+    CODE:
+        RETVAL = clutter_get_script_id (gobject);
+    OUTPUT:
+        RETVAL
 
