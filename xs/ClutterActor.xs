@@ -267,37 +267,35 @@ of L<Clutter::Behaviour>.
 
 =for position post_enums
 
-=head1 ACTORS INTERNALS
-
-=head2 Notes on actor transformation matrix
+=head1 TRANSFORMATIONS ORDER
 
 The OpenGL modelview matrix for the actor is constructed from the actor
 settings by the following order of operations:
 
 =over
 
-=item Translation by actor (x, y) coordinates
+=item 1. Translation by actor (x, y) coordinates
 
-=item Scaling by I<scale_x> and I<scale_y>
+=item 2. Scaling by I<scale_x> and I<scale_y>
 
-=item Negative translation by the anchor point (x, y) coordinates
+=item 3. Negative translation by the anchor point (x, y) coordinates
 
-=item Rotation around z axis
+=item 4. Rotation around z axis
 
-=item Rotation around y axis
+=item 5. Rotation around y axis
 
-=item Rotation around x axis
+=item 6. Rotation around x axis
 
-=item Translation by actor depth (z)
+=item 7. Translation by actor depth (z coordinate)
 
-=item Clip stencil is applied
+=item 8. Clip stencil is applied
 
 B<Note>: not an operation on the matrix as such, but done as part of the
 transformation set up
 
 =back
 
-=head2 Notes on clutter actor events
+=head1 EVENT HANDLING
 
 =over
 
@@ -307,16 +305,26 @@ transformation set up
 
 =item Events are handled by connecting signal handlers to the event signals
 
+Event signals usually have the C< -event > postfix.
+
 =item Event handlers B<must> return I<TRUE> if they handled the event
 
-=item Event handlers B<must> return I<FALSE> if the emission should continue
+When an event handler returns I<TRUE> it will interrupt the event emission chain.
+Event handlers B<must> return I<FALSE> if the emission should continue instead.
 
-=item Keyboard events are emitted if actor has key focus
+=item If an actor is grabbing events it will be the only receiver
+
+B<Note>: Key focus can be seen a "soft grab"; an actor with key focus will
+receive key events even if it's not grabbing them.
+
+=item Keyboard events are emitted if an actor has key focus
+
+B<Note>: By default, the stage has key focus.
 
 =item Motion events (motion, enter, leave) are not emitted if not enabled
 
 B<Note>: Motion events are enabled by default. The motion event is only
-emitted by the L<Clutter::Stage> if the motion events deliver is disabled.
+emitted by the L<Clutter::Stage> if the motion events delivery is disabled.
 
 =item The event emission has two phases: I<capture> and I<bubble>
 
@@ -328,16 +336,15 @@ by returning I<TRUE> (meaning "event handled")
 
 =item Pointer events will 'pass through' non reactive actors
 
+E.g., if two actors are overlaying, the non reactive actor will be ignored.
+
 =back
-
-=cut
-
-=for position post_enums
 
 =head1 DERIVING NEW ACTORS
 
-Clutter provides some default actors. You may derive a new actor from any of
-these, or directly from the Clutter::Actor class itself.
+Clutter intentionally provides only few default actors. You are encouraged to
+derive a new actor from any of these, or directly from the Clutter::Actor class
+itself.
 
 The new actor must be a GObject, so you must follow the normal procedure
 for creating a new Glib::Obect (i.e., either L<Glib::Object::Subclass> or
@@ -397,8 +404,9 @@ Other overridable methods when deriving a C<Clutter::Actor> are:
 This is called each time the actor needs to be painted. You can call native
 GL calls using Perl bindings for the OpenGL API. If you are implementing a
 containter actor, or if you are operating transformations on the actor while
-painting, you should push the GL matrix first with C<glPushMatrix>, paint and
-the pop it back with C<glPopMatrix>.
+painting, you should push the GL matrix first with C< glPushMatrix >, paint
+and the pop it back with C< glPopMatrix >; this will allow your children to
+follow the same transformations.
 
 =item SHOW_ALL ($actor)
 
@@ -422,6 +430,24 @@ some non-exposed children should be visible only if certain conditions arise.
 =back
 
 See C<SHOW_ALL> above.
+
+=item REALIZE ($actor)
+
+=item UNREALIZE ($actor)
+
+=over
+
+=item o $actor (Clutter::Actor)
+
+=back
+
+Actors might have to allocate resources before being shown for the first
+time, for instance GL-specific data. The C< REALIZE > virtual function will
+be called by the C< show > method. Inside this function you should set the
+C< realized > flag, or chain up to the parent class C< REALIZE > method.
+
+The C< UNREALIZE > virtual function will be called when destroying the
+actor, and allows the release of the resources allocated inside C< REALIZE >.
 
 =back
 

@@ -86,7 +86,7 @@ MODULE = Clutter::Behaviour     PACKAGE = Clutter::Behaviour    PREFIX = clutter
 
 =head1 DESCRIPTION
 
-Clutter::Behaviour is the base class for objects controlling the behaviour
+B<Clutter::Behaviour> is the base class for objects controlling the behaviour
 of actors.  These objects are used primarily to drive a set of actors
 depending on the position on a timeline, using an "alpha" function; the
 alpha function is held by the L<Clutter::Alpha> object, which automatically
@@ -98,15 +98,16 @@ binds a L<Clutter::Timeline> to the function.
 
 =head1 DERIVING NEW BEHAVIOURS
 
-Clutter provides three behaviours: Clutter::Behaviour::Opacity,
-Clutter::Behaviour::Path and Clutter::Behaviour::Scale.  You may derive a
+Clutter provides various behaviours, like L<Clutter::Behaviour::Opacity>,
+L<Clutter::Behaviour::Path> and L<Clutter::Behaviour::Scale>. You may derive a
 new behaviour from any of these, or directly from the Clutter::Behaviour
 class itself.
 
 The new behaviour must be a GObject, so you must follow the normal procedure
-for creating a new Glib::Object (i.e., either Glib::Object::Subclass or
-Glib::Type::register_object).  The new subclass can customize the behaviour
-by providing a new implementation of the following method:
+for creating a new Glib::Object (i.e., either using the Glib::Object::Subclass
+pragmatic module or by directly calling the Glib::Type::register_object
+function).  The new subclass can customize the behaviour by providing a new
+implementation of the following method:
 
 =over
 

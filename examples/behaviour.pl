@@ -89,8 +89,8 @@ sub ALPHA_NOTIFY {
 
     foreach my $actor (@actors) {
         $actor->set_rotation('z-axis', $angle,
-                             $actor->get_x() - 100,
-                             $actor->get_y() - 100,
+                             $actor->get_x() - 20,
+                             $actor->get_y() - 20,
                              0);
     }
 }
@@ -141,7 +141,13 @@ else {
 my $timeline = Clutter::Timeline->new(100, 26);
 $timeline->set(loop => TRUE);
 
-my $alpha = Clutter::Alpha->new($timeline, \&Clutter::Alpha::sine);
+my $alpha = Clutter::Alpha->new($timeline, sub {
+    my $alpha = shift;
+    my $timeline = $alpha->get_timeline();
+
+    return int($timeline->get_progress() * Clutter::Alpha->MAX_ALPHA);
+});
+
 my $o_behave = Clutter::Behaviour::Opacity->new($alpha, 0x33, 0xff);
 $o_behave->apply($group);
 

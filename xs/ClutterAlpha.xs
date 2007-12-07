@@ -63,6 +63,33 @@ MODULE = Clutter::Alpha PACKAGE = Clutter::Alpha PREFIX = clutter_alpha_
 BOOT:
         gperl_register_sink_func (CLUTTER_TYPE_ALPHA, clutterperl_alpha_sink);
 
+=for position DESCRIPTION
+
+=head1 DESCRIPTION
+
+The B< Clutter::Alpha > class binds together a L< Clutter::Timeline > and a
+function. At each frame of the timeline, the Alpha object will call the given
+function, which will receive the value of the frame and must return a value
+between 0 and MAX_ALPHA.
+
+This is an example of a simple alpha function that increments linearly:
+
+  sub linear {
+      my $alpha    = shift;
+      my $timeline = $alpha->get_timeline();
+
+      return int($timeline->get_progress() * Clutter::Alpha->MAX_ALPHA);
+  }
+
+Alphas are used by L<Clutter::Behaviour>s to create implicit animations. By
+changing the alpha function inside a Clutter::Alpha object it's possible to
+change the speed of the animation.
+
+Clutter provides some common alpha function, like ramps, sines, smoothsteps,
+exponential and square waves.
+
+=cut
+
 ClutterAlpha *
 clutter_alpha_new (class, timeline=NULL, func=NULL, data=NULL)
         ClutterTimeline *timeline
@@ -115,7 +142,7 @@ MAX_ALPHA (class)
 ## to maintain. -- Emmanuele
 
 guint32
-ramp (ClutterAlpha *alpha)
+ramp (class=NULL, ClutterAlpha *alpha)
     ALIAS:
         Clutter::Alpha::ramp           =  0
         Clutter::Alpha::ramp_inc       =  1
