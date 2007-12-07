@@ -46,11 +46,6 @@ our $buffer =<<ENDUI;
         "x" : 100, "y" : 100, "width" : 300, "height" : 300,
         "signals" : [
           { "name" : "button-press-event", "handler" : "do_press" }
-          {
-            "name" : "button-press-event",
-            "after" : true,
-            "handler" : "do_quit"
-          },
         ],
         "behaviours" : [ "move-behaviour", "scale-behaviour", "fade-behaviour" ]
       }
@@ -86,7 +81,6 @@ $score = Clutter::Score->new();
 $score->append(undef,           $move_timeline );
 $score->append($move_timeline,  $scale_timeline);
 $score->append($scale_timeline, $fade_timeline );
-$score->signal_connect(completed => \&do_quit);
 
 my $stage = $script->get_object('main-stage');
 die "Unable to retrieve the 'main-stage' object\n" unless defined $stage;
@@ -96,4 +90,3 @@ $stage->show_all();
 Clutter->main();
 
 0;
-

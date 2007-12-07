@@ -267,6 +267,73 @@ of L<Clutter::Behaviour>.
 
 =for position post_enums
 
+=head1 ACTORS INTERNALS
+
+=head2 Notes on actor transformation matrix
+
+The OpenGL modelview matrix for the actor is constructed from the actor
+settings by the following order of operations:
+
+=over
+
+=item Translation by actor (x, y) coordinates
+
+=item Scaling by I<scale_x> and I<scale_y>
+
+=item Negative translation by the anchor point (x, y) coordinates
+
+=item Rotation around z axis
+
+=item Rotation around y axis
+
+=item Rotation around x axis
+
+=item Translation by actor depth (z)
+
+=item Clip stencil is applied
+
+B<Note>: not an operation on the matrix as such, but done as part of the
+transformation set up
+
+=back
+
+=head2 Notes on clutter actor events
+
+=over
+
+=item Actors emit pointer events only if set reactive
+
+=item The stage is always reactive by default
+
+=item Events are handled by connecting signal handlers to the event signals
+
+=item Event handlers B<must> return I<TRUE> if they handled the event
+
+=item Event handlers B<must> return I<FALSE> if the emission should continue
+
+=item Keyboard events are emitted if actor has key focus
+
+=item Motion events (motion, enter, leave) are not emitted if not enabled
+
+B<Note>: Motion events are enabled by default. The motion event is only
+emitted by the L<Clutter::Stage> if the motion events deliver is disabled.
+
+=item The event emission has two phases: I<capture> and I<bubble>
+
+An emitted event starts in the I<capture> phase, beginning at the stage and
+traversing every child actor until the event source actor is reached. The
+emission then enters the I<bubble> phase, traversing back up the chain via
+parents until it reaches the stage. Any event handler can abort this chain
+by returning I<TRUE> (meaning "event handled")
+
+=item Pointer events will 'pass through' non reactive actors
+
+=back
+
+=cut
+
+=for position post_enums
+
 =head1 DERIVING NEW ACTORS
 
 Clutter provides some default actors. You may derive a new actor from any of
@@ -364,18 +431,28 @@ See C<SHOW_ALL> above.
 =for signature $actor->realized ($boolean)
 =for signature boolean = $actor->realized
 =for arg ... (__hide__)
+Checks if the actor is realized
 =cut
 
 =for apidoc Clutter::Actor::mapped
 =for signature $actor->mapped ($boolean)
 =for signature boolean = $actor->mapped
 =for arg ... (__hide__)
+Checks if the actor is mapped
 =cut
 
 =for apidoc Clutter::Actor::visible
 =for signature $actor->visible ($boolean)
-=for signatur boolean = $actor->visible
+=for signaturs boolean = $actor->visible
 =for arg ... (__hide__)
+Checks if the actor is both realized and mapped
+=cut
+
+=for apidoc Clutter::Actor::reactive
+=for signature $actor->reactive ($boolean)
+=for signaturs boolean = $actor->reactive
+=for arg ... (__hide__)
+Checks if the actor is reactive to events
 =cut
 
 gboolean
@@ -431,6 +508,9 @@ realized (actor, ...)
     OUTPUT:
         RETVAL
 
+=for apidoc
+Retrieves the flags set on the actor
+=cut
 ClutterActorFlags
 flags (ClutterActor *actor)
     ALIAS:
@@ -441,11 +521,17 @@ flags (ClutterActor *actor)
     OUTPUT:
         RETVAL
 
+=for apidoc
+Sets the given flags on the actor
+=cut
 void
 set_flags (ClutterActor *actor, ClutterActorFlags flags)
     CODE:
         CLUTTER_ACTOR_SET_FLAGS (actor, flags);
 
+=for apidoc
+Unsets the given flags on the actor
+=cut
 void
 unset_flags (ClutterActor *actor, ClutterActorFlags flags)
     CODE:
@@ -483,9 +569,17 @@ show (ClutterActor *actor)
 			g_assert_not_reached ();
 	}
 
+=for apidoc
+Sets the untransformed bounding box of the actor
+
+B<Note>: The actor might not comply with the request
+=cut
 void
 clutter_actor_request_coords (ClutterActor *actor, ClutterActorBox *box)
 
+=for apidoc
+Requests the untrasformend bounding box of the actor
+=cut
 ClutterActorBox_copy *
 clutter_actor_query_coords (ClutterActor *actor)
     PREINIT:
@@ -496,9 +590,15 @@ clutter_actor_query_coords (ClutterActor *actor)
     OUTPUT:
         RETVAL
 
+=for apidoc
+A simple, pixel-based wrapper around request_coords()
+=cut
 void
 clutter_actor_set_geometry (ClutterActor *actor, ClutterGeometry *geom)
 
+=for apidoc
+A simple, pixel-based wrapped around query_coords()
+=cut
 ClutterGeometry_copy *
 clutter_actor_get_geometry (ClutterActor *actor)
     PREINIT:
@@ -543,6 +643,7 @@ clutter_actor_get_position (ClutterActor *actor)
 
 =for apidoc
 =for signature (x, y) = $actor->get_abs_position
+Gets the absolute position of an actor in pixels relative to the stage
 =cut
 void
 clutter_actor_get_abs_position (ClutterActor *actor)
@@ -572,6 +673,7 @@ clutter_actor_get_size (ClutterActor *actor)
 
 =for apidoc
 =for signature (width, height) = $actor->get_abs_size
+Gets the absolute size of an actor taking into account any scaling factors
 =cut
 void
 clutter_actor_get_abs_size (ClutterActor *actor)
@@ -607,6 +709,22 @@ clutter_actor_set_y (ClutterActor *actor, gint y)
 gint
 clutter_actor_get_y (ClutterActor *actor)
 
+=for apidoc
+Sets the rotation angle of I<actor> around the given I<axis>.
+
+The rotation center coordinates depend on the value of I<axis>:
+
+=over
+
+=item 'x-axis' requires I<y> and I<z>
+
+=item 'y-axis' requires I<x> and I<z>
+
+=item 'z-axis' requires I<x> and I<y>
+
+=back
+
+=cut
 void
 clutter_actor_set_rotation (actor, axis, angle, x, y, z)
         ClutterActor *actor
@@ -619,6 +737,7 @@ clutter_actor_set_rotation (actor, axis, angle, x, y, z)
 =for apidoc
 =for signature angle = $actor->get_rotation ($axis)
 =for signature (angle, x, y, z) = $actor->get_rotation ($axis)
+Retrieves the angle and center of rotation on the given axis.
 =cut
 void
 clutter_actor_get_rotation (ClutterActor *actor, ClutterRotateAxis axis)
@@ -635,6 +754,10 @@ clutter_actor_get_rotation (ClutterActor *actor, ClutterRotateAxis axis)
                 PUSHs (sv_2mortal (newSViv (z)));
         }
 
+=for apidoc
+Sets the actor's opacity, with 0 being fully transparent and 255 being
+fully opaque
+=cut
 void
 clutter_actor_set_opacity (ClutterActor *actor, guint8 opacity)
 
@@ -723,6 +846,9 @@ clutter_actor_move_by (ClutterActor *actor, gint dx, gint dy)
 void
 clutter_actor_pick (ClutterActor *actor, ClutterColor *color)
 
+=for apidoc
+Sets whether the actor should react to events
+=cut
 void
 clutter_actor_set_reactive (ClutterActor *actor, gboolean reactive)
 
@@ -731,8 +857,8 @@ clutter_actor_get_reactive (ClutterActor *actor)
 
 =for apidoc
 =for signature vertices = $actor->get_vertices
-Returns an array of four Clutter::Vertex objects containing to the
-vertices of $actor
+Returns an array of four Clutter::Vertex objects containing the
+transformed coordinates of the vertices of I<actor>
 =cut
 void
 clutter_actor_get_vertices (ClutterActor *actor)
@@ -768,6 +894,12 @@ clutter_actor_should_pick_paint (ClutterActor *actor)
 ##      const gchar *param
 ##      gfloat value
 
+=for apidoc
+Sets the I<anchor point> of the I<actor>. The anchor is a point in the
+coordinates space of the actor (with origin set at the top left corner
+of the bounding box). The anchor point is taken into account when applying
+any transformation to an actor.
+=cut
 void
 clutter_actor_set_anchor_point (ClutterActor *actor, gint x, gint y)
 

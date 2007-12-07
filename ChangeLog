@@ -1,5 +1,12 @@
 2007-12-07  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* xs/ClutterActor.xs: Port some of the C API documentation
+	and description to the Perl bindings.
+
+	* examples/script.pl: Remove a useless signal handler definition.
+
+2007-12-07  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* xs/ClutterScript.xs: Fix documentation
 
 2007-12-07  Emmanuele Bassi  <ebassi@openedhand.com>
