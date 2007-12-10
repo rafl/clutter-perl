@@ -18,6 +18,7 @@ xs/ClutterEvent.xs
 xs/ClutterGroup.xs
 xs/ClutterLabel.xs
 xs/ClutterMedia.xs
+xs/ClutterModel.xs
 xs/ClutterRectangle.xs
 xs/ClutterScore.xs
 xs/ClutterScript.xs

@@ -44,6 +44,9 @@ our $buffer =<<ENDUI;
         "color" : "#dd0000",
         "opacity" : 255,
         "x" : 100, "y" : 100, "width" : 300, "height" : 300,
+        "rotation" : [
+          { "z-axis" : [ 45, [ 200, 200 ] ] }
+        ],
         "signals" : [
           { "name" : "button-press-event", "handler" : "do_press" }
         ],

@@ -1,5 +1,14 @@
 2007-12-10  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* MANIFEST:
+	* maps:
+	* xs_files:
+	* xs/ClutterModel.xs: Initial bindings for Clutter::Model.
+
+	* t/ClutterModel.t: Test suite for Clutter::Model API.
+
+2007-12-10  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* xs/ClutterBehaviourEllipse.xs: Use the mPUSH?() macros to
 	avoid the sv_2mortal(newSV?v()) tediousness.
 

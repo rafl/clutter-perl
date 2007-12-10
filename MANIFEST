@@ -29,6 +29,7 @@ t/ClutterBehaviourPath.t
 t/ClutterBehaviourScale.t
 t/ClutterGroup.t
 t/ClutterLabel.t
+t/ClutterModel.t
 t/ClutterRectangle.t
 t/ClutterStage.t
 t/ClutterTimeline.t
@@ -60,6 +61,7 @@ xs/ClutterGstVideoTexture.xs
 xs/ClutterGtk.xs
 xs/ClutterLabel.xs
 xs/ClutterMedia.xs
+xs/ClutterModel.xs
 xs/ClutterRectangle.xs
 xs/ClutterScore.xs
 xs/ClutterScript.xs
