@@ -1,3 +1,10 @@
+2007-12-10  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* xs/ClutterBehaviourEllipse.xs: Use the mPUSH?() macros to
+	avoid the sv_2mortal(newSV?v()) tediousness.
+
+	* t/ClutterBehaviourEllipse.t: Fix the alignment.
+
 2007-12-07  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* xs/ClutterActor.xs:

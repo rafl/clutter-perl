@@ -20,9 +20,9 @@ is(@angles, 2, 'two angles');
 $behaviour->set_tilt(0.0, 180.0, 270.0);
 my @tilts = $behaviour->get_tilt();
 is(@tilts, 3, 'tilting on three axis');
-is(int($tilts[0]), 0, 'no tilt on X');
-isnt(int($tilts[1]), 90, 'tilt on Y');
-is(int($tilts[2]), 270, 'tilt on Z');
+is(  int($tilts[0]),   0, 'no tilt on X');
+isnt(int($tilts[1]),  90, 'wrong tilt on Y');
+is(  int($tilts[2]), 270, 'correct tilt on Z');
 
 is(int($behaviour->get_angle_tilt('x-axis')),     0, 'X tilt');
 is(int($behaviour->get_angle_tilt('y-axis')),   180, 'Y tilt');

@@ -72,7 +72,10 @@ clutter_behaviour_ellipse_set_size (ellipse, width, height)
         gint width
         gint height
     CODE:
-        g_object_set (G_OBJECT (ellipse), "width", width, "height", height, NULL);
+        g_object_set (G_OBJECT (ellipse),
+                      "width", width,
+                      "height", height,
+                      NULL);
 
 void
 clutter_behaviour_ellipse_set_angle_start (ellipse, start)
@@ -123,8 +126,8 @@ clutter_behaviour_ellipse_get_center (ClutterBehaviourEllipse *ellipse)
     PPCODE:
         clutter_behaviour_ellipse_get_center (ellipse, &x, &y);
         EXTEND (SP, 2);
-        PUSHs (sv_2mortal (newSViv (x)));
-        PUSHs (sv_2mortal (newSViv (y)));
+        mPUSHi (x);
+        mPUSHi (y);
 
 gint
 clutter_behaviour_ellipse_get_width (ClutterBehaviourEllipse *ellipse)
@@ -141,10 +144,13 @@ clutter_behaviour_ellipse_get_size (ClutterBehaviourEllipse *ellipse)
         gint width, height;
     PPCODE:
         width = height = 0;
-        g_object_get (G_OBJECT (ellipse), "width", &width, "height", &height, NULL);
+        g_object_get (G_OBJECT (ellipse),
+                      "width", &width,
+                      "height", &height,
+                      NULL);
         EXTEND (SP, 2);
-        PUSHs (sv_2mortal (newSViv (width)));
-        PUSHs (sv_2mortal (newSViv (height)));
+        mPUSHi (width);
+        mPUSHi (height);
 
 gdouble
 clutter_behaviour_ellipse_get_angle_start (ClutterBehaviourEllipse *ellipse)
@@ -166,8 +172,8 @@ clutter_behaviour_ellipse_get_angles (ClutterBehaviourEllipse *ellipse)
                       "angle-end", &end,
                       NULL);
         EXTEND (SP, 2);
-        PUSHs (sv_2mortal (newSVnv (start)));
-        PUSHs (sv_2mortal (newSVnv (end)));
+        mPUSHn (start);
+        mPUSHn (end);
 
 gdouble
 clutter_behaviour_ellipse_get_angle_tilt (ellipse, axis)
@@ -185,9 +191,10 @@ clutter_behaviour_ellipse_get_tilt (ClutterBehaviourEllipse *ellipse)
         tilt_x = tilt_y = tilt_z = 0.0;
         clutter_behaviour_ellipse_get_tilt (ellipse, &tilt_x, &tilt_y, &tilt_z);
         EXTEND (SP, 3);
-        PUSHs (sv_2mortal (newSVnv (tilt_x)));
-        PUSHs (sv_2mortal (newSVnv (tilt_y)));
-        PUSHs (sv_2mortal (newSVnv (tilt_z)));
+        mPUSHn (tilt_x);
+        mPUSHn (tilt_y);
+        mPUSHn (tilt_z);
 
 ClutterRotateDirection
 clutter_behaviour_ellipse_get_direction (ClutterBehaviourEllipse *ellipse)
+
