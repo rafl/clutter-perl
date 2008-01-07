@@ -1,5 +1,15 @@
 2008-01-07  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* examples/script.pl: Fix the timeline to be used by the
+	behaviours, and quit when the score terminates.
+
+	* xs/ClutterModel.xs: Use the vector based API for appending
+	and prepending rows to the model.
+
+	* t/ClutterModel.t: Fix the Clutter::Model API test
+
+2008-01-07  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* Makefile.PL: Require unstable GLib, for gperl_sv_defined()
 
 2008-01-07  Emmanuele Bassi  <ebassi@openedhand.com>

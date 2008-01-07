@@ -9,7 +9,7 @@ use Clutter qw( :init );
 our $buffer =<<ENDUI;
 [
   { "id" : "move-timeline",  "type" : "ClutterTimeline", "duration" : 2500 },
-  { "id" : "scale-timeline", "type" : "ClutterTimeline", "duration" : 1000 },
+  { "id" : "scale-timeline", "type" : "ClutterTimeline", "duration" : 2000 },
   { "id" : "fade-timeline",  "type" : "ClutterTimeline", "duration" : 1500 },
   {
     "id" : "move-behaviour", "type" : "ClutterBehaviourPath",
@@ -23,8 +23,8 @@ our $buffer =<<ENDUI;
   },
   {
     "id" : "fade-behaviour", "type" : "ClutterBehaviourOpacity",
-    "opacity-start" : 0xff, "opacity-end" : 0x33,
-    "alpha" : { "timeline" : "scale-timeline", "function" : "sine-inc" }
+    "opacity-start" : 255, "opacity-end" : 0,
+    "alpha" : { "timeline" : "fade-timeline", "function" : "sine-inc" }
   },
   {
     "id" : "main-stage",
@@ -84,6 +84,7 @@ $score = Clutter::Score->new();
 $score->append(undef,           $move_timeline );
 $score->append($move_timeline,  $scale_timeline);
 $score->append($scale_timeline, $fade_timeline );
+$score->signal_connect(completed => \&do_quit);
 
 my $stage = $script->get_object('main-stage');
 die "Unable to retrieve the 'main-stage' object\n" unless defined $stage;

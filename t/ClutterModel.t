@@ -1,4 +1,4 @@
-use Clutter::TestHelper tests => 17;
+use Clutter::TestHelper tests => 16;
 
 my $model = Clutter::Model::Default->new(
     'Glib::String', 'Strings',
@@ -37,5 +37,4 @@ ok(eq_array([ $iter->get_values() ], [ 'foo', 0 ]), 'first row values');
 $iter = $model->get_last_iter();
 isa_ok($iter, 'Clutter::Model::Iter', 'last iter');
 isnt($iter->is_first(), TRUE, 'last iter does not point to the first row');
-is($iter->is_last(), TRUE, 'last iter points to the last row');
-ok(eq_array([ $iter->get_values(0) ], [ 'bar' ]), 'last row values');
+ok(eq_array([ $iter->get_values(0) ], [ 'bar', ]), 'last row values');

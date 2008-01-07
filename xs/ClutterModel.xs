@@ -55,6 +55,8 @@ clutter_model_append (ClutterModel *model, ...)
     PREINIT:
         gint n_cols, i;
         gint n_values;
+        guint *columns;
+        GValueArray *values;
         const char *errfmt = "Usage: $model->append ($column, $value, ...)\n"
                              "     %s";
     CODE:
@@ -63,6 +65,8 @@ clutter_model_append (ClutterModel *model, ...)
                        "There must be a value for every column number");
         n_cols = clutter_model_get_n_columns (model);
         n_values = (items - 2) / 2;
+        columns = g_new (guint, n_values);
+        values = g_value_array_new (n_values);
         for (i = 0; i < n_values; i++) {
                 gint position = -1;
                 gint column = 0;
@@ -80,9 +84,13 @@ clutter_model_append (ClutterModel *model, ...)
                 g_value_init (&value,
                               clutter_model_get_column_type (model, column));
                 gperl_value_from_sv (&value, ST (1 + i * 2 + 1));
-                clutter_model_append_value (model, column, &value);
+                columns[i] = column;
+                g_value_array_append (values, &value);
                 g_value_unset (&value);
         }
+        clutter_model_appendv (model, n_values, columns, values->values);
+        g_free (columns);
+        g_value_array_free (values);
 
 =for apidoc Clutter::Model::prepend
 =for signature boolean = $model->prepend ($column, $value, ...)
@@ -92,6 +100,8 @@ clutter_model_prepend (ClutterModel *model, ...)
     PREINIT:
         gint n_cols, i;
         gint n_values;
+        guint *columns;
+        GValueArray *values;
         const char *errfmt = "Usage: $model->prepend ($column, $value, ...)\n"
                              "     %s";
     CODE:
@@ -100,6 +110,8 @@ clutter_model_prepend (ClutterModel *model, ...)
                        "There must be a value for every column number");
         n_cols = clutter_model_get_n_columns (model);
         n_values = (items - 2) / 2;
+        columns = g_new (guint, n_values);
+        values = g_value_array_new (n_values);
         for (i = 0; i < n_values; i++) {
                 gint position = -1;
                 gint column = 0;
@@ -117,9 +129,13 @@ clutter_model_prepend (ClutterModel *model, ...)
                 g_value_init (&value,
                               clutter_model_get_column_type (model, column));
                 gperl_value_from_sv (&value, ST (1 + i * 2 + 1));
-                clutter_model_prepend_value (model, column, &value);
+                columns[i] = column;
+                g_value_array_append (values, &value);
                 g_value_unset (&value);
         }
+        clutter_model_prependv (model, n_values, columns, values->values);
+        g_free (columns);
+        g_value_array_free (values);
 
 =for apidoc
 =for signature $model->insert ($row, $column, $value, ...)
@@ -211,4 +227,3 @@ clutter_model_foreach (ClutterModel *model, SV *func, SV *data=NULL)
                                  G_TYPE_BOOLEAN);
         clutter_model_foreach (model, clutterperl_model_foreach_func, cb);
         gperl_callback_destroy (cb);
-
