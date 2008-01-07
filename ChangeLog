@@ -1,5 +1,9 @@
 2008-01-07  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* Makefile.PL: Require unstable GLib, for gperl_sv_defined()
+
+2008-01-07  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* Clutter.pm: Add overloading for Clutter::Container::ForeachFunc
 	invocation.
 
