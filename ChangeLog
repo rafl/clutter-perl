@@ -1,3 +1,24 @@
+2008-01-07  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* Clutter.pm: Add overloading for Clutter::Container::ForeachFunc
+	invocation.
+
+	* xs/ClutterContainer.xs: Finally wrap the FOREACH virtual
+	function of the Clutter::Container interface.
+
+	* xs/ClutterModel.xs:
+	* xs/ClutterModelDefault.xs:
+	* xs/ClutterModelIter.xs: Wrap more Clutter::Model and
+	Clutter::Model::Iter API; still not completely working: requires
+	API changes upstream for the append and prepend methods to
+	work correctly.
+
+	* t/ClutterModel.t: Add tests for Clutter::Model.
+
+	* maps:
+	* MANIFEST:
+	* xs_files: Add new files
+
 2007-12-10  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* MANIFEST:

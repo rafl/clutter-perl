@@ -25,64 +25,41 @@
 
 #include "clutterperl.h"
 
-MODULE = Clutter::Model         PACKAGE = Clutter::Model        PREFIX = clutter_model_
+static gboolean
+clutterperl_model_foreach_func (ClutterModel     *model,
+                                ClutterModelIter *iter,
+                                gpointer          data)
+{
+        GPerlCallback *callback = data;
+        GValue value = { 0, };
+        gboolean retval;
 
-=for apidoc
-=for signature model = Clutter::Model->new (type, name, ...)
-=cut
-ClutterModel_noinc *
-clutter_model_new (class, ...)
-    PREINIT:
-        GArray *types;
-        GPtrArray *names;
-        guint n_columns, i, pairs;
-    CODE:
-        /* we allow at least one pair */
-        if (items < 3 || 0 != ((items - 1) % 2))
-                croak("Usage: Clutter::Model->new($type, $name, ...)");
-        pairs = (items - 1) / 2;
-        types = g_array_sized_new (FALSE, FALSE, sizeof (GType), pairs);
-        names = g_ptr_array_sized_new (pairs);
-        for (i = 1, n_columns = 0; i < items; i += 2, n_columns++) {
-                gchar *package = SvPV_nolen (ST (i));
-                gchar *name    = SvPV_nolen (ST (i + 1));
-                GType t        = gperl_type_from_package (package);
-                if (t == G_TYPE_INVALID) {
-                        g_array_free (types, TRUE);
-                        g_ptr_array_free (names, TRUE);
-                        croak ("package `%s' is not registered with GPerl",
-                               package);
-                        g_assert ("not reached");
-                }
-                g_array_index (types, GType,  n_columns) = t;
-                g_ptr_array_add (names, name);
-        }
-        RETVAL = clutter_model_newv (n_columns,
-                                     (GType *) types->data,
-                                     (const gchar **) names->pdata);
-        g_array_free (types, TRUE);
-        g_ptr_array_free (names, TRUE);
-    OUTPUT:
-        RETVAL
+        g_value_init (&value, callback->return_type);
+
+        gperl_callback_invoke (callback, &value, model, iter);
+        
+        retval = g_value_get_boolean (&value);
+        g_value_unset (&value);
+
+        return retval;
+
+}
+
+MODULE = Clutter::Model         PACKAGE = Clutter::Model        PREFIX = clutter_model_
 
 =for apidoc Clutter::Model::append
 =for signature boolean = $model->append ($column, $value, ...)
 =cut
-
-=for apidoc Clutter::Model::prepend
-=for signature boolean = $model->prepend ($column, $value, ...)
-=cut
 void
-clutter_model_prepend (ClutterModel *model, ...)
-    ALIAS:
-        Clutter::Model::append = 1
+clutter_model_append (ClutterModel *model, ...)
     PREINIT:
         gint n_cols, i;
         gint n_values;
-        const char *errfmt = "Usage: $iter = $model->%s ($column, $value, ...)\n     %s";
+        const char *errfmt = "Usage: $model->append ($column, $value, ...)\n"
+                             "     %s";
     CODE:
         if (items < 1 || 0 != ((items - 1) % 2))
-                croak (errfmt, (ax == 0 ? "prepend" : "append"),
+                croak (errfmt,
                        "There must be a value for every column number");
         n_cols = clutter_model_get_n_columns (model);
         n_values = (items - 2) / 2;
@@ -92,21 +69,55 @@ clutter_model_prepend (ClutterModel *model, ...)
                 GValue value = { 0, };
                 gboolean res = FALSE;
                 if (! looks_like_number (ST (1 + i * 2)))
-                        croak (errfmt, (ax == 0 ? "prepend" : "append"),
+                        croak (errfmt,
                                "The first value in each pair must be a "
                                "column index number");
                 column = SvIV (ST (1 + i * 2));
                 if (! (column >= 0 && column < n_cols))
-                        croak (errfmt, (ax == 0 ? "prepend" : "append"),
+                        croak (errfmt,
                                form ("Bad column index %d, model only has "
                                      "%d columns", column, n_cols));
                 g_value_init (&value,
                               clutter_model_get_column_type (model, column));
                 gperl_value_from_sv (&value, ST (1 + i * 2 + 1));
-                if (ax == 0)
-                        clutter_model_prepend_value (model, column, &value);
-                else
-                        clutter_model_append_value (model, column, &value);
+                clutter_model_append_value (model, column, &value);
+                g_value_unset (&value);
+        }
+
+=for apidoc Clutter::Model::prepend
+=for signature boolean = $model->prepend ($column, $value, ...)
+=cut
+void
+clutter_model_prepend (ClutterModel *model, ...)
+    PREINIT:
+        gint n_cols, i;
+        gint n_values;
+        const char *errfmt = "Usage: $model->prepend ($column, $value, ...)\n"
+                             "     %s";
+    CODE:
+        if (items < 1 || 0 != ((items - 1) % 2))
+                croak (errfmt,
+                       "There must be a value for every column number");
+        n_cols = clutter_model_get_n_columns (model);
+        n_values = (items - 2) / 2;
+        for (i = 0; i < n_values; i++) {
+                gint position = -1;
+                gint column = 0;
+                GValue value = { 0, };
+                gboolean res = FALSE;
+                if (! looks_like_number (ST (1 + i * 2)))
+                        croak (errfmt,
+                               "The first value in each pair must be a "
+                               "column index number");
+                column = SvIV (ST (1 + i * 2));
+                if (! (column >= 0 && column < n_cols))
+                        croak (errfmt,
+                               form ("Bad column index %d, model only has "
+                                     "%d columns", column, n_cols));
+                g_value_init (&value,
+                              clutter_model_get_column_type (model, column));
+                gperl_value_from_sv (&value, ST (1 + i * 2 + 1));
+                clutter_model_prepend_value (model, column, &value);
                 g_value_unset (&value);
         }
 
@@ -118,7 +129,7 @@ clutter_model_insert (ClutterModel *model, guint row, ...)
     PREINIT:
         gint n_cols, i;
         gint n_values;
-        const char *errfmt = "Usage: $iter = $model->insert ($row, $column, $value, ...)\n     %s";
+        const char *errfmt = "Usage: $model->insert ($row, $column, $value, ...)\n     %s";
     CODE:
         if (items < 2 || 0 != (items % 2))
                 croak (errfmt, "There must be a value for every column number");
@@ -162,4 +173,42 @@ clutter_model_get_column_type (ClutterModel *model, guint column)
 
 guint
 clutter_model_get_n_columns (ClutterModel *model)
+
+ClutterModelIter_noinc *
+clutter_model_get_first_iter (ClutterModel *model)
+
+ClutterModelIter_noinc *
+clutter_model_get_last_iter (ClutterModel *model)
+
+ClutterModelIter_noinc *
+clutter_model_get_iter_at_row (ClutterModel *model, guint row)
+
+void
+clutter_model_set_sorting_column (ClutterModel *model, gint column)
+
+gint
+clutter_model_get_sorting_column (ClutterModel *model)
+
+gboolean
+clutter_model_filter_row (ClutterModel *model, guint row)
+
+gboolean
+clutter_model_filter_iter (ClutterModel *model, ClutterModelIter *iter)
+
+void
+clutter_model_resort (ClutterModel *model)
+
+void
+clutter_model_foreach (ClutterModel *model, SV *func, SV *data=NULL)
+    PREINIT:
+        GPerlCallback *cb;
+        GType types[2];
+    CODE:
+        types[0] = CLUTTER_TYPE_MODEL;
+        types[1] = CLUTTER_TYPE_MODEL_ITER;
+        cb = gperl_callback_new (func, data,
+                                 G_N_ELEMENTS (types), types,
+                                 G_TYPE_BOOLEAN);
+        clutter_model_foreach (model, clutterperl_model_foreach_func, cb);
+        gperl_callback_destroy (cb);
 

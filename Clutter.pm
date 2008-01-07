@@ -168,6 +168,12 @@ sub connect_signals {
   }
 }
 
+package Clutter::Container::ForeachFunc;
+
+use overload
+    '&{}' => sub { \&Clutter::Container::ForeachFunc::invoke },
+    fallback => 1;
+
 package Clutter;
 
 1;
