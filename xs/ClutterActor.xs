@@ -227,6 +227,35 @@ clutterperl_actor_unrealize (ClutterActor *actor)
 }
 
 static void
+clutterperl_actor_pick (ClutterActor       *actor,
+                        const ClutterColor *pick_color)
+{
+        HV *stash = gperl_object_stash_from_type (G_OBJECT_TYPE (actor));
+        GV *slot = gv_fetchmethod (stash, "PICK");
+
+        if (slot && GvCV (slot)) {
+                dSP;
+
+                ENTER;
+                SAVETMPS;
+                PUSHMARK (SP);
+
+                EXTEND (SP, 2);
+                PUSHs (newSVClutterActor (actor));
+                PUSHs (newSVClutterColor (pick_color));
+                
+                PUTBACK;
+
+                call_sv ((SV *) GvCV (slot), G_VOID | G_DISCARD);
+
+                SPAGAIN;
+
+                FREETMPS;
+                LEAVE;
+        }
+}
+
+static void
 clutterperl_actor_class_init (ClutterActorClass *klass)
 {
         klass->show_all       = clutterperl_actor_show_all;
@@ -236,6 +265,7 @@ clutterperl_actor_class_init (ClutterActorClass *klass)
         klass->query_coords   = clutterperl_actor_query_coords;
         klass->realize        = clutterperl_actor_realize;
         klass->unrealize      = clutterperl_actor_unrealize;
+        klass->pick           = clutterperl_actor_pick;
 }
 
 static void
@@ -448,6 +478,67 @@ C< realized > flag, or chain up to the parent class C< REALIZE > method.
 
 The C< UNREALIZE > virtual function will be called when destroying the
 actor, and allows the release of the resources allocated inside C< REALIZE >.
+
+=item PICK ($actor, $pick_color)
+
+=over
+
+=item o $actor (Clutter::Actor)
+
+=item o $pick_color (Clutter::Color)
+
+=back
+
+The C< PICK > virtual function will be called when drawing the scene with
+a mask of the actors in order to detect actor at a given pair of coordinates
+relative to the stage (see the C<get_actor_at_pos> method of
+L<Clutter::Stage>).
+
+The actor should paint its bounding box with the passed I<pick_color>, and
+its eventual children should be painted as well by invoking the C<paint>
+method. The default implementation of the C< PICK > method is the equivalent
+of:
+
+  sub PICK {
+    my ($self, $pick_color) = @_;
+
+    glColor4ub($pick_color->red,
+               $pick_color->green,
+               $pick_color->blue,
+               $pick_color->alpha);
+    glRecti($self->get_x(),
+            $self->get_y(),
+            $self->get_x() + $self->get_width(),
+            $self->get_y() + $self->get_height());
+  }
+
+Which will render the actor as a rectangle the size of its bounding box (Note:
+there is no need to override the C< PICK > virtual function in this case).
+
+An actor with internal children, or implementing the L<Clutter::Container>
+interface should, instead, use:
+
+  sub PICK {
+    my ($self, $pick_color) = @_;
+
+    glPushMatrix();
+
+    glColor4ub($pick_color->red,
+               $pick_color->green,
+               $pick_color->blue,
+               $pick_color->alpha);
+    glRecti($self->get_x(),
+            $self->get_y(),
+            $self->get_x() + $self->get_width(),
+            $self->get_y() + $self->get_height());
+
+    foreach my $child in ($self->get_children()) {
+        $child->paint(); # this will result in the PICK method of
+                         # the child being called
+    }
+
+    glPopMatrix();
+  }
 
 =back
 
@@ -1000,6 +1091,9 @@ _INSTALL_OVERRIDES (const char *package)
 =for apidoc Clutter::Actor::PAINT __hide__
 =cut
 
+=for apidoc Clutter::Actor::PICK __hide__
+=cut
+
 =for apidoc Clutter::Actor::REQUEST_COORDS __hide__
 =cut
 
@@ -1178,3 +1272,27 @@ UNREALIZE (ClutterActor *actor)
         if (klass->unrealize) {
                 klass->unrealize (actor);
         }
+
+void
+PICK (ClutterActor *actor, const ClutterColor *pick_color)
+    PREINIT:
+        ClutterActorClass *klass;
+        GType thisclass, parent_class;
+        SV *saveddefsv;
+    CODE:
+        saveddefsv = newSVsv (DEFSV);
+        eval_pv ("$_ = caller;", 0);
+        thisclass = gperl_type_from_package (SvPV_nolen (DEFSV));
+        SvSetSV (DEFSV, saveddefsv);
+        if (!thisclass)
+                thisclass = G_OBJECT_TYPE (actor);
+        parent_class = g_type_parent (thisclass);
+        if (!g_type_is_a (parent_class, CLUTTER_TYPE_ACTOR)) {
+                croak ("parent of %s is not a Clutter::Actor",
+                       g_type_name (thisclass));
+        }
+        klass = g_type_class_peek (parent_class);
+        if (klass->pick) {
+                klass->pick (actor, pick_color);
+        }
+
