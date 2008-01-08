@@ -1,5 +1,25 @@
 2008-01-08  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* MANIFEST: Add the new custom actor example
+
+	* examples/custom-actor.pl: Custom actor example; show how to
+	subclass Clutter::Actor and override key methods. Requires
+	the OpenGL module installed.
+
+	* xs/ClutterActor.xs: Fix a lot of bugs in the overridable
+	virtual functions; unfortunately, the ActorBox passed to
+	QUERY_COORDS() is an in-out parameter, so we need it on the
+	stack as well. subclasses will receive the box on the stack
+	and will have to return an array of coordinates (x1, y1, x2, y2)
+	with the new bounding box. Actors don't usually need the box
+	on the stack and can just ignore it, though.
+
+	* t/ClutterActor.t: There's no point in chaining up QUERY_COORDS;
+	make sure we get the right box size in subclasses; chain up
+	REQUEST_COORDS, which is instead needed.
+
+2008-01-08  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* xs/ClutterActor.xs: Allow overriding the PICK virtual function.
 
 2008-01-08  Emmanuele Bassi  <ebassi@openedhand.com>

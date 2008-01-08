@@ -38,15 +38,13 @@ clutterperl_actor_show_all (ClutterActor *actor)
                 SAVETMPS;
                 PUSHMARK (SP);
 
-                EXTEND (SP, 1);
                 PUSHs (newSVClutterActor (actor));
                 
                 PUTBACK;
-
                 call_sv ((SV *) GvCV (slot), G_VOID | G_DISCARD);
-
                 SPAGAIN;
 
+                PUTBACK;
                 FREETMPS;
                 LEAVE;
         }
@@ -65,15 +63,13 @@ clutterperl_actor_hide_all (ClutterActor *actor)
                 SAVETMPS;
                 PUSHMARK (SP);
 
-                EXTEND (SP, 1);
                 PUSHs (newSVClutterActor (actor));
                 
                 PUTBACK;
-
                 call_sv ((SV *) GvCV (slot), G_VOID | G_DISCARD);
-
                 SPAGAIN;
 
+                PUTBACK;
                 FREETMPS;
                 LEAVE;
         }
@@ -92,15 +88,13 @@ clutterperl_actor_paint (ClutterActor *actor)
                 SAVETMPS;
                 PUSHMARK (SP);
 
-                EXTEND (SP, 1);
                 PUSHs (newSVClutterActor (actor));
                 
                 PUTBACK;
-
                 call_sv ((SV *) GvCV (slot), G_VOID | G_DISCARD);
-
                 SPAGAIN;
 
+                PUTBACK;
                 FREETMPS;
                 LEAVE;
         }
@@ -128,6 +122,7 @@ clutterperl_actor_request_coords (ClutterActor    *actor,
                 call_sv ((SV *) GvCV (slot), G_VOID | G_DISCARD);
                 SPAGAIN;
 
+                PUTBACK;
                 FREETMPS;
                 LEAVE;
         }
@@ -148,8 +143,9 @@ clutterperl_actor_query_coords (ClutterActor    *actor,
                 SAVETMPS;
                 PUSHMARK (SP);
 
-                EXTEND (SP, 1);
+                EXTEND (SP, 2);
                 PUSHs (newSVClutterActor (actor));
+                PUSHs (sv_2mortal (newSVClutterActorBox (box)));
 
                 PUTBACK;
                 count = call_sv ((SV *) GvCV (slot), G_ARRAY);
@@ -185,15 +181,13 @@ clutterperl_actor_realize (ClutterActor *actor)
                 SAVETMPS;
                 PUSHMARK (SP);
 
-                EXTEND (SP, 1);
                 PUSHs (newSVClutterActor (actor));
                 
                 PUTBACK;
-
                 call_sv ((SV *) GvCV (slot), G_VOID | G_DISCARD);
-
                 SPAGAIN;
 
+                PUTBACK;
                 FREETMPS;
                 LEAVE;
         }
@@ -212,15 +206,13 @@ clutterperl_actor_unrealize (ClutterActor *actor)
                 SAVETMPS;
                 PUSHMARK (SP);
 
-                EXTEND (SP, 1);
                 PUSHs (newSVClutterActor (actor));
                 
                 PUTBACK;
-
                 call_sv ((SV *) GvCV (slot), G_VOID | G_DISCARD);
-
                 SPAGAIN;
 
+                PUTBACK;
                 FREETMPS;
                 LEAVE;
         }
@@ -245,11 +237,10 @@ clutterperl_actor_pick (ClutterActor       *actor,
                 PUSHs (newSVClutterColor (pick_color));
                 
                 PUTBACK;
-
                 call_sv ((SV *) GvCV (slot), G_VOID | G_DISCARD);
-
                 SPAGAIN;
 
+                PUTBACK;
                 FREETMPS;
                 LEAVE;
         }
@@ -1199,12 +1190,11 @@ REQUEST_COORDS (ClutterActor *actor, ClutterActorBox *box)
         }
 
 void
-QUERY_COORDS (ClutterActor *actor)
+QUERY_COORDS (ClutterActor *actor, ClutterActorBox *box)
     PREINIT:
         ClutterActorClass *klass;
         GType thisclass, parent_class;
         SV *saveddefsv;
-        ClutterActorBox box = { 0, };
     PPCODE:
         saveddefsv = newSVsv (DEFSV);
         eval_pv ("$_ = caller;", 0);
@@ -1219,13 +1209,17 @@ QUERY_COORDS (ClutterActor *actor)
         }
         klass = g_type_class_peek (parent_class);
         if (klass->query_coords) {
-                klass->query_coords (actor, &box);
+                klass->query_coords (actor, box);
         }
         /* allow doing:
          *   return $self->SUPER::QUERY_COORDS();
          * in Perl subclasses
          */
-        XPUSHs (sv_2mortal (newSVClutterActorBox (&box)));
+        EXTEND (SP, 4);
+        PUSHs (sv_2mortal (newSViv (box->x1)));
+        PUSHs (sv_2mortal (newSViv (box->y1)));
+        PUSHs (sv_2mortal (newSViv (box->x2)));
+        PUSHs (sv_2mortal (newSViv (box->y2)));
 
 void
 REALIZE (ClutterActor *actor)
