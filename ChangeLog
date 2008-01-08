@@ -1,5 +1,17 @@
 2008-01-08  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* xs/ClutterActor.xs: Fix documentation
+
+	* xs/ClutterTypes.xs: Add more documentation for the ::Color
+	and ::ActorBox perldoc pages; add the convenience functions:
+
+	  Clutter::ActorBox::origin
+	  Clutter::ActorBox::size
+	
+	for getting the origin and the size of and actor box.
+
+2008-01-08  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* MANIFEST: Add the new custom actor example
 
 	* examples/custom-actor.pl: Custom actor example; show how to

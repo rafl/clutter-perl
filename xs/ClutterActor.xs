@@ -311,8 +311,8 @@ settings by the following order of operations:
 
 =item 8. Clip stencil is applied
 
-B<Note>: not an operation on the matrix as such, but done as part of the
-transformation set up
+B<Note>: clipping not an operation on the matrix as such, but done as part
+of the transformation set up
 
 =back
 
@@ -396,17 +396,23 @@ C< SUPER > mechanism provided by Perl, for instance:
 
 See L<perlobj>.
 
-=item  (x1, y1, x2, y2) = QUERY_COORDS ($actor)
+=item  (x1, y1, x2, y2) = QUERY_COORDS ($actor, $box)
 
 =over
 
 =item o $actor (Clutter::Actor)
+
+=item o $box (Clutter::ActorBox)
 
 =back
 
 This is called each time the actor is queried for its coordinates and size.
 The returned array must contains the upper left and lower right coordinates of
 the box surrounding the actor, in coordinates relative to the actor's parent.
+
+B<Note>: Actors can mostly ignore the I<box> parameter: it will contain the
+current coordinates of the actor's bounding box, which can be taken into
+account when recomputing the new box.
 
 =back
 

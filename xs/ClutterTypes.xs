@@ -27,6 +27,15 @@
 
 MODULE = Clutter::Types		PACKAGE = Clutter::Color
 
+=for position DESCRIPTION
+
+=head1 DESCRIPTION
+
+Color representation in RGBA format. Every color component is 8 bits
+wide.
+
+=cut
+
 ClutterColor_copy *
 new (class, red=0, green=0, blue=0, alpha=0)
 	guint8 red
@@ -314,6 +323,21 @@ values (ClutterGeometry *geometry)
 
 MODULE = Clutter::Types		PACKAGE = Clutter::ActorBox
 
+=for position DESCRIPTION
+
+=head1 DESCRIPTION
+
+The bounding box of an actor, represented by the coordinates of the
+upper left and lower right corners:
+
+  +-----------------------+
+  | (x1,y1)               |
+  |                       |
+  |               (x2,y2) |
+  +-----------------------+
+
+=cut
+
 ClutterActorBox_copy *
 new (class, x1, y1, x2, y2)
 	gint32 x1
@@ -385,7 +409,7 @@ x1 (ClutterActorBox *box, SV *newvalue = 0)
         RETVAL
 
 =for apidoc
-=for signature (x, y, x2, y2) = $box->values
+=for signature (x1, y1, x2, y2) = $box->values
 =cut
 void
 values (ClutterActorBox *box)
@@ -395,6 +419,27 @@ values (ClutterActorBox *box)
 	PUSHs (sv_2mortal (newSViv (box->y1)));
 	PUSHs (sv_2mortal (newSViv (box->x2)));
 	PUSHs (sv_2mortal (newSViv (box->y2)));
+
+=for apidoc
+=for signature (x, y) = $box->origin
+=cut
+void
+origin (ClutterActorBox *box)
+    PPCODE:
+        EXTEND (SP, 2);
+        PUSHs (sv_2mortal (newSViv (box->x1)));
+        PUSHs (sv_2mortal (newSViv (box->y1)));
+
+
+=for apidoc
+=for signature (width, height) = $box->size
+=cut
+void
+size (ClutterActorBox *box)
+    PPCODE:
+        EXTEND (SP, 2);
+        PUSHs (sv_2mortal (newSViv (box->x2 - box->x1)));
+        PUSHs (sv_2mortal (newSViv (box->y2 - box->y1)));
 
 MODULE = Clutter::Types		PACKAGE = Clutter::Knot
 
