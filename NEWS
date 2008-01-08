@@ -1,3 +1,6 @@
+Clutter 0.510
+=============
+
 Clutter 0.410
 =============
 * Fix Clutter::Actor::QUERY_COORDS to return an array
