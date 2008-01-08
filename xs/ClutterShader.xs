@@ -1,0 +1,76 @@
+/* Clutter.
+ *
+ * Perl bindings for the OpenGL based 'interactive canvas' library.
+ *
+ * Clutter Authored By Matthew Allum  <mallum@openedhand.com>
+ * Perl bindings by Emmanuele Bassi  <ebassi@openedhand.com>
+ * 
+ * Copyright (C) 2006 OpenedHand
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#include "clutterperl.h"
+
+MODULE = Clutter::Shader        PACKAGE = Clutter::Shader       PREFIX = clutter_shader_
+
+ClutterShader_noinc *
+clutter_shader_new (class)
+    C_ARGS:
+        /* void */
+
+void
+clutter_shader_set_is_enabled (ClutterShader *shader, gboolean enabled)
+
+gboolean
+clutter_shader_get_is_enabled (ClutterShader *shader)
+
+=for apidoc __gerror__
+=cut
+gboolean
+clutter_shader_bind (ClutterShader *shader)
+    PREINIT:
+        GError *error = NULL;
+    CODE:
+        clutter_shader_bind (shader, &error);
+        if (error)
+                gperl_croak_gerror (NULL, error);
+
+void
+clutter_shader_release (ClutterShader *shader)
+
+gboolean
+clutter_shader_is_bound (ClutterShader *shader)
+
+void
+clutter_shader_set_vertex_source (ClutterShader *shader, const gchar *source)
+    CODE:
+        clutter_shader_set_vertex_source (shader, source, -1);
+
+const gchar *
+clutter_shader_get_vertex_source (ClutterShader *shader)
+
+void
+clutter_shader_set_fragment_source (ClutterShader *shader, const gchar *source)
+    CODE:
+        clutter_shader_set_fragment_source (shader, source, -1);
+
+const gchar *
+clutter_shader_get_fragment_source (ClutterShader *shader)
+
+void
+clutter_shader_set_uniform_1f (ClutterShader *shader, const gchar *name, gfloat value)
+

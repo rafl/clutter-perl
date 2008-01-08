@@ -1,5 +1,16 @@
 2008-01-08  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* MANIFEST:
+	* maps:
+	* xs_files: Add xs/ClutterShader.xs and its types.
+
+	* xs/ClutterActor.xs: Bind Clutter::Actor shaders API.
+
+	* xs/ClutterShader.xs: Bind Clutter::Shader, the OpenGL
+	programmable pipeline abstraction.
+
+2008-01-08  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* xs/ClutterModel.xs: Bind:
 
 	  clutter_model_set_sort()

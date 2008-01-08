@@ -40,6 +40,7 @@ CLUTTER_TYPE_ROTATE_DIRECTION   ClutterRotateDirection  GEnum           Clutter:
 CLUTTER_TYPE_SCROLL_DIRECTION   ClutterScrollDirection  GEnum           Clutter::ScrollDirection
 CLUTTER_TYPE_SCORE              ClutterScore            GObject         Clutter::Score
 CLUTTER_TYPE_SCRIPT             ClutterScript           GObject         Clutter::Script
+CLUTTER_TYPE_SHADER             ClutterShader           GObject         Clutter::Shader
 CLUTTER_TYPE_STAGE	        ClutterStage	        GObject	        Clutter::Stage
 CLUTTER_TYPE_STAGE_STATE        ClutterStageState       GFlags          Clutter::StageState
 CLUTTER_TYPE_TEXTURE	        ClutterTexture	        GObject	        Clutter::Texture

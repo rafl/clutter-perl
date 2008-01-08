@@ -67,6 +67,7 @@ xs/ClutterModelIter.xs
 xs/ClutterRectangle.xs
 xs/ClutterScore.xs
 xs/ClutterScript.xs
+xs/ClutterShader.xs
 xs/ClutterStage.xs
 xs/ClutterTexture.xs
 xs/ClutterTimeline.xs

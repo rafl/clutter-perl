@@ -911,14 +911,14 @@ clutter_actor_apply_transform_to_point (ClutterActor *actor, ClutterVertex *vert
 gboolean
 clutter_actor_should_pick_paint (ClutterActor *actor)
 
-##gboolean
-##clutter_actor_apply_shader (ClutterActor *actor, ClutterShader_ornull *shader)
+gboolean
+clutter_actor_apply_shader (ClutterActor *actor, ClutterShader_ornull *shader)
 
-##void
-##clutter_actor_set_shader_param (actor, param, value)
-##      ClutterActor *actor
-##      const gchar *param
-##      gfloat value
+void
+clutter_actor_set_shader_param (actor, param, value)
+      ClutterActor *actor
+      const gchar *param
+      gfloat value
 
 =for apidoc
 Sets the I<anchor point> of the I<actor>. The anchor is a point in the
