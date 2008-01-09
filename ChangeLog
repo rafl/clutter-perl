@@ -1,5 +1,10 @@
 2008-01-09  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* NEWS:
+	* README: Release 0.500
+
+2008-01-09  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* examples/custom-actor.pl: Add a ::clicked signal and the
 	event handling marshallers to emit it.
 

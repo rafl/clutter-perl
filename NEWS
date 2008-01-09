@@ -1,5 +1,11 @@
-Clutter 0.510
+Clutter 0.500
 =============
+* Resync with upstream API
+* Changed the Clutter::Actor::QUERY_COORDS() method signature: an ActorBox
+  is also passed to the method, containing the current bounding box
+  coordinates
+* Added a new example showing how to correctly implementing an actor
+* More documentation
 
 Clutter 0.410
 =============
