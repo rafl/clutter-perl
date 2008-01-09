@@ -1,3 +1,8 @@
+2008-01-09  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* examples/custom-actor.pl: Add a ::clicked signal and the
+	event handling marshallers to emit it.
+
 2008-01-08  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* xs/ClutterActor.xs: Fix documentation

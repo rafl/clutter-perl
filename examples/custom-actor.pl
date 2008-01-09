@@ -3,7 +3,7 @@ package Clutter::Ex::Triangle;
 use warnings;
 use strict;
 
-use Glib;
+use Glib qw( :constants );
 use OpenGL;
 use Clutter;
 
@@ -39,6 +39,17 @@ class providing a triangular shape.
 
 use Glib::Object::Subclass
     'Clutter::Actor',
+    signals => {
+        clicked => {
+            class_closure => undef,
+            flags         => [ qw( run-last ) ],
+            return_type   => undef,
+            param_types   => [ ],
+        },
+        button_press_event   => \&on_button_press,
+        button_release_event => \&on_button_release,
+        leave_event          => \&on_leave,
+    },
     properties => [
         Glib::ParamSpec->boxed(
             'color',
@@ -48,6 +59,50 @@ use Glib::Object::Subclass
             [ qw( readable writable ) ],
         ),
     ];
+
+sub on_button_press {
+    my ($self, $event) = @_;
+
+    if ($event->button == 1) {
+        $self->{is_pressed} = TRUE;
+
+        Clutter->grab_pointer($self);
+
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+sub on_button_release {
+    my ($self, $event) = @_;
+
+    if ($event->button == 1 and $self->{is_pressed}) {
+        $self->{is_pressed} = FALSE;
+
+        Clutter->ungrab_pointer();
+
+        $self->signal_emit('clicked');
+
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+sub on_leave {
+    my ($self, $event) = @_;
+
+    if ($self->{is_pressed}) {
+        $self->{is_pressed} = FALSE;
+
+        Clutter->ungrab_pointer();
+
+        return TRUE;
+    }
+
+    return FALSE;
+}
 
 sub PICK {
     my ($self, $pick_color) = @_;
@@ -168,6 +223,19 @@ sub get_color {
 
 =back
 
+=head1 SIGNALS
+
+=over
+
+=item B<clicked ($triangle)>
+
+  * $triangle (Clutter::Ex::Triangle)
+
+The C<clicked> signal is emitted each time the mouse is pressed and then
+released within the actor's area.
+
+=back
+
 =head1 PROPERTIES
 
 =over
@@ -193,6 +261,8 @@ notice.
 
 =cut
 
+# aaw, demo it already!
+
 package main;
 
 use Glib qw( :constants );
@@ -209,12 +279,7 @@ $triangle->set_reactive(TRUE);
 $stage->add($triangle);
 $triangle->set_position((640 - 100) / 2, (480 - 100) / 2);
 $triangle->set_size(100, 100);
-$triangle->signal_connect(button_press_event => sub {
-    my ($actor, $event) = @_;
-
-    print "Button press at (", join(', ', $event->get_coords()), ")\n";
-    Clutter->main_quit();
-});
+$triangle->signal_connect(clicked => sub { Clutter->main_quit(); });
 
 $triangle->show();
 
