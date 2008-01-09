@@ -17,10 +17,10 @@ xs/ClutterEntry.xs
 xs/ClutterEvent.xs
 xs/ClutterGroup.xs
 xs/ClutterLabel.xs
+xs/ClutterListModel.xs
 xs/ClutterMedia.xs
 xs/ClutterModel.xs
 xs/ClutterModelIter.xs
-xs/ClutterModelDefault.xs
 xs/ClutterRectangle.xs
 xs/ClutterScore.xs
 xs/ClutterScript.xs

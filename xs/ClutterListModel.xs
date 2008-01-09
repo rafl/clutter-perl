@@ -25,16 +25,16 @@
 
 #include "clutterperl.h"
 
-MODULE = Clutter::Model::Default PACKAGE = Clutter::Model::Default PREFIX = clutter_model_
+MODULE = Clutter::ListModel     PACKAGE = Clutter::ListModel    PREFIX = clutter_list_model_
 
 =for apidoc
-=for signature model = Clutter::Model::Default->new (type, name, ...)
+=for signature model = Clutter::ListModel->new (type, name, ...)
 =for arg type (string) type of the column
 =for arg name (string) name of the column, or undef
 =for arg ... (list) of type, name pairs
 =cut
 ClutterModel_noinc *
-clutter_model_new (class, ...)
+clutter_list_model_new (class, ...)
     PREINIT:
         GArray *types;
         GPtrArray *names;
@@ -60,9 +60,9 @@ clutter_model_new (class, ...)
                 g_array_index (types, GType,  n_columns) = t;
                 g_ptr_array_add (names, name);
         }
-        RETVAL = clutter_model_default_newv (n_columns,
-                                             (GType *) types->data,
-                                             (const gchar **) names->pdata);
+        RETVAL = clutter_list_model_newv (n_columns,
+                                          (GType *) types->data,
+                                          (const gchar **) names->pdata);
         g_array_free (types, TRUE);
         g_ptr_array_free (names, TRUE);
     OUTPUT:

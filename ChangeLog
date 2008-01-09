@@ -1,5 +1,20 @@
 2008-01-09  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	reviewed by: <delete if not using a buddy>
+
+	* Clutter.pm: Bump up to 0.510 as we require the 0.5.1 release
+
+	* README:
+	* Makefile.PL: Update Clutter requirements
+
+	* MANIFEST:
+	* maps:
+	* xs_files: s/ClutterModelDefault/ClutterListModel/
+
+	* xs/ClutterListModel.xs: Update wrapper after rename
+
+2008-01-09  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* Clutter.pm: Post-release bump to 0.501
 
 2008-01-09  Emmanuele Bassi  <ebassi@openedhand.com>

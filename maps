@@ -29,10 +29,10 @@ CLUTTER_TYPE_GROUP	        ClutterGroup	        GObject	        Clutter::Group
 CLUTTER_TYPE_KNOT               ClutterKnot             GBoxed          Clutter::Knot
 CLUTTER_TYPE_INIT_ERROR         ClutterInitError        GEnum           Clutter::InitError
 CLUTTER_TYPE_LABEL	        ClutterLabel	        GObject	        Clutter::Label
+CLUTTER_TYPE_LIST_MODEL         ClutterListModel        GObject         Clutter::ListModel
 CLUTTER_TYPE_MEDIA	        ClutterMedia	        GInterface	Clutter::Media
 CLUTTER_TYPE_MODEL              ClutterModel            GObject         Clutter::Model
 CLUTTER_TYPE_MODEL_ITER         ClutterModelIter        GObject         Clutter::Model::Iter
-CLUTTER_TYPE_MODEL_DEFAULT      ClutterModelDefault     GObject         Clutter::Model::Default
 CLUTTER_TYPE_MODIFIER_TYPE      ClutterModifierType     GFlags          Clutter::ModifierType
 CLUTTER_TYPE_RECTANGLE	        ClutterRectangle        GObject	        Clutter::Rectangle
 CLUTTER_TYPE_ROTATE_AXIS        ClutterRotateAxis       GEnum           Clutter::RotateAxis
