@@ -1,6 +1,6 @@
 use Clutter::TestHelper tests => 16;
 
-my $model = Clutter::Model::Default->new(
+my $model = Clutter::ListModel->new(
     'Glib::String', 'Strings',
     'Glib::Int',    'Integers',
 );

@@ -1,5 +1,9 @@
 2008-01-09  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* t/ClutterModel.t: Update test suite.
+
+2008-01-09  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	reviewed by: <delete if not using a buddy>
 
 	* Clutter.pm: Bump up to 0.510 as we require the 0.5.1 release
