@@ -7,6 +7,7 @@ doctypes
 examples/behaviour.pl
 examples/cairo.pl
 examples/custom-actor.pl
+examples/gtk-clutter.pl
 examples/hello.pl
 examples/rects.pl
 examples/redhand.png

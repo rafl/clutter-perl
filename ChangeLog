@@ -1,5 +1,10 @@
 2008-01-17  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* MANIFEST:
+	* examples/gtk-clutter.pl: Add Gtk2::ClutterEmbed usage example.
+
+2008-01-17  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* Clutter.pm: Bump up to 0.530, as we require trunk
 
 	* Makefile.PL: Require clutter-core 0.5.3
