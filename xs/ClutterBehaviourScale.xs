@@ -31,26 +31,46 @@ MODULE = Clutter::Behaviour::Scale    PACKAGE = Clutter::Behaviour::Scale   PREF
 =cut
 
 ClutterBehaviour_noinc *
-clutter_behaviour_scale_new (class, alpha=NULL, scale_start, scale_end, gravity)
+clutter_behaviour_scale_new (class, alpha=NULL, x_start, y_start, x_end, y_end, gravity=CLUTTER_GRAVITY_NONE)
         ClutterAlpha_ornull *alpha
-        gdouble scale_start
-        gdouble scale_end
+        gdouble x_start
+        gdouble y_start
+        gdouble x_end
+        gdouble y_end
         ClutterGravity gravity
     C_ARGS:
-        alpha, scale_start, scale_end, gravity
+        alpha, x_start, y_start, x_end, y_end, gravity
+
+void
+clutter_behaviour_scale_set_bounds (scale, x_start, y_start, x_end, y_end)
+        ClutterBehaviourScale *scale
+        gdouble x_start
+        gdouble y_start
+        gdouble x_end
+        gdouble y_end
 
 =for apidoc
-=for signature (scale_start, scale_end) = $scale->get_bounds
+=for signature (x_start, y_start, x_end, y_end) = $scale->get_bounds
 =cut
 void
 clutter_behaviour_scale_get_bounds (ClutterBehaviourScale *scale)
     PREINIT:
-        gdouble scale_start, scale_end;
+        gdouble x_start, x_end;
+        gdouble y_start, y_end;
     PPCODE:
-        clutter_behaviour_scale_get_bounds (scale, &scale_start, &scale_end);
-        EXTEND (SP, 2);
-        PUSHs (sv_2mortal (newSVnv (scale_start)));
-        PUSHs (sv_2mortal (newSVnv (scale_end)));
+        clutter_behaviour_scale_get_bounds (scale,
+                                            &x_start, &y_start,
+                                            &x_end, &y_end);
+        EXTEND (SP, 4);
+        PUSHs (sv_2mortal (newSVnv (x_start)));
+        PUSHs (sv_2mortal (newSVnv (y_start)));
+        PUSHs (sv_2mortal (newSVnv (x_end)));
+        PUSHs (sv_2mortal (newSVnv (y_end)));
+
+void
+clutter_behaviour_scale_set_gravity (scale, gravity)
+        ClutterBehaviourScale *scale
+        ClutterGravity gravity
 
 ClutterGravity
 clutter_behaviour_scale_get_gravity (ClutterBehaviourScale *scale)

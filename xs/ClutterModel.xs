@@ -413,12 +413,17 @@ clutter_model_insert (ClutterModel *model, guint row, ...)
     PREINIT:
         gint n_cols, i;
         gint n_values;
-        const char *errfmt = "Usage: $model->insert ($row, $column, $value, ...)\n     %s";
+        guint *columns;
+        GValueArray *values;
+        const char *errfmt = "Usage: $model->insert ($row, $column, $value, ...)\n"
+                             "     %s";
     CODE:
         if (items < 2 || 0 != (items % 2))
                 croak (errfmt, "There must be a value for every column number");
         n_cols = clutter_model_get_n_columns (model);
         n_values = (items - 2) / 2;
+        columns = g_new (guint, n_values);
+        values = g_value_array_new (n_values);
         for (i = 0; i < n_values; i++) {
                 gint column = 0;
                 GValue value = { 0, };
@@ -432,9 +437,13 @@ clutter_model_insert (ClutterModel *model, guint row, ...)
                 g_value_init (&value,
                               clutter_model_get_column_type (model, column));
                 gperl_value_from_sv (&value, ST (2 + i * 2 + 1));
-                clutter_model_insert_value (model, row, column, &value);
+                columns[i] = column;
+                g_value_array_append (values, &value);
                 g_value_unset (&value);
         }
+        clutter_model_insertv (model, row, n_values, columns, values->values);
+        g_free (columns);
+        g_value_array_free (values);
 
 void
 clutter_model_remove (ClutterModel *model, guint row)

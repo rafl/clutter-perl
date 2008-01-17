@@ -15,13 +15,24 @@ Clutter::Ex::Triangle - Basic triangular actor
 
 =head1 SYNOPSIS
 
+  use Clutter qw( :init );
   use Clutter::Ex::Triangle;
 
   my $triangle = Clutter::Ex::Triangle->new();
   my $color = Clutter::Color->parse('DarkBlue');
   $triangle->set_color($color);
 
+  # - or -
+
   my $triangle = Clutter::Ex::Triangle->new_with_color($color);
+
+  my $stage = Clutter::Stage->get_default();
+  $stage->add($triangle);
+  $triangle->set_reactive(1);
+  $triangle->signal_connect(clicked => sub { Clutter->main_quit() });
+  $triangle->show();
+
+  Clutter->main();
 
 =head1 DESCRIPTION
 
