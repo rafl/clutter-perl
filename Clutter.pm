@@ -199,8 +199,9 @@ Clutter - Simple GL-based canvas library
   # add an actor and place it right in the middle
   my $label = Clutter::Label->new("Sans 30", "Hello, Clutter!");
   $label->set_color(Clutter::Color->new(0xff, 0xcc, 0xcc, 0xdd));
-  $label->set_position(($stage->get_width()  - $label->get_width())  / 2,
-                       ($stage->get_height() - $label->get_height()) / 2);
+  $label->set_anchor_point($label->get_width() / 2,
+                           $label->get_height() / 2);
+  $label->set_position($stage->get_width() / 2, $stage->get_height() / 2);
   $stage->add($label);
 
   $stage->show_all();
@@ -252,8 +253,9 @@ As above, the name has been changed to reinforce the inheritance.
 
 =item GtkClutter =E<gt> Gtk2::ClutterEmbed
 
-Move the GTK+ widget into the Gtk2 namespace and use the ClutterEmbed
-name.
+The widget for embedding a Clutter::Stage into a GTK+ application has
+been moved into the Gtk2 namespace and use the ClutterEmbed name similar
+to the MozEmbed widget for embedding Gecko.
 
 =back
 
@@ -275,9 +277,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 You should have received a copy of the GNU Library General Public
-License along with this module; if not, write to the 
-Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
-Boston, MA  02111-1307  USA.
+License along with this module; if not, see L<http://www.gnu.org/licenses/>.
 
 For the terms of The Artistic License, see L<perlartistic>.
 

@@ -1,5 +1,10 @@
 2008-01-17  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* Clutter.pm: Clean up some wording, and remove the old FSF address
+	from the licesing notes (use the URL instead).
+
+2008-01-17  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* MANIFEST:
 	* examples/gtk-clutter.pl: Add Gtk2::ClutterEmbed usage example.
 
