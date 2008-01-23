@@ -96,7 +96,7 @@ if ($@) {
 # Integration libraries: Gtk2::ClutterEmbed
 our $have_clutter_gtk = 0;
 eval {
-    my %gtkpkgcfg = ExtUtils::PkgConfig->find('clutter-gtk-0.5');
+    my %gtkpkgcfg = ExtUtils::PkgConfig->find('clutter-gtk-0.5 >= 0.5.1');
 
     $module_cflags .= ' ' . $gtkpkgcfg{cflags} . '-DCLUTTERPERL_GTK';
     $module_libs   .= ' ' . $gtkpkgcfg{libs};

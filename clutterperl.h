@@ -15,7 +15,7 @@
 #endif
 
 #ifdef CLUTTERPERL_GTK
-#include <clutter-gtk/clutter-gtk.h>
+#include <clutter-gtk/gtk-clutter-embed.h>
 #endif
 
 #include "clutterperl-autogen.h"

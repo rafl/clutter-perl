@@ -1,3 +1,11 @@
+2008-01-23  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* Makefile.PL: Require trunk for clutter-gtk
+
+	* clutterperl.h:
+	* maps-gtk:
+	* xs/ClutterGtk.xs: Update for upstream change.
+
 2008-01-17  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* Clutter.pm: Clean up some wording, and remove the old FSF address
