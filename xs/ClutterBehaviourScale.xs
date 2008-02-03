@@ -31,15 +31,14 @@ MODULE = Clutter::Behaviour::Scale    PACKAGE = Clutter::Behaviour::Scale   PREF
 =cut
 
 ClutterBehaviour_noinc *
-clutter_behaviour_scale_new (class, alpha=NULL, x_start, y_start, x_end, y_end, gravity=CLUTTER_GRAVITY_NONE)
+clutter_behaviour_scale_new (class, alpha=NULL, x_start, y_start, x_end, y_end)
         ClutterAlpha_ornull *alpha
         gdouble x_start
         gdouble y_start
         gdouble x_end
         gdouble y_end
-        ClutterGravity gravity
     C_ARGS:
-        alpha, x_start, y_start, x_end, y_end, gravity
+        alpha, x_start, y_start, x_end, y_end
 
 void
 clutter_behaviour_scale_set_bounds (scale, x_start, y_start, x_end, y_end)
@@ -66,12 +65,3 @@ clutter_behaviour_scale_get_bounds (ClutterBehaviourScale *scale)
         PUSHs (sv_2mortal (newSVnv (y_start)));
         PUSHs (sv_2mortal (newSVnv (x_end)));
         PUSHs (sv_2mortal (newSVnv (y_end)));
-
-void
-clutter_behaviour_scale_set_gravity (scale, gravity)
-        ClutterBehaviourScale *scale
-        ClutterGravity gravity
-
-ClutterGravity
-clutter_behaviour_scale_get_gravity (ClutterBehaviourScale *scale)
-

@@ -143,12 +143,11 @@ fade (class, template, actor, end, func=NULL, data=NULL)
         RETVAL
 
 ClutterTimeline_noinc *
-scale (class, template, actor, x_end, y_end, gravity, func=NULL, data=NULL)
+scale (class, template, actor, x_end, y_end, func=NULL, data=NULL)
         ClutterEffectTemplate *template
         ClutterActor *actor
         gdouble x_end
         gdouble y_end
-        ClutterGravity gravity
         SV *func
         SV *data
     PREINIT:
@@ -158,7 +157,6 @@ scale (class, template, actor, x_end, y_end, gravity, func=NULL, data=NULL)
                 cb = clutterperl_effect_complete_func_create (func, data);
         RETVAL = clutter_effect_scale (template, actor,
                                        x_end, y_end,
-                                       gravity,
                                        clutterperl_effect_complete, cb);
     OUTPUT:
         RETVAL

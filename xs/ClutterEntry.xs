@@ -111,10 +111,10 @@ PangoAlignment
 clutter_entry_get_alignment (ClutterEntry *entry)
 
 void
-clutter_entry_set_position (ClutterEntry *entry, gint position)
+clutter_entry_set_cursor_position (ClutterEntry *entry, gint position)
 
 gint
-clutter_entry_get_position (ClutterEntry *entry)
+clutter_entry_get_cursor_position (ClutterEntry *entry)
 
 void
 clutter_entry_handle_key_event (ClutterEntry *entry, ClutterEvent *event)

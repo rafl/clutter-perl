@@ -14,7 +14,7 @@ our %build_reqs = (
     'perl-Glib'               => '1.171', # for Glib::MakeHelper
     'perl-Gtk2'               => '1.140',
     'perl-Cairo'              => '1.00',
-    'Clutter'                 => '0.5.3',
+    'Clutter'                 => '0.5.5',
 );
 
 # Writing a fake Makefile ensures that CPAN will pick up the correct
