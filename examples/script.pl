@@ -18,7 +18,8 @@ our $buffer =<<ENDUI;
   },
   {
     "id" : "scale-behaviour", "type" : "ClutterBehaviourScale",
-    "scale-start" : 1.0, "scale-end" : 0.7,
+    "x-scale-start" : 1.0, "x-scale-end" : 0.7,
+    "y-scale-start" : 1.0, "y-scale-end" : 0.7,
     "alpha" : { "timeline" : "scale-timeline", "function" : "sine-inc" }
   },
   {

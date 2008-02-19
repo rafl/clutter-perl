@@ -1,5 +1,9 @@
 2008-02-19  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* examples/script.pl: Fix scale behaviour properties.
+
+2008-02-19  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* xs/ClutterActor.xs: Bind the relative transformation API.
 
 	* xs/ClutterTexture.xs: Bind the from_actor constructor.
