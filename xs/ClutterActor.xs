@@ -954,6 +954,12 @@ clutter_actor_get_scale (ClutterActor *actor)
         PUSHs (sv_2mortal (newSVnv (scale_x)));
         PUSHs (sv_2mortal (newSVnv (scale_y)));
 
+gboolean
+clutter_actor_is_scaled (ClutterActor *actor)
+
+gboolean
+clutter_actor_is_rotated (ClutterActor *actor)
+
 void
 clutter_actor_move_by (ClutterActor *actor, gint dx, gint dy)
 
@@ -986,6 +992,24 @@ clutter_actor_get_vertices (ClutterActor *actor)
         PUSHs (sv_2mortal (newSVClutterVertex (&vertices[2])));
         PUSHs (sv_2mortal (newSVClutterVertex (&vertices[3])));
 
+=for apidoc
+=for signature vertices = $actor->get_relative_vertices ($ancestor)
+Returns an array of four Clutter::Vertex objects containing the
+transformed coordinates of the vertices of I<actor> in the I<ancestor>
+plane
+=cut
+void
+clutter_actor_get_relative_vertices (ClutterActor *actor, ClutterActor_ornull *ancestor)
+    PREINIT:
+        ClutterVertex vertices[4];
+    PPCODE:
+        clutter_actor_get_relative_vertices (actor, ancestor, vertices);
+        EXTEND (SP, 4);
+        PUSHs (sv_2mortal (newSVClutterVertex (&vertices[0])));
+        PUSHs (sv_2mortal (newSVClutterVertex (&vertices[1])));
+        PUSHs (sv_2mortal (newSVClutterVertex (&vertices[2])));
+        PUSHs (sv_2mortal (newSVClutterVertex (&vertices[3])));
+
 ClutterVertex_copy *
 clutter_actor_apply_transform_to_point (ClutterActor *actor, ClutterVertex *vertex)
     PREINIT:
@@ -996,11 +1020,24 @@ clutter_actor_apply_transform_to_point (ClutterActor *actor, ClutterVertex *vert
     OUTPUT:
         RETVAL
 
+ClutterVertex_copy *
+clutter_actor_apply_relative_transform_to_point (ClutterActor *actor, ClutterActor_ornull *ancestor, ClutterVertex *vertex)
+    PREINIT:
+        ClutterVertex transformed = { 0, };
+    CODE:
+        clutter_actor_apply_relative_transform_to_point (actor, ancestor, vertex, &transformed);
+        RETVAL = &transformed;
+    OUTPUT:
+        RETVAL
+
 gboolean
 clutter_actor_should_pick_paint (ClutterActor *actor)
 
 gboolean
-clutter_actor_apply_shader (ClutterActor *actor, ClutterShader_ornull *shader)
+clutter_actor_set_shader (ClutterActor *actor, ClutterShader_ornull *shader)
+
+ClutterShader_ornull *
+clutter_actor_get_shader (ClutterActor *actor)
 
 void
 clutter_actor_set_shader_param (actor, param, value)

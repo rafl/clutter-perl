@@ -1,3 +1,9 @@
+2008-02-19  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* xs/ClutterActor.xs: Bind the relative transformation API.
+
+	* xs/ClutterTexture.xs: Bind the from_actor constructor.
+
 2008-02-03  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* Makefile.PL: Require Clutter core >= 0.5.5

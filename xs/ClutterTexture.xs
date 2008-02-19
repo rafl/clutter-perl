@@ -31,11 +31,14 @@ MODULE = Clutter::Texture PACKAGE = Clutter::Texture PREFIX = clutter_texture_
 =cut
 
 ClutterActor *
-clutter_texture_new (class, pixbuf=NULL)
+clutter_texture_new (class, pixbuf=NULL, actor=NULL)
         GdkPixbuf_ornull *pixbuf
+        ClutterActor_ornull *actor
     CODE:
         if (pixbuf)
                 RETVAL = clutter_texture_new_from_pixbuf (pixbuf);
+        else if (actor)
+                RETVAL = clutter_texture_new_from_actor (actor);
         else
                 RETVAL = clutter_texture_new ();
     OUTPUT:
