@@ -17,7 +17,7 @@ my $embed = Gtk2::ClutterEmbed->new();
 $vbox->pack_start($embed, TRUE, FALSE, 0);
 
 my $stage = $embed->get_stage();
-$stage->set_size(300, 200);
+$embed->set_size_request(300, 200);
 $stage->set_color(Clutter::Color->parse('DarkBlue'));
 $embed->realize();
 

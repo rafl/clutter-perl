@@ -14,7 +14,7 @@ our %build_reqs = (
     'perl-Glib'               => '1.171', # for Glib::MakeHelper
     'perl-Gtk2'               => '1.140',
     'perl-Cairo'              => '1.00',
-    'Clutter'                 => '0.5.5',
+    'Clutter'                 => '0.6.0',
 );
 
 # Writing a fake Makefile ensures that CPAN will pick up the correct
@@ -48,7 +48,7 @@ our @xs_files = ();
 
 # Base module
 our %pkgcfg =
-    ExtUtils::PkgConfig->find('clutter-0.5 >= ' . $build_reqs{Clutter});
+    ExtUtils::PkgConfig->find('clutter-0.6 >= ' . $build_reqs{Clutter});
 
 my @names = Glib::MakeHelper->read_source_list_file('xs_files');
 print "Loaded " . scalar(@names) . " xs files for Clutter\n";
@@ -60,7 +60,7 @@ our $module_libs   = $pkgcfg{libs};
 # Integration libraries: Clutter::Gst
 our $have_clutter_gst = 0;
 eval {
-    my %gstpkgcfg = ExtUtils::PkgConfig->find('clutter-gst-0.5');
+    my %gstpkgcfg = ExtUtils::PkgConfig->find('clutter-gst-0.6');
 
     $module_cflags .= ' ' . $gstpkgcfg{cflags} . '-DCLUTTERPERL_GST';
     $module_libs   .= ' ' . $gstpkgcfg{libs};
@@ -78,7 +78,7 @@ if ($@) {
 # Integration libraries: Clutter::Texture::Cairo
 our $have_clutter_cairo = 0;
 eval {
-    my %cairopkgcfg = ExtUtils::PkgConfig->find('clutter-cairo-0.5');
+    my %cairopkgcfg = ExtUtils::PkgConfig->find('clutter-cairo-0.6');
 
     $module_cflags .= ' ' . $cairopkgcfg{cflags} . '-DCLUTTERPERL_CAIRO';
     $module_libs   .= ' ' . $cairopkgcfg{libs};
@@ -96,7 +96,7 @@ if ($@) {
 # Integration libraries: Gtk2::ClutterEmbed
 our $have_clutter_gtk = 0;
 eval {
-    my %gtkpkgcfg = ExtUtils::PkgConfig->find('clutter-gtk-0.5 >= 0.5.1');
+    my %gtkpkgcfg = ExtUtils::PkgConfig->find('clutter-gtk-0.6');
 
     $module_cflags .= ' ' . $gtkpkgcfg{cflags} . '-DCLUTTERPERL_GTK';
     $module_libs   .= ' ' . $gtkpkgcfg{libs};
@@ -173,7 +173,7 @@ WriteMakefile(
 );
 
 
-#=pod
+=pod
 #=unstable
 
 print "
@@ -186,7 +186,7 @@ bugs to clutter AT openedhand DOT com as soon as possible.
 WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
 ";
 
-#=cut
+=cut
 
 sub MY::postamble
 {

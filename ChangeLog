@@ -1,5 +1,14 @@
 2008-02-19  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* Makefile.PL: Require Clutter suite >= 0.6
+
+	* Clutter.pm: Bump to 0.600
+
+	* README:
+	* NEWS: Release 0.600
+
+2008-02-19  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* examples/script.pl: Fix scale behaviour properties.
 
 2008-02-19  Emmanuele Bassi  <ebassi@openedhand.com>
