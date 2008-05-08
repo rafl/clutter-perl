@@ -1,3 +1,13 @@
+Clutter 0.620
+=============
+* Require clutter-0.6 >= 0.6.2
+* Require clutter-cairo-0.6 >= 0.6.1
+* Require clutter-gtk-0.6 >= 0.6.1
+* Add new API to Clutter::Texture::Cairo for sub-region updates
+* Fix usage of glib-perl API
+* Return a boolean value in Clutter::Entry->handle_key_event()
+* Do no re-register GConnectFlags as a GType if it's already known
+
 Clutter 0.600
 =============
 * Resync with upstream API

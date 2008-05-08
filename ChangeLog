@@ -1,5 +1,12 @@
 2008-05-08  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* Clutter.pm: Bump to 0.621
+
+	* README:
+	* NEWS: Release 0.621
+
+2008-05-08  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* Clutter.pm: Bump to 0.620
 
 	* Makefile.PL: Bump requirements:
