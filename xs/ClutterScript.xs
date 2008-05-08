@@ -32,6 +32,8 @@ static GType
 clutterperl_connect_flags_get_type (void)
 {
         static GType etype = 0;
+
+        etype = g_type_from_name ("GConnectFlags");
         if (etype == 0) {
                 static const GFlagsValue values[] = {
                         { G_CONNECT_AFTER, "G_CONNECT_AFTER", "after" },

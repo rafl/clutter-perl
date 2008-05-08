@@ -422,7 +422,7 @@ DESTROY (SV *code)
         MAGIC *mg;
         ClutterPerlContainerForeachFunc *stuff;
     CODE:
-        if (!gperl_sv_defined (code) || !SvROK (code) || !(mg = mg_find (SvRV (code), PERL_MAGIC_ext)))
+        if (!gperl_sv_is_defined (code) || !SvROK (code) || !(mg = mg_find (SvRV (code), PERL_MAGIC_ext)))
                 return;
         stuff = INT2PTR (ClutterPerlContainerForeachFunc*, SvIV ((SV *) mg->mg_ptr));
         sv_unmagic (SvRV (code), PERL_MAGIC_ext);

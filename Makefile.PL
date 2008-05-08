@@ -14,7 +14,7 @@ our %build_reqs = (
     'perl-Glib'               => '1.171', # for Glib::MakeHelper
     'perl-Gtk2'               => '1.140',
     'perl-Cairo'              => '1.00',
-    'Clutter'                 => '0.6.0',
+    'Clutter'                 => '0.6.2',
 );
 
 # Writing a fake Makefile ensures that CPAN will pick up the correct
@@ -78,7 +78,7 @@ if ($@) {
 # Integration libraries: Clutter::Texture::Cairo
 our $have_clutter_cairo = 0;
 eval {
-    my %cairopkgcfg = ExtUtils::PkgConfig->find('clutter-cairo-0.6');
+    my %cairopkgcfg = ExtUtils::PkgConfig->find('clutter-cairo-0.6 >= 0.6.1');
 
     $module_cflags .= ' ' . $cairopkgcfg{cflags} . '-DCLUTTERPERL_CAIRO';
     $module_libs   .= ' ' . $cairopkgcfg{libs};
@@ -96,7 +96,7 @@ if ($@) {
 # Integration libraries: Gtk2::ClutterEmbed
 our $have_clutter_gtk = 0;
 eval {
-    my %gtkpkgcfg = ExtUtils::PkgConfig->find('clutter-gtk-0.6');
+    my %gtkpkgcfg = ExtUtils::PkgConfig->find('clutter-gtk-0.6 >= 0.6.1');
 
     $module_cflags .= ' ' . $gtkpkgcfg{cflags} . '-DCLUTTERPERL_GTK';
     $module_libs   .= ' ' . $gtkpkgcfg{libs};

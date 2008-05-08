@@ -1,3 +1,24 @@
+2008-05-08  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* Clutter.pm: Bump to 0.620
+
+	* Makefile.PL: Bump requirements:
+		clutter-0.6 >= 0.6.2
+		clutter-gtk-0.6 >= 0.6.1
+		clutter-cairo-0.6 >= 0.6.1
+
+	* tools/genkeysyms.pl: Require clutter-0.6
+
+	* xs/ClutterCairo.xs: Add new ClutterCairo API.
+
+	* xs/ClutterContainer.xs: Fix gperl_sv_is_defined().
+
+	* xs/ClutterEntry.xs: Return a boolean in handle_key_event().
+
+	* xs/ClutterScript.xs: Check if the GConnectFlags type has
+	already been registered by Glib or Gtk2, and if not register
+	it ourselves.
+
 2008-02-19  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* Makefile.PL: Require Clutter suite >= 0.6

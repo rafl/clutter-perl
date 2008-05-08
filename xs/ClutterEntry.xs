@@ -116,7 +116,7 @@ clutter_entry_set_cursor_position (ClutterEntry *entry, gint position)
 gint
 clutter_entry_get_cursor_position (ClutterEntry *entry)
 
-void
+gboolean
 clutter_entry_handle_key_event (ClutterEntry *entry, ClutterEvent *event)
     CODE:
         if (event->type != CLUTTER_KEY_PRESS ||
