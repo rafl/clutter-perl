@@ -25,32 +25,6 @@
 
 #include "clutterperl.h"
 
-static GPerlCallback *
-clutterperl_alpha_func_create (SV *func, SV *data)
-{
-        GType param_types[1] = { CLUTTER_TYPE_ALPHA, };
-
-        return gperl_callback_new (func, data, 1, param_types, G_TYPE_UINT);
-}
-
-static guint32
-clutterperl_alpha_func (ClutterAlpha *alpha,
-                        gpointer      data)
-{
-        GPerlCallback *callback = data;
-        GValue return_value = { 0, };
-        guint32 retval;
-
-        g_value_init (&return_value, callback->return_type);
-
-        gperl_callback_invoke (callback, &return_value, alpha);
-
-        retval = g_value_get_uint (&return_value);
-        g_value_unset (&return_value);
-
-        return retval;
-}
-
 static void
 clutterperl_alpha_sink (GObject *object)
 {
@@ -67,10 +41,10 @@ BOOT:
 
 =head1 DESCRIPTION
 
-The B< Clutter::Alpha > class binds together a L< Clutter::Timeline > and a
+The B<Clutter::Alpha> class binds together a L<Clutter::Timeline> and a
 function. At each frame of the timeline, the Alpha object will call the given
 function, which will receive the value of the frame and must return a value
-between 0 and MAX_ALPHA.
+between 0 and L<Clutter::Alpha::MAX_ALPHA>.
 
 This is an example of a simple alpha function that increments linearly:
 
@@ -96,15 +70,13 @@ clutter_alpha_new (class, timeline=NULL, func=NULL, data=NULL)
         SV *func
         SV *data
     CODE:
-        if (!timeline)
-                RETVAL = clutter_alpha_new ();
-        else {
-                GPerlCallback *callback;
-                callback = clutterperl_alpha_func_create (func, data);
-                RETVAL = clutter_alpha_new_full (timeline,
-                                                 clutterperl_alpha_func,
-                                                 callback,
-                                                 (GDestroyNotify) gperl_callback_destroy);
+        RETVAL = clutter_alpha_new ();
+        if (timeline) {
+                clutter_alpha_set_timeline (RETVAL, timeline);
+        }
+        if (func) {
+                GClosure *closure = gperl_closure_new (func, data, FALSE);
+                clutter_alpha_set_closure (RETVAL, closure);
         }
     OUTPUT:
         RETVAL
@@ -117,11 +89,7 @@ clutter_alpha_set_func (ClutterAlpha *alpha, SV *func, SV *data=NULL)
     PREINIT:
         GPerlCallback *callback;
     CODE:
-        callback = clutterperl_alpha_func_create (func, data);
-        clutter_alpha_set_func (alpha,
-                                clutterperl_alpha_func,
-                                callback,
-                                (GDestroyNotify) gperl_callback_destroy);
+        clutter_alpha_set_closure (alpha, gperl_closure_new (func, data, FALSE));
 
 void
 clutter_alpha_set_timeline (ClutterAlpha *alpha, ClutterTimeline *timeline)

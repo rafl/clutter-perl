@@ -1,5 +1,10 @@
 2008-07-21  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* xs/ClutterAlpha.xs: Simplify a lot of the Alpha bindings
+	code by using clutter_alpha_set_closure() internally.
+
+2008-07-21  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* xs/ClutterTimeline.xs: Bind newly added markers API.
 
 2008-07-21  Emmanuele Bassi  <ebassi@openedhand.com>
