@@ -106,7 +106,6 @@ BOOT:
         gperl_handle_logs_for ("Clutter-Gtk");
         gperl_handle_logs_for ("Clutter-Cairo");
 
-
 guint
 MAJOR_VERSION ()
     ALIAS:
@@ -245,6 +244,32 @@ clutter_gst_init_dummy (class=NULL)
         RETVAL
 
 #endif /* CLUTTERPERL_GST */
+
+#ifndef CLUTTERPERL_GTK
+
+# /* in case we are not building Clutter without the GTK+ support
+#  * we need a stub for clutter_gtk_init(), to warn the user if the
+#  * Clutter module was imported using the '-gtk-init' parameter or if
+#  * there's an explicit call to Clutter::Gtk->init()
+#  */
+
+ClutterInitError
+clutter_gtk_init_dummy (class=NULL)
+    ALIAS:
+        Clutter::Gst::init = 0
+    PREINIT:
+        GPerlArgv *pargv;
+    CODE:
+        PERL_UNUSED_VAR (ax);
+        pargv = gperl_argv_new ();
+        g_warning ("Clutter was built without support for GStreamer");
+        RETVAL = clutter_init (&pargv->argc, &pargv->argv);
+        gperl_argv_update (pargv); 
+        gperl_argv_free (pargv);
+    OUTPUT:
+        RETVAL
+
+#endif /* CLUTTERPERL_GTK */
 
 void
 clutter_main (class)

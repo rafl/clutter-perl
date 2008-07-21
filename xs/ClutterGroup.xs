@@ -27,7 +27,7 @@
 
 MODULE = Clutter::Group		PACKAGE = Clutter::Group	PREFIX = clutter_group_
 
-ClutterActor *
+ClutterActor_noinc *
 clutter_group_new (class)
     C_ARGS:
         /* void */

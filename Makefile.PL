@@ -12,9 +12,9 @@ our %build_reqs = (
     'perl-ExtUtils-Depends'   => '0.2',
     'perl-ExtUtils-PkgConfig' => '1.03',
     'perl-Glib'               => '1.171', # for Glib::MakeHelper
-    'perl-Gtk2'               => '1.140',
+    'perl-Gtk2'               => '1.140', # for Gtk2::Pango
     'perl-Cairo'              => '1.00',
-    'Clutter'                 => '0.6.2',
+    'Clutter'                 => '0.8.0',
 );
 
 # Writing a fake Makefile ensures that CPAN will pick up the correct
@@ -24,6 +24,7 @@ unless (eval "use ExtUtils::Depends '$build_reqs{'perl-ExtUtils-Depends'}';"
            # just seeing if Glib is available isn't enough, make sure
            # it's recent enough, too 
            . "use Glib '$build_reqs{'perl-Glib'}';"
+           . "use Cairo '$build_reqs{'perl-Cairo'}';"
            . "use Gtk2 '$build_reqs{'perl-Gtk2'}';"
            . "use Glib::MakeHelper;"
            # we need Gtk2::CodeGen because we use GtkObject in ClutterGtk
@@ -34,7 +35,7 @@ unless (eval "use ExtUtils::Depends '$build_reqs{'perl-ExtUtils-Depends'}';"
          PREREQ_FATAL => 1,
          PREREQ_PM    => {
             'Glib'                => $build_reqs{'perl-Glib'},
-            'Gtk2'                => $build_reqs{'perl-Gtk2'},
+            'Cairo'               => $build_reqs{'perl-Cairo'},
             'ExtUtils::Depends'   => $build_reqs{'perl-ExtUtils-Depends'},
             'ExtUtils::PkgConfig' => $build_reqs{'perl-ExtUtils-PkgConfig'},
          },
@@ -48,7 +49,7 @@ our @xs_files = ();
 
 # Base module
 our %pkgcfg =
-    ExtUtils::PkgConfig->find('clutter-0.6 >= ' . $build_reqs{Clutter});
+    ExtUtils::PkgConfig->find('clutter-0.8 >= ' . $build_reqs{Clutter});
 
 my @names = Glib::MakeHelper->read_source_list_file('xs_files');
 print "Loaded " . scalar(@names) . " xs files for Clutter\n";
@@ -60,7 +61,7 @@ our $module_libs   = $pkgcfg{libs};
 # Integration libraries: Clutter::Gst
 our $have_clutter_gst = 0;
 eval {
-    my %gstpkgcfg = ExtUtils::PkgConfig->find('clutter-gst-0.6');
+    my %gstpkgcfg = ExtUtils::PkgConfig->find('clutter-gst-0.8');
 
     $module_cflags .= ' ' . $gstpkgcfg{cflags} . '-DCLUTTERPERL_GST';
     $module_libs   .= ' ' . $gstpkgcfg{libs};
@@ -78,7 +79,7 @@ if ($@) {
 # Integration libraries: Clutter::Texture::Cairo
 our $have_clutter_cairo = 0;
 eval {
-    my %cairopkgcfg = ExtUtils::PkgConfig->find('clutter-cairo-0.6 >= 0.6.1');
+    my %cairopkgcfg = ExtUtils::PkgConfig->find('clutter-cairo-0.8');
 
     $module_cflags .= ' ' . $cairopkgcfg{cflags} . '-DCLUTTERPERL_CAIRO';
     $module_libs   .= ' ' . $cairopkgcfg{libs};
@@ -96,7 +97,7 @@ if ($@) {
 # Integration libraries: Gtk2::ClutterEmbed
 our $have_clutter_gtk = 0;
 eval {
-    my %gtkpkgcfg = ExtUtils::PkgConfig->find('clutter-gtk-0.6 >= 0.6.1');
+    my %gtkpkgcfg = ExtUtils::PkgConfig->find('clutter-gtk-0.8');
 
     $module_cflags .= ' ' . $gtkpkgcfg{cflags} . '-DCLUTTERPERL_GTK';
     $module_libs   .= ' ' . $gtkpkgcfg{libs};
@@ -134,8 +135,8 @@ our %pod_files = (
 # typemaps generation files
 my @input_maps = qw/ maps /;
 push @input_maps, 'maps-gst'   if $have_clutter_gst   == 1;
-push @input_maps, 'maps-cairo' if $have_clutter_cairo == 1;
 push @input_maps, 'maps-gtk'   if $have_clutter_gtk   == 1;
+push @input_maps, 'maps-cairo' if $have_clutter_cairo == 1;
 
 # autogeneration
 Gtk2::CodeGen->parse_maps('clutterperl', input => \@input_maps);
@@ -147,8 +148,8 @@ system "$^X tools/genkeysyms.pl >\"build/Keysyms.pm\"";
 
 my @deps = qw/ Glib /;
 push @deps, 'GStreamer' if $have_clutter_gst   == 1;
-push @deps, 'Cairo'     if $have_clutter_cairo == 1;
-push @deps, 'Gtk2';     # default, because we need Gtk2::Gdk::Pixbuf
+push @deps, 'Cairo';    # core depends on Cairo
+push @deps, 'Gtk2';     # core depends on Gtk2 for Pango
 
 my $cwd = cwd();
 
@@ -157,8 +158,13 @@ $clutter->set_inc($module_cflags . ' -I./build ');
 $clutter->set_libs($module_libs);
 $clutter->add_xs(@xs_files);
 $clutter->add_pm(%pm_files);
-$clutter->add_typemaps(map { File::Spec->catfile($cwd, $_) }
-                           'build/clutterperl.typemap');
+$clutter->add_typemaps(
+    map {
+        File::Spec->catfile($cwd, $_)
+    }
+    'build/clutterperl.typemap',
+    'clutter.typemap'
+);
 $clutter->install(qw(clutterperl.h build/clutterperl-autogen.h));
 $clutter->save_config('build/IFiles.pm');
 
@@ -201,6 +207,7 @@ sub MY::postamble
             'PERL_EXTUTILS_DEPENDS' => $build_reqs{'perl-ExtUtils-Depends'},
             'PERL_EXTUTILS_PKGCONFIG' => $build_reqs{'perl-ExtUtils-PkgConfig'},
             'PERL_GLIB' => $build_reqs{'perl-Glib'},
+            'PERL_CAIRO' => $build_reqs{'perl-Cairo'},
             'PERL_GTK2' => $build_reqs{'perl-Gtk2'},
            );
 }

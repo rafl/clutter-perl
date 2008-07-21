@@ -16,6 +16,7 @@ CLUTTER_TYPE_BEHAVIOUR_PATH     ClutterBehaviourPath    GObject         Clutter:
 CLUTTER_TYPE_BEHAVIOUR_ROTATE   ClutterBehaviourRotate  GObject         Clutter::Behaviour::Rotate
 CLUTTER_TYPE_BEHAVIOUR_SCALE    ClutterBehaviourScale   GObject         Clutter::Behaviour::Scale
 CLUTTER_TYPE_BEHAVIOUR          ClutterBehaviour        GObject         Clutter::Behaviour
+CLUTTER_TYPE_CHILD_META         ClutterChildMeta        GObject         Clutter::ChildMeta
 CLUTTER_TYPE_CLONE_TEXTURE	ClutterCloneTexture	GObject         Clutter::Texture::Clone
 CLUTTER_TYPE_CONTAINER          ClutterContainer        GInterface      Clutter::Container
 CLUTTER_TYPE_COLOR	        ClutterColor	        GBoxed	        Clutter::Color
@@ -42,9 +43,11 @@ CLUTTER_TYPE_SCORE              ClutterScore            GObject         Clutter:
 CLUTTER_TYPE_SCRIPT             ClutterScript           GObject         Clutter::Script
 CLUTTER_TYPE_SHADER             ClutterShader           GObject         Clutter::Shader
 CLUTTER_TYPE_STAGE	        ClutterStage	        GObject	        Clutter::Stage
+CLUTTER_TYPE_STAGE_MANAGER      ClutterStageManager     GObject         Clutter::StageManager
 CLUTTER_TYPE_STAGE_STATE        ClutterStageState       GFlags          Clutter::StageState
 CLUTTER_TYPE_TEXTURE	        ClutterTexture	        GObject	        Clutter::Texture
 CLUTTER_TYPE_TEXTURE_FLAGS      ClutterTextureFlags     GFlags          Clutter::TextureFlags
+CLUTTER_TYPE_TEXTURE_QUALITY    ClutterTextureQuality   GEnum           Clutter::TextureQuality
 CLUTTER_TYPE_TIMELINE_DIRECTION ClutterTimelineDirection GEnum          Clutter::TimelineDirection
 CLUTTER_TYPE_TIMELINE	        ClutterTimeline	        GObject	        Clutter::Timeline
 CLUTTER_TYPE_VERTEX             ClutterVertex           GBoxed          Clutter::Vertex

@@ -30,34 +30,29 @@ MODULE = Clutter::Texture PACKAGE = Clutter::Texture PREFIX = clutter_texture_
 =for enum ClutterTextureFlags
 =cut
 
+=for enum ClutterTextureQuality
+=cut
+
 ClutterActor *
-clutter_texture_new (class, pixbuf=NULL, actor=NULL)
-        GdkPixbuf_ornull *pixbuf
-        ClutterActor_ornull *actor
+clutter_texture_new (class, filename=NULL)
+        const gchar_ornull *filename
     CODE:
-        if (pixbuf)
-                RETVAL = clutter_texture_new_from_pixbuf (pixbuf);
-        else if (actor)
-                RETVAL = clutter_texture_new_from_actor (actor);
+        if (filename) {
+                GError *error = NULL;
+
+                RETVAL = clutter_texture_new_from_file (filename, &error);
+                if (error)
+                        gperl_croak_gerror (NULL, error);
+        }
         else
                 RETVAL = clutter_texture_new ();
     OUTPUT:
         RETVAL
 
-=for apidoc
-=for apidoc __gerror__
-=cut
-void
-clutter_texture_set_pixbuf (ClutterTexture *texture, GdkPixbuf *pixbuf)
-    PREINIT:
-        GError *error = NULL;
-    CODE:
-        clutter_texture_set_pixbuf (texture, pixbuf, &error);
-        if (error)
-                gperl_croak_gerror (NULL, error);
-
-GdkPixbuf_ornull *
-clutter_texture_get_pixbuf (ClutterTexture* texture)
+ClutterActor *
+clutter_texture_new_from_actor (SV *class, ClutterActor *actor)
+    C_ARGS:
+        actor
 
 =for apidoc
 =for signature (width, height) = $texture->get_base_size
@@ -72,65 +67,17 @@ clutter_texture_get_base_size (ClutterTexture *texture)
 	PUSHs (sv_2mortal (newSViv (width)));
 	PUSHs (sv_2mortal (newSViv (height)));
 
-=for apidoc
-=for signature (n_x_tiles, n_y_tiles) = $texture->get_n_tiles
-=cut
 void
-clutter_texture_get_n_tiles (ClutterTexture *texture)
-    PREINIT:
-        gint n_x_tiles, n_y_tiles;
-    PPCODE:
-        clutter_texture_get_n_tiles (texture, &n_x_tiles, &n_y_tiles);
-	EXTEND (SP, 2);
-	PUSHs (sv_2mortal (newSViv (n_x_tiles)));
-	PUSHs (sv_2mortal (newSViv (n_y_tiles)));
+clutter_texture_set_filter_quality (ClutterTexture *texture, ClutterTextureQuality filter_quality)
 
-=for apidoc Clutter::Texture::get_x_tile_detail
-=for signature (pos, size, waste) = $texture->get_x_tile_detail ($x_index)
-=for arg x_index (integer)
-=for arg index (__hide__)
-=cut
-
-=for apidoc Clutter::Texture::get_y_tile_detail
-=for signature (pos, size, waste) = $texture->get_y_tile_detail ($y_index)
-=for arg y_index (integer)
-=for arg index (__hide__)
-=cut
+ClutterTextureQuality
+clutter_texture_get_filter_quality (ClutterTexture *texture)
 
 void
-clutter_texture_get_x_tile_detail (ClutterTexture *texture, gint index)
-    ALIAS:
-        Clutter::Texture::get_y_tile_detail = 1
-    PREINIT:
-        gint pos, size, waste;
-    PPCODE:
-        if (ix == 0) {
-	  clutter_texture_get_x_tile_detail (texture, index,
-			  		     &pos,
-					     &size,
-					     &waste);
-        }
-        else if (ix == 1) {
-	  clutter_texture_get_y_tile_detail (texture, index,
-			  		     &pos,
-					     &size,
-					     &waste);
-        }
-        else {
-          pos = size = waste = -1;
-	  g_assert_not_reached ();
-	}
-	
-	EXTEND (SP, 3);
-	PUSHs (sv_2mortal (newSViv (pos)));
-	PUSHs (sv_2mortal (newSViv (size)));
-	PUSHs (sv_2mortal (newSViv (waste)));
+clutter_texture_set_max_tile_waste (ClutterTexture *texture, gint max_tile_waste)
 
-gboolean
-clutter_texture_has_generated_tiles (ClutterTexture *texture)
-
-gboolean
-clutter_texture_is_tiled (ClutterTexture *texture)
+gint
+clutter_texture_get_max_tile_waste (ClutterTexture *texture)
 
 =for apidoc __gerror__
 =cut
@@ -165,6 +112,39 @@ clutter_texture_set_from_rgb_data (texture, data, has_alpha, width, height, rows
 =for apidoc __gerror__
 =cut
 gboolean
+clutter_texture_set_area_from_rgb_data (texture, data, has_alpha, x, y, width, height, rowstride, bpp, flags)
+        ClutterTexture *texture
+        SV *data
+        gboolean has_alpha
+        gint x
+        gint y
+        gint width
+        gint height
+        gint rowstride
+        gint bpp
+        ClutterTextureFlags flags
+    PREINIT:
+        GError *error;
+    CODE:
+        if (!data || !SvPOK (data))
+                croak ("expecting a packed string for pixel data");
+        error = NULL;
+        RETVAL = clutter_texture_set_area_from_rgb_data (texture,
+                                                         (const guchar *) SvPV_nolen (data),
+                                                         has_alpha,
+                                                         x, y,
+                                                         width, height,
+                                                         rowstride, bpp,
+                                                         flags,
+                                                         &error);
+        if (error)
+                gperl_croak_gerror (NULL, error);
+    OUTPUT:
+        RETVAL
+
+=for apidoc __gerror__
+=cut
+gboolean
 clutter_texture_set_from_yuv_data (texture, data, width, height, flags)
         ClutterTexture *texture
         SV *data
@@ -184,3 +164,25 @@ clutter_texture_set_from_yuv_data (texture, data, width, height, flags)
                 gperl_croak_gerror (NULL, error);
     OUTPUT:
         RETVAL
+
+=for apidoc __gerror__
+=cut
+gboolean
+clutter_texture_set_from_file (texture, filename)
+        ClutterTexture *texture
+        const gchar *filename
+    PREINIT:
+        GError *error = NULL;
+    CODE:
+        RETVAL = clutter_texture_set_from_file (texture, filename, &error);
+        if (error)
+                gperl_croak_gerror (NULL, error);
+    OUTPUT:
+        RETVAL
+
+CoglHandle
+clutter_texture_get_cogl_texture (ClutterTexture *texture)
+
+void
+clutter_texture_set_cogl_texture (ClutterTexture *texture, CoglHandle tex)
+

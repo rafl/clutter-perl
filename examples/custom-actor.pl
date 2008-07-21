@@ -3,8 +3,9 @@ package Clutter::Ex::Triangle;
 use warnings;
 use strict;
 
+use Data::Dumper;
+
 use Glib qw( :constants );
-use OpenGL;
 use Clutter;
 
 =pod
@@ -123,39 +124,40 @@ sub PICK {
     # if pick should not paint, then skip it
     return unless $self->should_pick_paint();
 
-    my $opacity = $self->get_opacity();
+    my $geom = $self->get_allocation_geometry();
 
-    glColor4ub($pick_color->red(),
-               $pick_color->green(),
-               $pick_color->blue(),
-               $opacity);
+    Clutter::Cogl->path_move_to($geom->width() / 2, 0);
+    Clutter::Cogl->path_line_to($geom->width(), $geom->height());
+    Clutter::Cogl->path_line_to(0, $geom->height());
+    Clutter::Cogl->path_line_to($geom->width() / 2, 0);
 
-    glEnable(GL_BLEND);
-
-    glBegin(GL_POLYGON);
-    glVertex2i($self->get_width() / 2, 0);
-    glVertex2i($self->get_width(), $self->get_height());
-    glVertex2i(0, $self->get_height());
-    glEnd();
+    Clutter::Cogl->color($pick_color);
+    Clutter::Cogl->path_fill();
 }
 
 sub PAINT {
     my ($self) = @_;
 
-    my $opacity = $self->get_opacity();
+    my $geom = $self->get_allocation_geometry();
 
-    glColor4ub($self->{color}->red(),
-               $self->{color}->green(),
-               $self->{color}->blue(),
-               $opacity);
+    Clutter::Cogl->path_move_to($geom->width() / 2, 0);
+    Clutter::Cogl->path_line_to($geom->width(), $geom->height());
+    Clutter::Cogl->path_line_to(0, $geom->height());
+    Clutter::Cogl->path_line_to($geom->width() / 2, 0);
 
-    glEnable(GL_BLEND);
+    my $color = $self->{color};
 
-    glBegin(GL_POLYGON);
-    glVertex2i($self->get_width() / 2, 0);
-    glVertex2i($self->get_width(), $self->get_height());
-    glVertex2i(0, $self->get_height());
-    glEnd();
+    # compute the real alpha of the actor, taking into
+    # account the opacity set by the developer and the
+    # composited opacity of the scenegraph
+    my $real_alpha = $self->get_paint_opacity()
+                   * $color->alpha()
+                   / 255;
+
+    $color->alpha($real_alpha);
+
+    Clutter::Cogl->color($color);
+    Clutter::Cogl->path_fill();
 }
 
 sub SET_PROPERTY {
@@ -185,13 +187,13 @@ sub INIT_INSTANCE {
 
 =item B<< actor = Clutter::Ex::Triangle->new >>
 
-Creates a new C< Clutter::Ex::Triangle > actor.
+Creates a new Clutter::Ex::Triangle actor.
 
 =item B<< actor = Clutter::Ex::Triangle->new_with_color($color) >>
 
-  * $color (L<Clutter::Color>)
+  * $color (Clutter::Color)
 
-Creates a new C< Clutter::Ex::Triangle > with the given I<color>.
+Creates a new Clutter::Ex::Triangle with the given I<color>.
 
 =cut
 
@@ -205,7 +207,9 @@ sub new_with_color {
 
 =item B<< $triangle->set_color($color) >>
 
-  * $color (L<Clutter::Color>)
+  * $color (Clutter::Color)
+
+Sets the color of the triangle to I<color>.
 
 =cut
 
@@ -213,14 +217,16 @@ sub set_color {
     my ($self, $color) = @_;
 
     $self->{color} = $color;
-    $self->set_opacity($color->alpha());
-
     $self->notify('color');
+
+    $self->queue_redraw() if $self->visible();
 }
 
 =pod
 
 =item B<< color = $triangle->get_color >>
+
+Retrieves the L<Clutter::Color> used by the triangle.
 
 =cut
 
@@ -259,7 +265,7 @@ Color of the triangle
 
 =head1 SEE ALSO
 
-Clutter, Glib::Object, Glib::InitiallyUnowned, Clutter::Actor
+L<Clutter>, L<Glib::Object>, L<Glib::InitiallyUnowned>, L<Clutter::Actor>
 
 =head1 COPYRIGHT
 
@@ -279,20 +285,29 @@ package main;
 use Glib qw( :constants );
 use Clutter qw( :init );
 
-my $stage = Clutter::Stage->get_default();
+my $stage = Clutter::Stage->new();
 $stage->set_size(640, 480);
 $stage->set_color(Clutter::Color->parse('Black'));
+$stage->signal_connect(destroy => sub { Clutter->main_quit() });
 
 my $triangle = Clutter::Ex::Triangle->new();
 $triangle->set_color(Clutter::Color->parse('Red'));
-$triangle->set_opacity(255);
 $triangle->set_reactive(TRUE);
+$triangle->set_size(200, 200);
+$triangle->set_anchor_point(100, 100);
+$triangle->set_position(320, 240);
 $stage->add($triangle);
-$triangle->set_position((640 - 100) / 2, (480 - 100) / 2);
-$triangle->set_size(100, 100);
-$triangle->signal_connect(clicked => sub { Clutter->main_quit(); });
+$triangle->signal_connect(clicked => sub { Clutter->main_quit() });
 
-$triangle->show();
+my $label = Clutter::Label->new();
+$label->set_font_name('Sans 36px');
+$label->set_text('Click me!');
+$label->set_color(Clutter::Color->parse('Red'));
+$label->set_position(
+    (640 - $label->get_width()) / 2,
+     $triangle->get_y() + $triangle->get_height(),
+);
+$stage->add($label);
 
 $stage->show();
 

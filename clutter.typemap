@@ -1,0 +1,10 @@
+# this is where Clutter handcoded typemap stuff resides
+TYPEMAP
+
+# these are just fixed point values encoded into integers
+ClutterUnit             T_IV
+ClutterFixed            T_IV
+ClutterAngle            T_IV
+
+CoglHandle              T_GPERL_GENERIC_WRAPPER
+CoglTextureVertex       T_GPERL_GENERIC_WRAPPER

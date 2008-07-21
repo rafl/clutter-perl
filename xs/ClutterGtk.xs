@@ -1,11 +1,22 @@
 #include "clutterperl.h"
 
-MODULE = Gtk2::ClutterEmbed     PACKAGE = Gtk2::ClutterEmbed    PREFIX = gtk_clutter_embed_
+MODULE = Clutter::Gtk   PACKAGE = Clutter::Gtk  PREFIX = clutter_gtk_
 
-GtkWidget *
-gtk_clutter_embed_new (class)
-    C_ARGS:
-        /* void */
+=for apidoc
+Special initialization function for the GTK+ integration.
 
-ClutterActor *
-gtk_clutter_embed_get_stage (GtkClutterEmbed *embed)
+You should use this function instead of Gtk2::init and Clutter::init
+if you plan to use the L<Gtk2::ClutterEmbed> widget.
+=cut
+ClutterInitError
+clutter_gtk_init (class=NULL)
+    PREINIT:
+        GPerlArgv *pargv;
+    CODE:
+        pargv = gperl_argv_new ();
+        RETVAL = gtk_clutter_init (&pargv->argc, &pargv->argv);
+        gperl_argv_update (pargv); 
+        gperl_argv_free (pargv);
+    OUTPUT:
+        RETVAL
+

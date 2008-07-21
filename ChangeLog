@@ -1,3 +1,54 @@
+2008-07-21  Emmanuele Bassi  <ebassi@openedhand.com>
+
+	* Clutter.pm: Bump to 0.800
+
+	* MANIFEST: Update.
+
+	* Makefile.PL: Require 0.8 versions of core and suite.
+
+	* clutter.typemap: Add typemap for manually wrapped types
+
+	* clutterperl.h: Add new type conversion API.
+
+	* doctypes: Update.
+
+	* examples/custom-actor.pl:
+	* examples/gtk-clutter.pl: Update the examples.
+
+	* maps: Add new types.
+
+	* t/ClutterActor.t: Update the subclassing test.
+
+	* tools/genkeysyms.pl: Require clutter-0.8 to generate the
+	keybindings symbols.
+
+	* xs/ClutterCogl.xs: Add COGL bindings.
+
+	* xs/Clutter.xs:
+	* xs/ClutterActor.xs:
+	* xs/ClutterAlpha.xs:
+	* xs/ClutterChildMeta.xs:
+	* xs/ClutterCloneTexture.xs:
+	* xs/ClutterEvent.xs:
+	* xs/ClutterFixed.xs:
+	* xs/ClutterGroup.xs:
+	* xs/ClutterGtk.xs:
+	* xs/ClutterLabel.xs:
+	* xs/ClutterRectangle.xs:
+	* xs/ClutterShader.xs:
+	* xs/ClutterStage.xs:
+	* xs/ClutterStageManager.xs:
+	* xs/ClutterTexture.xs:
+	* xs/ClutterUnits.xs: Update the core bindings.
+
+	* xs/ClutterCairo.xs:
+	* xs/ClutterGstVideoTexture.xs:
+	* xs/GtkClutterEmbed.xs:
+	* xs/GtkClutterUtil.xs: Update the suite bindings.
+
+	* xs_files:
+	* xs_files_gtk: Add new XS files.
+
 2008-05-08  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* Clutter.pm: Bump to 0.621

@@ -27,8 +27,13 @@
 
 MODULE = Clutter::Stage		PACKAGE = Clutter::Stage	PREFIX = clutter_stage_
 
-ClutterActor *
+ClutterActor_noinc *
 clutter_stage_get_default (class)
+    C_ARGS:
+        /* void */
+
+ClutterActor_noinc *
+clutter_stage_new (class)
     C_ARGS:
         /* void */
 
@@ -47,14 +52,6 @@ clutter_stage_get_color (ClutterStage *stage)
 
 ClutterActor *
 clutter_stage_get_actor_at_pos (ClutterStage *stage, gint x, gint y)
-
-GdkPixbuf_noinc *
-clutter_stage_snapshot (stage, x, y, width, height)
-        ClutterStage *stage
-        gint x
-        gint y
-        gint width
-        gint height
 
 void
 clutter_stage_fullscreen (ClutterStage *stage)
@@ -164,3 +161,5 @@ clutter_stage_set_key_focus (ClutterStage *stage, ClutterActor_ornull *actor)
 ClutterActor *
 clutter_stage_get_key_focus (ClutterStage *stage)
 
+gboolean
+clutter_stage_is_default (ClutterStage *stage)

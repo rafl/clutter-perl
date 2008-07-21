@@ -90,7 +90,7 @@ exponential and square waves.
 
 =cut
 
-ClutterAlpha *
+ClutterAlpha_noinc *
 clutter_alpha_new (class, timeline=NULL, func=NULL, data=NULL)
         ClutterTimeline *timeline
         SV *func

@@ -2,8 +2,7 @@ use warnings;
 use strict;
 
 use Glib ':constants';
-use Clutter ':init';
-use Gtk2 '-init';
+use Clutter ':gtk-init';
 
 my $window = Gtk2::Window->new('toplevel');
 $window->signal_connect(destroy => sub { Gtk2->main_quit(); });

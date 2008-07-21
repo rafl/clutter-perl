@@ -6,4 +6,8 @@ PangoLayout     Gtk2::Pango::Layout
 PangoWrapMode   Gtk2::Pango::WrapMode
 timestamp       seconds from the System Epoch
 GstElement      GStreamer::Element
-ClutterUnit     high precision units
+ClutterUnit     units
+ClutterFixed    fixed point number
+ClutterAngle    fixed point angle
+CoglHandle      handle
+CoglTextureVertex       texture vertex

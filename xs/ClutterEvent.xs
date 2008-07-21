@@ -387,6 +387,26 @@ clutter_event_get_source (ClutterEvent *event)
     OUTPUT:
         RETVAL
 
+ClutterStage_ornull *
+clutter_event_get_stage (ClutterEvent *event)
+    ALIAS:
+        Clutter::Event::stage = 1
+    CODE:
+        PERL_UNUSED_VAR (ix);
+        RETVAL = clutter_event_get_stage (event);
+    OUTPUT:
+        RETVAL
+
+gint
+clutter_event_get_device_id (ClutterEvent *event)
+    ALIAS:
+        Clutter::Event::device_id = 1
+    CODE:
+        PERL_UNUSED_VAR (ix);
+        RETVAL = clutter_event_get_device_id (event);
+    OUTPUT:
+        RETVAL
+
 ClutterEvent_own_ornull *
 clutter_event_get (class)
     ALIAS:
@@ -545,7 +565,7 @@ hardware_keycode (ClutterEvent *event, guint16 newvalue=0)
 guint32
 unicode (ClutterEvent *event)
     CODE:
-        RETVAL = clutter_keysym_to_unicode (event->key.keyval);
+        RETVAL = clutter_key_event_unicode ((ClutterKeyEvent *) event);
     OUTPUT:
         RETVAL
 

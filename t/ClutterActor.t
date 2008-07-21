@@ -5,29 +5,31 @@ use Clutter;
 use Glib::Object::Subclass
     'Clutter::Actor';
 
-sub QUERY_COORDS
+sub GET_PREFERRED_WIDTH
 {
-    my ($self, $box) = @_;
-
-    if (exists ($self->{coords})) {
-        return ($self->{coords}->x1, $self->{coords}->y1,
-                $self->{coords}->x2, $self->{coords}->y2);
-    }
+    my ($self, $for_height) = @_;
 
     # we have to transform the pixels here
     return (Clutter::Units->FROM_INT(0),
-            Clutter::Units->FROM_INT(0),
-            Clutter::Units->FROM_INT(100),
             Clutter::Units->FROM_INT(100));
 }
 
-sub REQUEST_COORDS
+sub GET_PREFERRED_HEIGHT
 {
-    my ($self, $box) = @_;
+    my ($self, $for_width) = @_;
+
+    # we have to transform the pixels here
+    return (Clutter::Units->FROM_INT(0),
+            Clutter::Units->FROM_INT(100));
+}
+
+sub ALLOCATE
+{
+    my ($self, $box, $origin_changed) = @_;
+
+    $self->SUPER::ALLOCATE($box, $origin_changed);
 
     $self->{coords} = $box;
-
-    $self->SUPER::REQUEST_COORDS($box);
 }
 
 package My::BarActor;
@@ -37,20 +39,17 @@ use Clutter;
 use Glib::Object::Subclass
     'My::FooActor';
 
-sub QUERY_COORDS
+sub GET_PREFERRED_WIDTH
 {
-    my ($self, $box) = @_;
+    my ($self, $for_height) = @_;
 
-    return (Clutter::Units->FROM_DEVICE(100),
-            Clutter::Units->FROM_DEVICE(100),
-            Clutter::Units->FROM_DEVICE(150),
-            Clutter::Units->FROM_DEVICE(150));
+    return (0, Clutter::Units->FROM_DEVICE(50));
 }
 
-sub REQUEST_COORDS {
-    my ($self, $box) = shift;
+sub ALLOCATE {
+    my ($self, $box, $origin_changed) = @_;
 
-    $self->SUPER::REQUEST_COORDS($box);
+    $self->SUPER::ALLOCATE($box, $origin_changed);
 }
 
 package main;
@@ -60,12 +59,26 @@ use Clutter::TestHelper tests => 7;
 my $foo_actor = My::FooActor->new();
 isa_ok($foo_actor, 'Clutter::Actor', 'foo');
 
-is($foo_actor->get_width(), 100, 'foo::query-coords #1');
-is($foo_actor->get_height(), 100, 'foo::query-coords #2');
+my @foo_width = $foo_actor->get_preferred_width(-1);
+is_deeply(\@foo_width,
+          [ 0, Clutter::Units->FROM_DEVICE(100) ],
+          'foo::width');
+
+my @foo_height = $foo_actor->get_preferred_height(-1);
+is_deeply(\@foo_height,
+          [ 0, Clutter::Units->FROM_DEVICE(100) ],
+          'foo::height');
 
 my $bar_actor = My::BarActor->new();
 isa_ok($bar_actor, 'Clutter::Actor', 'bar');
 isa_ok($bar_actor, 'Clutter::Actor', 'foo');
 
-is($bar_actor->get_width(), 50, 'bar::query-coords #1');
-is($bar_actor->get_height(), 50, 'bar::query-coords #2');
+my @bar_width = $bar_actor->get_preferred_width(-1);
+is_deeply(\@bar_width,
+          [ 0, Clutter::Units->FROM_DEVICE(50) ],
+          'bar::width');
+
+my @bar_height = $bar_actor->get_preferred_height(-1);
+is_deeply(\@bar_height,
+          [ 0, Clutter::Units->FROM_DEVICE(100) ],
+          'bar::height');

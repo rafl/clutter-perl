@@ -28,7 +28,7 @@
 MODULE = Clutter::Label		PACKAGE = Clutter::Label	PREFIX = clutter_label_
 
 
-ClutterActor *
+ClutterActor_noinc *
 clutter_label_new (class, font_name=NULL, text=NULL, color=NULL)
 	const gchar_ornull *font_name
 	const gchar_ornull *text

@@ -1,32 +1,46 @@
 #include "clutterperl.h"
 
-MODULE = Clutter::Units         PACKAGE = Clutter::Units
+MODULE = Clutter::Unit  PACKAGE = Clutter::ParamSpec    PREFIX = clutter_param_spec_
+
+BOOT:
+        gperl_register_param_spec (CLUTTER_TYPE_PARAM_UNIT, "Clutter::ParamSpec::Unit");
+
+=for apidoc
+Glib::ParamSpec for unit-based properties
+=cut
+GParamSpec *
+clutter_param_spec_unit (class, name, nick, blurb, minimum, maximum, default_value, flags)
+        const gchar *name
+        const gchar *nick
+        const gchar *blurb
+        ClutterUnit minimum
+        ClutterUnit maximum
+        ClutterUnit default_value
+        GParamFlags flags
+    C_ARGS:
+        name, nick, blurb, minimum, maximum, default_value, flags
+
+MODULE = Clutter::Unit         PACKAGE = Clutter::Units
 
 =for position DESCRIPTION
 
 =head1 DESCRIPTION
 
 Clutter uses device independent units, internally, to provide sub-pixel
-positioning. While the public API does not always expose this for convenience
-of the developer, when writing new L<Clutter::Actor> classes or when
-implementing low-level interfaces like L<Clutter::Layout> you will be
-exposed to this kind of units.
+positioning and sizing. While the public API does not always expose this
+for convenience of the developer, when writing new L<Clutter::Actor>
+classes you will be exposed to this kind of units.
 
 The following package methods are useful for converting device dependent
 units, like pixels and percentages, into device independent units and vice
 versa.
-
-B<Note>: this is true for Clutter 0.4. In Clutter 0.6 (and relative Perl
-bindings) the public API will always return device independent units as
-well, and will be care of the developer to convert it to device units,
-like pixels, font units, etc.
 
 =cut
 
 =for apidoc
 Converts an integer value, like pixels, into a device independent unit.
 =cut
-gint32
+ClutterUnit
 FROM_INT (class=NULL, gint value)
     CODE:
         RETVAL = CLUTTER_UNITS_FROM_INT (value);
@@ -38,7 +52,7 @@ FROM_INT (class=NULL, gint value)
 Converts a device independent unit into an integer value, like pixels.
 =cut
 gint
-TO_INT (class=NULL, gint32 units)
+TO_INT (class=NULL, ClutterUnit units)
     CODE:
         RETVAL = CLUTTER_UNITS_TO_INT (units);
     OUTPUT:
@@ -48,7 +62,7 @@ TO_INT (class=NULL, gint32 units)
 Converts a floating point value, like a percentage, into a device independent
 unit
 =cut
-gint32
+ClutterUnit
 FROM_FLOAT (class=NULL, gdouble value)
     CODE:
         RETVAL = CLUTTER_UNITS_FROM_FLOAT (value);
@@ -61,7 +75,7 @@ Converts a device independent unit into a floating point value, like a
 percentage
 =cut
 gdouble
-TO_FLOAT (class=NULL, gint32 units)
+TO_FLOAT (class=NULL, ClutterUnit units)
     CODE:
         RETVAL = CLUTTER_UNITS_TO_FLOAT (units);
     OUTPUT:
@@ -70,7 +84,7 @@ TO_FLOAT (class=NULL, gint32 units)
 =for apidoc
 Converts pixels into device independent units
 =cut
-gint32
+ClutterUnit
 FROM_DEVICE (class=NULL, gint value)
     CODE:
         RETVAL = CLUTTER_UNITS_FROM_DEVICE (value);
@@ -82,14 +96,14 @@ FROM_DEVICE (class=NULL, gint value)
 Converts device independent units into pixels
 =cut
 gint
-TO_DEVICE (class=NULL, gint32 units)
+TO_DEVICE (class=NULL, ClutterUnit units)
     CODE:
         RETVAL = CLUTTER_UNITS_TO_DEVICE (units);
 
 =for apidoc
 Converts Pango units into device independent units
 =cut
-gint32
+ClutterUnit
 FROM_PANGO_UNIT (class=NULL, gint value)
     CODE:
         RETVAL = CLUTTER_UNITS_FROM_PANGO_UNIT (value);
@@ -100,7 +114,7 @@ FROM_PANGO_UNIT (class=NULL, gint value)
 Converts device independent units into Pango units
 =cut
 gint
-TO_PANGO_UNIT (class=NULL, gint32 units)
+TO_PANGO_UNIT (class=NULL, ClutterUnit units)
     CODE:
         RETVAL = CLUTTER_UNITS_TO_PANGO_UNIT (units);
     OUTPUT:
@@ -110,7 +124,7 @@ TO_PANGO_UNIT (class=NULL, gint32 units)
 Converts a percentage of the default stage's width into
 device independed units
 =cut
-gint32
+ClutterUnit
 FROM_STAGE_WIDTH_PERCENTAGE (class=NULL, gint percent)
     CODE:
         RETVAL = CLUTTER_UNITS_FROM_STAGE_WIDTH_PERCENTAGE (percent);
@@ -121,7 +135,7 @@ FROM_STAGE_WIDTH_PERCENTAGE (class=NULL, gint percent)
 Converts a percentage of the default stage's height into
 device independed units
 =cut
-gint32
+ClutterUnit
 FROM_STAGE_HEIGHT_PERCENTAGE (class=NULL, gint percent)
     CODE:
         RETVAL = CLUTTER_UNITS_FROM_STAGE_HEIGHT_PERCENTAGE (percent);
@@ -132,7 +146,7 @@ FROM_STAGE_HEIGHT_PERCENTAGE (class=NULL, gint percent)
 Converts a percentage of an actor's parent widget width into
 device independed units
 =cut
-gint32
+ClutterUnit
 FROM_PARENT_WIDTH_PERCENTAGE (class=NULL, ClutterActor *actor, gint percent)
     CODE:
         RETVAL = CLUTTER_UNITS_FROM_PARENT_WIDTH_PERCENTAGE (actor, percent);
@@ -143,7 +157,7 @@ FROM_PARENT_WIDTH_PERCENTAGE (class=NULL, ClutterActor *actor, gint percent)
 Converts a percentage of an actor's parent widget height into
 device independed units
 =cut
-gint32
+ClutterUnit
 FROM_PARENT_HEIGHT_PERCENTAGE (class=NULL, ClutterActor *actor, gint percent)
     CODE:
         RETVAL = CLUTTER_UNITS_FROM_PARENT_HEIGHT_PERCENTAGE (actor, percent);
@@ -153,7 +167,7 @@ FROM_PARENT_HEIGHT_PERCENTAGE (class=NULL, ClutterActor *actor, gint percent)
 =for apidoc
 Converts millimeters into device independent units
 =cut
-gint32
+ClutterUnit
 FROM_MM (class=NULL, gint millimeters)
     CODE:
         RETVAL = CLUTTER_UNITS_FROM_MM (millimeters);
@@ -163,10 +177,29 @@ FROM_MM (class=NULL, gint millimeters)
 =for apidoc
 Converts font points into device independent units
 =cut
-gint32
+ClutterUnit
 FROM_POINTS (class=NULL, gint points)
     CODE:
         RETVAL = CLUTTER_UNITS_FROM_POINTS (points);
     OUTPUT:
         RETVAL
 
+=for apidoc
+Minimum value for units
+=cut
+ClutterUnit
+MIN_UNIT (class=NULL)
+    CODE:
+        RETVAL = CLUTTER_MINUNIT;
+    OUTPUT:
+        RETVAL
+
+=for apidoc
+Maximum value for units
+=cut
+ClutterUnit
+MAX_UNIT (class=NULL)
+    CODE:
+        RETVAL = CLUTTER_MAXUNIT;
+    OUTPUT:
+        RETVAL

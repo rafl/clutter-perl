@@ -5,7 +5,7 @@ MODULE = Clutter::Texture::Cairo PACKAGE = Clutter::Texture::Cairo PREFIX = clut
 BOOT:
         gperl_set_isa ("Clutter::Cairo::Context", "Cairo::Context");
 
-ClutterActor *
+ClutterActor_noinc *
 clutter_cairo_new (class, gint width, gint height)
     C_ARGS:
         width, height

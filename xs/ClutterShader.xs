@@ -41,11 +41,11 @@ clutter_shader_get_is_enabled (ClutterShader *shader)
 =for apidoc __gerror__
 =cut
 gboolean
-clutter_shader_bind (ClutterShader *shader)
+clutter_shader_compile (ClutterShader *shader)
     PREINIT:
         GError *error = NULL;
     CODE:
-        clutter_shader_bind (shader, &error);
+        clutter_shader_compile (shader, &error);
         if (error)
                 gperl_croak_gerror (NULL, error);
 
@@ -53,7 +53,7 @@ void
 clutter_shader_release (ClutterShader *shader)
 
 gboolean
-clutter_shader_is_bound (ClutterShader *shader)
+clutter_shader_is_compiled (ClutterShader *shader)
 
 void
 clutter_shader_set_vertex_source (ClutterShader *shader, const gchar *source)

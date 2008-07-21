@@ -23,6 +23,7 @@ use strict;
 use warnings;
 
 use Glib;
+use Cairo;
 use Gtk2;
 
 require DynaLoader;
@@ -37,7 +38,7 @@ our @ISA = qw( DynaLoader Exporter );
 # of the bindings for each point release of libclutter,
 # which should be enough even in case of brown paper
 # bag releases. -- ebassi
-our $VERSION = '0.621';
+our $VERSION = '0.800';
 
 sub import {
     my $class = shift;
@@ -57,6 +58,7 @@ sub import {
     foreach (@_) {
         if    (/^[-:]?init$/)         { $init = 1;           }
         elsif (/^[-:]?gst-init$/)     { $init = 2;           }
+        elsif (/^[-:]?gtk-init$/)     { $init = 3;           }
         elsif (/^[-:]?threads-init$/) { $threads_init = 1;   }
         else                          { $class->VERSION($_); }
     }
@@ -64,6 +66,7 @@ sub import {
     Clutter::Threads->init() if $threads_init;
     Clutter->init()          if $init == 1;
     Clutter::Gst->init()     if $init == 2;
+    Clutter::Gtk->init()     if $init == 3
 }
 
 sub dl_load_flags { $^O eq 'darwin' ? 0x00 : 0x01 }
