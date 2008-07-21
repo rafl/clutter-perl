@@ -101,7 +101,6 @@ use strict;
 use warnings;
 
 use Glib qw( :constants );
-use Gtk2;
 use Clutter qw( :init );
 
 my $stage = Clutter::Stage->get_default();
@@ -122,17 +121,16 @@ $rect->set_border_color(Clutter::Color->new(0xff, 0xcc, 0xcc, 0xff));
 $group->add($rect);
 $rect->show();
 
-my $pixbuf;
-eval { $pixbuf = Gtk2::Gdk::Pixbuf->new_from_file('redhand.png'); };
+my $hand;
+eval { $hand = Clutter::Texture->new('redhand.png') };
 if ($@) {
     warn ("Unable to load 'redhand.png': $@");
 }
 else {
-    my $hand = Clutter::Texture->new($pixbuf);
     $hand->set_position(5, 5);
 
-    $rect->set_size($pixbuf->get_width()  + 5,
-                    $pixbuf->get_height() + 5);
+    $rect->set_size($hand->get_width()  + 5,
+                    $hand->get_height() + 5);
 
     $group->add($hand);
     $hand->show();

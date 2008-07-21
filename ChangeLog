@@ -1,5 +1,9 @@
 2008-07-21  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* examples/behaviour.pl: Update example.
+
+2008-07-21  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* Clutter.pm: Bump to 0.800
 
 	* MANIFEST: Update.
