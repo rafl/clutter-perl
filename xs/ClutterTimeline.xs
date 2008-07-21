@@ -123,3 +123,49 @@ clutter_timeline_get_delta (ClutterTimeline *timeline)
                 XPUSHs (sv_2mortal (newSVuv (msecs)));
         }
 
+void
+clutter_timeline_add_marker_at_frame (timeline, marker_name, frame_num)
+        ClutterTimeline *timeline
+        const gchar     *marker_name
+        guint            frame_num
+
+void
+clutter_timeline_add_marker_at_time (timeline, marker_name, msecs)
+        ClutterTimeline *timeline
+        const gchar     *marker_name
+        guint            msecs
+
+void
+clutter_timeline_remove_marker (timeline, marker_name)
+        ClutterTimeline *timeline
+        const gchar     *marker_name
+
+void
+clutter_timeline_list_markers (timeline, frame_num)
+        ClutterTimeline *timeline
+        gint             frame_num
+    PREINIT:
+        gchar **markers;
+        gsize n_markers, i;
+    PPCODE:
+        markers = clutter_timeline_list_markers (timeline, frame_num,
+                                                 &n_markers);
+        if (markers) {
+                EXTEND (SP, n_markers);
+                for (i = 0; i < n_markers; i++) {
+                        PUSHs (sv_2mortal (newSVGChar (markers[i])));
+                        g_free (markers[i]);
+                }
+                g_free (markers);
+        }
+
+gboolean
+clutter_timeline_has_marker (timeline, marker_name)
+        ClutterTimeline *timeline
+        const gchar     *marker_name
+
+void
+clutter_timeline_advance_to_marker (timeline, marker_name)
+        ClutterTimeline *timeline
+        const gchar     *marker_name
+
