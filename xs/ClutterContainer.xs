@@ -205,6 +205,21 @@ clutterperl_container_lower (ClutterContainer *container,
 }
 
 static void
+clutterperl_container_sort_depth_order (ClutterContainer *container)
+{
+  GET_METHOD (container, "SORT_DEPTH_ORDER");
+
+  if (METHOD_EXISTS)
+    {
+      PREP (container);
+
+      CALL;
+
+      FINISH;
+    }
+}
+
+static void
 clutterperl_container_create_child_meta (ClutterContainer *container,
                                          ClutterActor     *child)
 {
@@ -287,6 +302,7 @@ clutterperl_container_init (ClutterContainerIface *iface)
   iface->foreach = clutterperl_container_foreach;
   iface->raise = clutterperl_container_raise;
   iface->lower = clutterperl_container_lower;
+  iface->sort_depth_order = clutterperl_container_sort_depth_order;
   iface->create_child_meta = clutterperl_container_create_child_meta;
   iface->destroy_child_meta = clutterperl_container_destroy_child_meta;
   iface->get_child_meta = clutterperl_container_get_child_meta;
@@ -385,11 +401,21 @@ following methods is required:
 
 =over
 
-=item ADD ($container, $actor)
+=item B<< ADD ($container, $actor) >>
+
+=over
+
+=item o $container (Clutter::Container)
+
+=item o $actor (Clutter::Actor)
+
+=back
 
 Called to add I<actor> to I<container>. The implementation should emit
 the B<::actor-added> signal once the actor has been added.
 
+=item B<< REMOVE ($container, $actor) >>
+
 =over
 
 =item o $container (Clutter::Container)
@@ -397,25 +423,27 @@ the B<::actor-added> signal once the actor has been added.
 =item o $actor (Clutter::Actor)
 
 =back
-
-=item REMOVE ($container, $actor)
 
 Called to remove I<actor> from I<container>. The implementation should emit
 the B<::actor-removed> signal once the actor has been removed.
 
+=item B<< RAISE ($container, $child, $sibling) >>
+
 =over
 
 =item o $container (Clutter::Container)
 
-=item o $actor (Clutter::Actor)
+=item o $child (Clutter::Actor)
+
+=item o $sibling (Clutter::Actor)
 
 =back
-
-=item RAISE ($container, $child, $sibling)
 
 Called when raising I<child> above I<sibling>. If I<sibling> is undefined,
 then I<child> should be raised above every other child of I<container>.
 
+=item B<< LOWER ($container, $child, $sibling) >>
+
 =over
 
 =item o $container (Clutter::Container)
@@ -425,33 +453,21 @@ then I<child> should be raised above every other child of I<container>.
 =item o $sibling (Clutter::Actor)
 
 =back
-
-=item LOWER ($container, $child, $sibling)
 
 Called when lowering I<child> below I<sibling>. If I<sibling> is undefined,
 then I<child> should be lowered below every other child of I<container>.
 
+=item B<< SORT_DEPTH_ORDER ($container) >>
+
 =over
 
 =item o $container (Clutter::Container)
 
-=item o $child (Clutter::Actor)
-
-=item o $sibling (Clutter::Actor)
+Called when resorting the list of children depending on their depth.
 
 =back
 
-=item FOREACH ($container, $function, $data)
-
-Called when iterating over every child of I<container>. For each child
-the I<function> must be called with the actor and the passed I<data>, for
-instance:
-
-  foreach my $child (@{$container->{children}}) {
-    &$function ($child, $data);
-  }
-
-This function will also be called by the B<get_children> method.
+=item B<< FOREACH ($container, $function, $data) >>
 
 =over
 
@@ -463,25 +479,25 @@ This function will also be called by the B<get_children> method.
 
 =back
 
-=item RAISE ($container, $child, $sibling)
+Called when iterating over every child of I<container>. For each child
+the I<function> must be called with the actor and the passed I<data>, for
+instance:
 
-=item LOWER ($container, $child, $sibling)
+  foreach my $child (@{$container->{children}}) {
+    &$function ($child, $data);
+  }
 
-Called when changing the paint order of I<child> inside I<container>. If
-I<sibling> is C<undef>, RAISE should move I<child> to the top of the list,
-while LOWER should move I<child> to the bottom.
+This function will also be called by the B<get_children> method.
+
+=item B<< CREATE_CHILD_META ($container, $actor) >>
 
 =over
 
 =item o $container (Clutter::Container)
 
-=item o $child (Clutter::Actor)
-
-=item o $sibling (Clutter::Actor)
+=item o $actor (Clutter::Actor)
 
 =back
-
-=item CREATE_CHILD_META ($container, $actor)
 
 Called when creating a new L<Clutter::ChildMeta> instance wrapping I<actor>
 inside I<container>. This function should be overridden only if the
@@ -490,6 +506,8 @@ or needs to be stored inside a different data structure within I<container>.
 
 This function is called before Clutter::Container::ADD_ACTOR.
 
+=item B<< DESTROY_CHILD_META ($container, $actor) >>
+
 =over
 
 =item o $container (Clutter::Container)
@@ -497,13 +515,13 @@ This function is called before Clutter::Container::ADD_ACTOR.
 =item o $actor (Clutter::Actor)
 
 =back
-
-=item DESTROY_CHILD_META ($container, $actor)
 
 Called when destroying a L<Clutter::ChildMeta> instance for I<actor>.
 
 This function is called before Clutter::Actor::REMOVE_ACTOR
 
+=item B<< childmeta = GET_CHILD_META ($container, $actor) >>
+
 =over
 
 =item o $container (Clutter::Container)
@@ -511,18 +529,8 @@ This function is called before Clutter::Actor::REMOVE_ACTOR
 =item o $actor (Clutter::Actor)
 
 =back
-
-=item childmeta = GET_CHILD_META ($container, $actor)
 
 Called when retrieving a L<Clutter::ChildMeta> instance for I<actor>.
-
-=over
-
-=item o $container (Clutter::Container)
-
-=item o $actor (Clutter::Actor)
-
-=back
 
 =back
 
@@ -543,6 +551,11 @@ _ADD_INTERFACE (class, const char *target_class)
         g_type_add_interface_static (gtype, CLUTTER_TYPE_CONTAINER, &iface_info);
     }
 
+=for apidoc
+=for arg actor __hide__
+=for arg ... list of actors
+Adds a list of actors to I<container>
+=cut
 void
 clutter_container_add (ClutterContainer *container, ClutterActor *actor, ...)
     PREINIT:
@@ -552,6 +565,11 @@ clutter_container_add (ClutterContainer *container, ClutterActor *actor, ...)
 	for (i = 2; i < items; i++)
 	  clutter_container_add_actor (container, SvClutterActor (ST (i)));
 
+=for apidoc
+=for arg actor __hide__
+=for arg ... list of actors
+Removes a list of actors from I<container>
+=cut
 void
 clutter_container_remove (ClutterContainer *container, ClutterActor *actor, ...)
     PREINIT:

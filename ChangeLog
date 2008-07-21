@@ -1,5 +1,9 @@
 2008-07-21  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* xs/ClutterContainer.xs: Documentation fixes.
+
+2008-07-21  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* xs/ClutterContainer.xs: Add support for the child properties
 	machinery in Perl - both for accessing and implementing. The
 	implementation part is experimental and will need further
