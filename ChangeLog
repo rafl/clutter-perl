@@ -1,5 +1,15 @@
 2008-07-21  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* xs/ClutterContainer.xs: Add support for the child properties
+	machinery in Perl - both for accessing and implementing. The
+	implementation part is experimental and will need further
+	testing.
+
+	* t/ClutterContainer.t: Add Clutter::Container test suite,
+	exercising the ChildMeta implementation as well.
+
+2008-07-21  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* xs/ClutterAlpha.xs: Simplify a lot of the Alpha bindings
 	code by using clutter_alpha_set_closure() internally.
 
