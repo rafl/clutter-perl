@@ -786,7 +786,7 @@ clutter_actor_get_allocation_geometry (ClutterActor *actor)
         RETVAL
 
 =for apidoc
-Retrieves the allocation box in Clutter units
+Retrieves the allocation box in units
 =cut
 ClutterActorBox_copy *
 clutter_actor_get_allocation_box (ClutterActor *actor)
@@ -849,6 +849,20 @@ clutter_actor_get_transformed_position (ClutterActor *actor)
 	PUSHs (sv_2mortal (newSViv (x)));
 	PUSHs (sv_2mortal (newSViv (y)));
 
+=for apidoc
+=for signature (x, y) = $actor->get_transformed_positionu
+Gets the absolute position of an actor in units relative to the stage
+=cut
+void
+clutter_actor_get_transformed_positionu (ClutterActor *actor)
+    PREINIT:
+        ClutterUnit x, y;
+    PPCODE:
+        clutter_actor_get_transformed_positionu (actor, &x, &y);
+	EXTEND (SP, 2);
+	PUSHs (sv_2mortal (newSViv (x)));
+	PUSHs (sv_2mortal (newSViv (y)));
+
 void
 clutter_actor_set_size (ClutterActor *actor, gint width, gint height)
 
@@ -888,7 +902,8 @@ clutter_actor_get_sizeu (ClutterActor *actor)
 
 =for apidoc
 =for signature (width, height) = $actor->get_transformed_size
-Gets the absolute size of an actor taking into account any scaling factors
+Gets the absolute size of an actor in pixels taking into account
+any transformation
 =cut
 void
 clutter_actor_get_transformed_size (ClutterActor *actor)
@@ -899,6 +914,21 @@ clutter_actor_get_transformed_size (ClutterActor *actor)
         EXTEND (SP, 2);
         PUSHs (sv_2mortal (newSVuv (width)));
         PUSHs (sv_2mortal (newSVuv (height)));
+
+=for apidoc
+=for signature (width, height) = $actor->get_transformed_sizeu
+Gets the absolute size of an actor in units taking into account
+any transformation
+=cut
+void
+clutter_actor_get_transformed_sizeu (ClutterActor *actor)
+    PREINIT:
+        ClutterUnit width, height;
+    PPCODE:
+        clutter_actor_get_transformed_size (actor, &width, &height);
+        EXTEND (SP, 2);
+        PUSHs (sv_2mortal (newSViv (width)));
+        PUSHs (sv_2mortal (newSViv (height)));
 
 void
 clutter_actor_set_width (ClutterActor *actor, guint width)
@@ -1016,7 +1046,15 @@ guint32
 clutter_actor_get_gid (ClutterActor *actor)
 
 void
-clutter_actor_set_clip (ClutterActor *actor, gint xoff, gint yoff, gint width, gint height)
+clutter_actor_set_clip (ClutterActor *actor, gint x_offset, gint y_offset, gint width, gint height)
+
+void
+clutter_actor_set_clipu (actor, x_offset, y_offset, width, height)
+        ClutterActor *actor
+        ClutterUnit x_offset
+        ClutterUnit y_offset
+        ClutterUnit width
+        ClutterUnit height
 
 void
 clutter_actor_remove_clip (ClutterActor *actor)
@@ -1025,7 +1063,7 @@ gboolean
 clutter_actor_has_clip (ClutterActor *actor)
 
 =for apidoc
-=for signature (xoff, yoff, width, height) = $actor->get_clip
+=for signature (x_offset, y_offset, width, height) = $actor->get_clip
 =cut
 void
 clutter_actor_get_clip (ClutterActor *actor)
@@ -1033,6 +1071,21 @@ clutter_actor_get_clip (ClutterActor *actor)
         gint xoff, yoff, width, height;
     PPCODE:
         clutter_actor_get_clip (actor, &xoff, &yoff, &width, &height);
+        EXTEND (SP, 4);
+        PUSHs (sv_2mortal (newSViv (xoff)));
+        PUSHs (sv_2mortal (newSViv (yoff)));
+        PUSHs (sv_2mortal (newSViv (width)));
+        PUSHs (sv_2mortal (newSViv (height)));
+
+=for apidoc
+=for signature (x_offset, y_offset, width, height) = $actor->get_clipu
+=cut
+void
+clutter_actor_get_clipu (ClutterActor *actor)
+    PREINIT:
+        ClutterUnit xoff, yoff, width, height;
+    PPCODE:
+        clutter_actor_get_clipu (actor, &xoff, &yoff, &width, &height);
         EXTEND (SP, 4);
         PUSHs (sv_2mortal (newSViv (xoff)));
         PUSHs (sv_2mortal (newSViv (yoff)));
@@ -1060,8 +1113,14 @@ clutter_actor_lower (ClutterActor *actor, ClutterActor *above)
 void
 clutter_actor_set_depth (ClutterActor *actor, gint depth)
 
+void
+clutter_actor_set_depthu (ClutterActor *actor, ClutterUnit depth)
+
 gint
 clutter_actor_get_depth (ClutterActor *actor)
+
+ClutterUnit
+clutter_actor_get_depthu (ClutterActor *actor)
 
 void
 clutter_actor_set_scale (ClutterActor *actor, gdouble scale_x, gdouble scale_y)
@@ -1093,6 +1152,9 @@ clutter_actor_set_fixed_position_set (ClutterActor *actor, gboolean is_set)
 
 void
 clutter_actor_move_by (ClutterActor *actor, gint dx, gint dy)
+
+void
+clutter_actor_move_byu (ClutterActor *actor, ClutterUnit dx, ClutterUnit dy)
 
 void
 clutter_actor_pick (ClutterActor *actor, ClutterColor *color)

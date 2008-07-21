@@ -1,5 +1,9 @@
 2008-07-21  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* xs/ClutterActor.xs: Add more unit-based API.
+
+2008-07-21  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* examples/behaviour.pl: Update example.
 
 2008-07-21  Emmanuele Bassi  <ebassi@openedhand.com>
