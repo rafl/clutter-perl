@@ -1,3 +1,4 @@
+======== Clutter 0.800 =======================================================
 2008-07-21  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* xs/ClutterContainer.xs: Documentation fixes.

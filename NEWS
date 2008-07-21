@@ -1,3 +1,11 @@
+Clutter 0.800
+=============
+* Require clutter-0.8 >= 0.8.0
+* Resync with upstream API
+* Wrap newly exposed COGL API as Clutter::Cogl
+* Wrap newly added Gtk2::Clutter utility API
+* Allow full implementation of Clutter::Container
+
 Clutter 0.620
 =============
 * Require clutter-0.6 >= 0.6.2

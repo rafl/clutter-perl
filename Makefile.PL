@@ -11,7 +11,7 @@ use ExtUtils::MakeMaker;
 our %build_reqs = (
     'perl-ExtUtils-Depends'   => '0.2',
     'perl-ExtUtils-PkgConfig' => '1.03',
-    'perl-Glib'               => '1.171', # for Glib::MakeHelper
+    'perl-Glib'               => '1.180', # for Glib::MakeHelper
     'perl-Gtk2'               => '1.140', # for Gtk2::Pango
     'perl-Cairo'              => '1.00',
     'Clutter'                 => '0.8.0',

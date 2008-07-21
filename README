@@ -1,10 +1,11 @@
-Clutter version 0.620
+Clutter version 0.800
 =====================
 
 Perl bindings to the Clutter OpenGL canvas.  Clutter aims to give a nice
-and easy GObject based API for creating fast, mainly 2B single window
-stylised applications, such as media box UI, presentations, kiosk style
-applications, etc.  Clutter uses OpenGL for rendering.
+and easy GObject based API for creating fast, heavily stylised applications,
+such as media box UI, presentations, kiosk style applications, etc.
+
+Clutter uses OpenGL for rendering.
 
 The Clutter Perl bindings allow you to write canvas-based applications in
 a Perlish and object-oriented way, freeing you from having to care about
@@ -38,22 +39,29 @@ DEPENDENCIES
 This module requires these other modules and libraries:
 
   perl >= 5.8.0
-  Glib >= 1.171 (Perl module)
-  Gtk2 >= 1.120 (Perl module)
-  Clutter >= 0.6.2 (C library)
-  ClutterGst >= 0.6.1 (C library)
-  ClutterGtk >= 0.6.1 (C library)
-  ClutterCairo >= 0.6.1 (C library)
+  Glib >= 1.180 (Perl module)
+  Cairo >= 1.0.0 (Perl module)
+  Gtk2 >= 1.140 (Perl module)
+  Clutter >= 0.8.0 (C library)
+  Clutter-GStreamer >= 0.8.0 (C library) [optional]
+  Clutter-GTK+ >= 0.8.1 (C library) [optional]
+  Clutter-Cairo >= 0.8.1 (C library) [optional]
 
 In order to build it from source, you'll also need:
 
   ExtUtils::Depends >= 0.2
   ExtUtils::PkgConfig >= 1.03
 
+When building with support for Clutter-Cairo, the Cairo Perl module is
+also required.
+
+When building with support for Clutter-GStreamer, the GStreamer Perl
+module is also required.
+
 BUG REPORTS
 -----------
 
-Please report bugs to the clutter product in OpenedHand's Bugzilla:
+Please report bugs to the Clutter product in OpenedHand's Bugzilla:
 
   http://bugzilla.gnome.org/enter_bug.cgi?product=Clutter
 
