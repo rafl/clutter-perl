@@ -1,5 +1,7 @@
 #include "clutterperl.h"
 
+#include <clutter/clutter-stage-manager.h>
+
 MODULE = Clutter::StageManager  PACKAGE = Clutter::StageManager PREFIX = clutter_stage_manager_
 
 ClutterStageManager_noinc *

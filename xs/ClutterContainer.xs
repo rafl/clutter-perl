@@ -151,7 +151,7 @@ clutterperl_container_foreach (ClutterContainer *container,
 
       PREP (container);
 
-      create_callback (callback, data, &code, &data);
+      create_callback (callback, callback_data, &code, &data);
 
       XPUSHs (sv_2mortal (newSVsv (code)));
       XPUSHs (sv_2mortal (newSVsv (data)));

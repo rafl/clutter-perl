@@ -1,5 +1,21 @@
 2008-07-22  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	Miscellaneous fixes for the Debian packaging.
+
+	* xs/ClutterContainer.xs: Use the right parameter for the
+	FOREACH code reference generation.
+
+	* xs/ClutterEntry.xs: Remove the deprecated handle_key_event()
+	wrapper.
+
+	* xs/ClutterEvent.xs: Remove an unused function.
+
+	* xs/ClutterStageManager.xs: Include clutter-stage-manager.h,
+	since Clutter 0.8.0 shipped with this header missing from the
+	clutter.h collective header.
+
+2008-07-22  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* xs/ClutterGstAudio.xs: Bind the get_playbin() method.
 
 	* xs/ClutterGstVideoSink.xs:

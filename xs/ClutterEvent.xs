@@ -196,12 +196,6 @@ clutterperl_event_get_modifier_state (ClutterEvent *event)
   return retval;
 }
 
-static ClutterActor *
-clutterperl_event_get_source (ClutterEvent *event)
-{
-  return event->any.source;
-}
-
 /* initialized in the boot section */
 static GPerlBoxedWrapperClass clutter_event_wrapper_class;
 static GPerlBoxedWrapperClass *default_wrapper_class;
