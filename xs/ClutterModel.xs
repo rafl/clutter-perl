@@ -247,15 +247,15 @@ MODULE = Clutter::Model         PACKAGE = Clutter::Model        PREFIX = clutter
 
 =over
 
-=item rows = GET_N_ROWS ($model)
+=item B<< rows = GET_N_ROWS ($model) >>
 
-=item columns = GET_N_COLUMNS ($model)
+=item B<< columns = GET_N_COLUMNS ($model) >>
 
-=item type = GET_COLUMN_TYPE ($model)
+=item B<< type = GET_COLUMN_TYPE ($model) >>
 
-=item name = GET_COLUMN_NAME ($model)
+=item B<< name = GET_COLUMN_NAME ($model) >>
 
-=item iterator = INSERT_ROW ($model, $position)
+=item B<< iterator = INSERT_ROW ($model, $position) >>
 
   sub INSERT_ROW {
       my ($model, $position) = @_;
@@ -279,11 +279,9 @@ MODULE = Clutter::Model         PACKAGE = Clutter::Model        PREFIX = clutter
                                row   => $position);
   }
 
-=item REMOVE_ROW ($model, $position)
+=item B<< REMOVE_ROW ($model, $position) >>
 
-=item iterator = GET_ITER_AT_ROW ($model, $position)
-
-=item RESORT ($model)
+=item B<< iterator = GET_ITER_AT_ROW ($model, $position) >>
 
 =head2 ITERATORS
 
@@ -295,21 +293,21 @@ MODULE = Clutter::Model         PACKAGE = Clutter::Model        PREFIX = clutter
 
 =over
 
-=item boolean = IS_LAST ($iter)
+=item B<< boolean = IS_LAST ($iter) >>
 
-=item NEXT ($iter)
+=item B<< NEXT ($iter) >>
 
-=item boolean = IS_FIRST ($iter)
+=item B<< boolean = IS_FIRST ($iter) >>
 
-=item PREV ($iter)
+=item B<< PREV ($iter) >>
 
-=item model = GET_MODEL ($iter)
+=item B<< model = GET_MODEL ($iter) >>
 
-=item row = GET_ROW ($iter)
+=item B<< row = GET_ROW ($iter) >>
 
-=item value = GET_VALUE ($iter, $column)
+=item B<< value = GET_VALUE ($iter, $column) >>
 
-=item SET_VALUE ($iter, $column, $value)
+=item B<< SET_VALUE ($iter, $column, $value) >>
 
 =back
 
@@ -336,10 +334,8 @@ clutter_model_append (ClutterModel *model, ...)
         columns = g_new (guint, n_values);
         values = g_value_array_new (n_values);
         for (i = 0; i < n_values; i++) {
-                gint position = -1;
                 gint column = 0;
                 GValue value = { 0, };
-                gboolean res = FALSE;
                 if (! looks_like_number (ST (1 + i * 2)))
                         croak (errfmt,
                                "The first value in each pair must be a "
@@ -381,10 +377,8 @@ clutter_model_prepend (ClutterModel *model, ...)
         columns = g_new (guint, n_values);
         values = g_value_array_new (n_values);
         for (i = 0; i < n_values; i++) {
-                gint position = -1;
                 gint column = 0;
                 GValue value = { 0, };
-                gboolean res = FALSE;
                 if (! looks_like_number (ST (1 + i * 2)))
                         croak (errfmt,
                                "The first value in each pair must be a "
@@ -427,7 +421,6 @@ clutter_model_insert (ClutterModel *model, guint row, ...)
         for (i = 0; i < n_values; i++) {
                 gint column = 0;
                 GValue value = { 0, };
-                gboolean res = FALSE;
                 if (! looks_like_number (ST (2 + i * 2)))
                         croak (errfmt, "The first value in each pair must be a column index number");
                 column = SvIV (ST (2 + i * 2));

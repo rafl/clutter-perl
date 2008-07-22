@@ -25,12 +25,168 @@
 
 #include "clutterperl.h"
 
+#define PREP(obj)                                       \
+        dSP;                                            \
+        ENTER;                                          \
+        SAVETMPS;                                       \
+        PUSHMARK(SP);                                   \
+        PUSHs (newSVGObject ((GObject *) (obj)));
+
+#define CALL_METHOD(name,flags)         \
+        PUTBACK;                        \
+        call_method ((name), (flags));  \
+        SPAGAIN;
+
+#define FINISH          \
+        PUTBACK;        \
+        FREETMPS;       \
+        LEAVE;
+
+static gboolean
+clutterperl_model_iter_is_first (ClutterModelIter *iter)
+{
+  gboolean ret = FALSE;
+
+  PREP (iter);
+
+  CALL_METHOD ("IS_FIRST", G_SCALAR);
+
+  ret = POPi;
+
+  FINISH;
+
+  return ret;
+}
+
+static gboolean
+clutterperl_model_iter_is_last (ClutterModelIter *iter)
+{
+  gboolean ret = FALSE;
+
+  PREP (iter);
+
+  CALL_METHOD ("IS_FIRST", G_SCALAR);
+
+  ret = POPi;
+
+  FINISH;
+
+  return ret;
+}
+
+static ClutterModelIter *
+clutterperl_model_iter_next (ClutterModelIter *iter)
+{
+  PREP (iter);
+
+  CALL_METHOD ("NEXT", G_VOID | G_DISCARD);
+
+  FINISH;
+
+  return iter;
+}
+
+static ClutterModelIter *
+clutterperl_model_iter_prev (ClutterModelIter *iter)
+{
+  PREP (iter);
+
+  CALL_METHOD ("PREV", G_VOID | G_DISCARD);
+
+  FINISH;
+
+  return iter;
+}
+
+static ClutterModel *
+clutterperl_model_iter_get_model (ClutterModelIter *iter)
+{
+  ClutterModel *ret = NULL;
+  SV *svret;
+
+  PREP (iter);
+
+  CALL_METHOD ("GET_MODEL", G_SCALAR);
+  svret = POPs;
+  PUTBACK;
+
+  ret = SvClutterModel (svret);
+
+  FREETMPS;
+  LEAVE;
+
+  return ret;
+}
+
+static guint
+clutterperl_model_iter_get_row (ClutterModelIter *iter)
+{
+  guint ret = 0;
+
+  PREP (iter);
+
+  CALL_METHOD ("GET_ROW", G_SCALAR);
+  ret = POPi;
+
+  FINISH;
+
+  return ret;
+}
+
+static void
+clutterperl_model_iter_get_value (ClutterModelIter *iter,
+                                  guint             column,
+                                  GValue           *value)
+{
+  SV *svret;
+
+  PREP (iter);
+  XPUSHs (sv_2mortal (newSVuv (column)));
+
+  CALL_METHOD ("GET_VALUE", G_SCALAR);
+  svret = POPs;
+  PUTBACK;
+
+  gperl_value_from_sv (value, svret);
+
+  FREETMPS;
+  LEAVE;
+}
+
+static void
+clutterperl_model_iter_set_value (ClutterModelIter *iter,
+                                  guint             column,
+                                  const GValue     *value)
+{
+  PREP (iter);
+
+  XPUSHs (sv_2mortal (newSVuv (column)));
+  XPUSHs (sv_2mortal (gperl_sv_from_value (value)));
+
+  CALL_METHOD ("SET_VALUE", G_VOID | G_DISCARD);
+
+  FINISH;
+}
+
+static void
+clutterperl_model_iter_class_init (ClutterModelIterClass *klass)
+{
+  klass->get_model = clutterperl_model_iter_get_model;
+  klass->get_row = clutterperl_model_iter_get_row;
+  klass->is_first = clutterperl_model_iter_is_first;
+  klass->is_last = clutterperl_model_iter_is_last;
+  klass->prev = clutterperl_model_iter_prev;
+  klass->next = clutterperl_model_iter_next;
+  klass->get_value = clutterperl_model_iter_get_value;
+  klass->set_value = clutterperl_model_iter_set_value;
+}
+
 MODULE = Clutter::Model::Iter   PACKAGE = Clutter::Model::Iter  PREFIX = clutter_model_iter_
 
 =for apidoc
 =for arg ... of column indices
 
-Fetch and return the model's values in the row pointed to by I<$iter>.
+Fetch and return the model's values in the row pointed to by I<iter>.
 If you specify no column indices, it returns the values for all of the
 columns, otherwise, returns just those columns' values (in order).
 
@@ -64,7 +220,7 @@ clutter_model_iter_get_values (ClutterModelIter *iter, ...)
 =for apidoc
 =for arg ... of column, value pairs
 
-Sets the model's values in the row pointed to by I<$iter>.
+Sets the model's values in the row pointed to by I<iter>.
 
 =cut
 void
@@ -120,4 +276,29 @@ clutter_model_iter_get_model (ClutterModelIter *iter)
 
 guint
 clutter_model_iter_get_row (ClutterModelIter *iter)
+
+=for apidoc Clutter::Model::Iter::_INSTALL_OVERRIDES __hide__
+=cut
+
+void
+_INSTALL_OVERRIDES (const char *package)
+    PREINIT:
+        GType gtype;
+        ClutterModelIterClass *klass;
+    CODE:
+        gtype = gperl_object_type_from_package (package);
+        if (!gtype) {
+                croak("package `%s' is not registered with GPerl", package);
+        }
+        if (!g_type_is_a (gtype, CLUTTER_TYPE_MODEL)) {
+                croak("package `%s' (%s) is not a Clutter::Model::Iter",
+                      package,
+                      g_type_name (gtype));
+        }
+        klass = g_type_class_peek (gtype);
+        if (!klass) {
+                croak("INTERNAL ERROR: can't peek a type class for `%s'",
+                      g_type_name (gtype));
+        }
+        clutterperl_model_iter_class_init (klass);
 

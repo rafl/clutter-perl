@@ -1,5 +1,12 @@
 2008-07-22  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* xs/ClutterModel.xs:
+	* xs/ClutterModelIter.xs: Finish the wrappers for implementing
+	a ClutterModel and a ClutterModelIter in pure Perl; the
+	ClutterModel::resort implementation is still missing.
+
+2008-07-22  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	Miscellaneous fixes for the Debian packaging.
 
 	* xs/ClutterContainer.xs: Use the right parameter for the
