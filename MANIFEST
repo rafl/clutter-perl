@@ -20,6 +20,7 @@ maps
 maps-cairo
 maps-gst
 maps-gtk
+META.yml
 NEWS
 README
 t/0.t
@@ -30,6 +31,7 @@ t/ClutterBehaviourEllipse.t
 t/ClutterBehaviourOpacity.t
 t/ClutterBehaviourPath.t
 t/ClutterBehaviourScale.t
+t/ClutterContainer.t
 t/ClutterGroup.t
 t/ClutterLabel.t
 t/ClutterModel.t
@@ -63,6 +65,7 @@ xs/ClutterFixed.xs
 xs/ClutterGroup.xs
 xs/ClutterGst.xs
 xs/ClutterGstAudio.xs
+xs/ClutterGstVideoSink.xs
 xs/ClutterGstVideoTexture.xs
 xs/ClutterGtk.xs
 xs/ClutterLabel.xs

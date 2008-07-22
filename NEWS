@@ -1,3 +1,12 @@
+Clutter 0.801
+=============
+* Compilation fixes required for compiling with Clutter installed
+  from the 0.8.0 tarball
+* Wrap Clutter::Gst::Audio::get_playbin()
+* Wrap Clutter::Gst::VideoSink
+* Enhance Clutter::Model and Clutter::Model::Iter bindings to
+  allow pure-Perl implementations
+
 Clutter 0.800
 =============
 * Require clutter-0.8 >= 0.8.0
