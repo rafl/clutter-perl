@@ -8,3 +8,5 @@ clutter_gst_audio_new (class)
     C_ARGS:
         /* void */
 
+GstElement *
+clutter_gst_audio_get_playbin (ClutterGstAudio *audio)
