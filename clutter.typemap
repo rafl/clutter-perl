@@ -7,4 +7,7 @@ ClutterFixed            T_IV
 ClutterAngle            T_IV
 
 CoglHandle              T_GPERL_GENERIC_WRAPPER
+CoglPixelFormat         T_GPERL_GENERIC_WRAPPER
+CoglFeatureFlags        T_GPERL_GENERIC_WRAPPER
+CoglBufferTarget        T_GPERL_GENERIC_WRAPPER
 CoglTextureVertex       T_GPERL_GENERIC_WRAPPER

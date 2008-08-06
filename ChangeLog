@@ -1,5 +1,13 @@
 2008-08-07  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* clutter.typemap:
+	* clutterperl.h:
+	* xs/ClutterCogl.xs: Start wrapping the COGL API for
+	textures. It is stil very experimental, and should only
+	be used for testing at this moment.
+
+2008-08-07  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* Makefile.PL: Update the WriteMakefile() parameters so that
 	the META.yml that MakeMaker generates is finally useful. Remove
 	the rpms magic from the postamble.

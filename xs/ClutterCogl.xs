@@ -25,6 +25,142 @@
 
 #include "clutterperl.h"
 
+#ifndef COGL_TYPE_PIXEL_FORMAT
+#define COGL_TYPE_PIXEL_FORMAT  (coglperl_pixel_format_get_type ())
+
+static GType
+coglperl_pixel_format_get_type (void)
+{
+  static GType gtype = 0;
+
+  if (G_UNLIKELY (gtype == 0))
+    {
+      const GEnumValue values[] = {
+        { COGL_PIXEL_FORMAT_ANY, "COGL_PIXEL_FORMAT_ANY", "any" },
+        { COGL_PIXEL_FORMAT_A_8, "COGL_PIXEL_FORMAT_A_8", "a-8" },
+        { COGL_PIXEL_FORMAT_RGB_565, "COGL_PIXEL_FORMAT_RGB_565", "rgb-565" },
+        { COGL_PIXEL_FORMAT_RGBA_4444, "COGL_PIXEL_FORMAT_RGBA_4444", "rgba-4444" },
+        { COGL_PIXEL_FORMAT_RGBA_5551, "COGL_PIXEL_FORMAT_RGBA_5551", "rgba-5551" },
+        { COGL_PIXEL_FORMAT_YUV, "COGL_PIXEL_FORMAT_YUV", "yuv" },
+        { COGL_PIXEL_FORMAT_G_8, "COGL_PIXEL_FORMAT_G_8", "g-8" },
+        { COGL_PIXEL_FORMAT_RGB_888, "COGL_PIXEL_FORMAT_RGB_888", "rgb-888" },
+        { COGL_PIXEL_FORMAT_BGR_888, "COGL_PIXEL_FORMAT_BGR_888", "bgr-888" },
+        { COGL_PIXEL_FORMAT_RGBA_8888, "COGL_PIXEL_FORMAT_RGBA_8888", "rgba-8888" },
+        { COGL_PIXEL_FORMAT_BGRA_8888, "COGL_PIXEL_FORMAT_BGRA_8888", "bgra-8888" },
+        { COGL_PIXEL_FORMAT_ARGB_8888, "COGL_PIXEL_FORMAT_ARGB_8888", "argb-8888" },
+        { COGL_PIXEL_FORMAT_ABGR_8888, "COGL_PIXEL_FORMAT_ABGR_8888", "abgr-8888" },
+        { COGL_PIXEL_FORMAT_RGBA_8888_PRE, "COGL_PIXEL_FORMAT_RGBA_8888_PRE", "rgba-8888-pre" },
+        { COGL_PIXEL_FORMAT_BGRA_8888_PRE, "COGL_PIXEL_FORMAT_BGRA_8888_PRE", "bgra-8888-pre" },
+        { COGL_PIXEL_FORMAT_ARGB_8888_PRE, "COGL_PIXEL_FORMAT_ARGB_8888_PRE", "argb-8888-pre" },
+        { COGL_PIXEL_FORMAT_ABGR_8888_PRE, "COGL_PIXEL_FORMAT_ABGR_8888_PRE", "abgr-8888-pre" },
+        { COGL_PIXEL_FORMAT_RGBA_4444_PRE, "COGL_PIXEL_FORMAT_RGBA_4444_PRE", "rgba-4444-pre" },
+        { COGL_PIXEL_FORMAT_RGBA_5551_PRE, "COGL_PIXEL_FORMAT_RGBA_5551_PRE", "rgba-5551-pre" },
+        { 0, NULL, NULL }
+      };
+
+      gtype = g_enum_register_static (g_intern_static_string ("CoglPixelFormat"),
+                                      values);
+    }
+
+  return gtype;
+}
+
+#endif /* COGL_TYPE_PIXEL_FORMAT */
+
+SV *
+newSVCoglPixelFormat (CoglPixelFormat format)
+{
+  return gperl_convert_back_enum (COGL_TYPE_PIXEL_FORMAT, format);
+}
+
+CoglPixelFormat
+SvCoglPixelFormat (SV *sv)
+{
+  return gperl_convert_enum (COGL_TYPE_PIXEL_FORMAT, sv);
+}
+
+#ifndef COGL_TYPE_FEATURE_FLAGS
+#define COGL_TYPE_FEATURE_FLAGS (coglperl_feature_flags_get_type ())
+
+static GType
+coglperl_feature_flags_get_type (void)
+{
+  static GType gtype = 0;
+
+  if (G_UNLIKELY (gtype == 0))
+    {
+      const GFlagsValue values[] = {
+        { COGL_FEATURE_TEXTURE_RECTANGLE, "COGL_FEATURE_TEXTURE_RECTANGLE", "texture-rectangle" },
+        { COGL_FEATURE_TEXTURE_NPOT, "COGL_FEATURE_TEXTURE_NPOT", "texture-npot" },
+        { COGL_FEATURE_TEXTURE_YUV, "COGL_FEATURE_TEXTURE_YUV", "yuv" },
+        { COGL_FEATURE_TEXTURE_READ_PIXELS, "COGL_FEATURE_TEXTURE_READ_PIXELS", "read-pixels" },
+        { COGL_FEATURE_SHADERS_GLSL, "COGL_FEATURE_SHADERS_GLSL", "shaders-glsl" },
+        { COGL_FEATURE_OFFSCREEN, "COGL_FEATURE_OFFSCREEN", "offscreen" },
+        { COGL_FEATURE_OFFSCREEN_MULTISAMPLE, "COGL_FEATURE_OFFSCREEN_MULTISAMPLE", "offscreen-multisample" },
+        { COGL_FEATURE_OFFSCREEN_BLIT, "COGL_FEATURE_OFFSCREEN_BLIT", "offscreen-blit" },
+        { COGL_FEATURE_FOUR_CLIP_PLANES, "COGL_FEATURE_FOUR_CLIP_PLANES", "four-clip-planes" },
+        { COGL_FEATURE_STENCIL_BUFFER, "COGL_FEATURE_STENCIL_BUFFER", "stencil-buffer" },
+        { 0, NULL, NULL }
+      };
+
+      gtype = g_flags_register_static (g_intern_static_string ("CoglFeatureFlags"), values);
+    }
+
+  return gtype;
+}
+
+#endif /* COGL_TYPE_FEATURE_FLAGS */
+
+SV *
+newSVCoglFeatureFlags (CoglFeatureFlags flags)
+{
+  return gperl_convert_back_flags (COGL_TYPE_FEATURE_FLAGS, flags);
+}
+
+CoglFeatureFlags
+SvCoglFeatureFlags (SV *sv)
+{
+  return gperl_convert_flags (COGL_TYPE_FEATURE_FLAGS, sv);
+}
+
+#ifndef COGL_TYPE_BUFFER_TARGET
+#define COGL_TYPE_BUFFER_TARGET (coglperl_buffer_target_get_type ())
+
+static GType
+coglperl_buffer_target_get_type (void)
+{
+  static GType gtype = 0;
+
+  if (G_UNLIKELY (gtype == 0))
+    {
+      const GFlagsValue values[] = {
+        { COGL_WINDOW_BUFFER, "COGL_WINDOW_BUFFER", "window-buffer" },
+        { COGL_MASK_BUFFER, "COGL_MASK_BUFFER", "mask-buffer" },
+        { COGL_OFFSCREEN_BUFFER, "COGL_OFFSCREEN_BUFFER", "offscreen-buffer" },
+        { 0, NULL, NULL }
+      };
+
+      gtype = g_flags_register_static (g_intern_static_string ("CoglBufferTarget"), values);
+    }
+
+  return gtype;
+}
+
+#endif /* COGL_TYPE_BUFFER_TARGET */
+
+SV *
+newSVCoglBufferTarget (CoglBufferTarget flags)
+{
+  return gperl_convert_back_flags (COGL_TYPE_BUFFER_TARGET, flags);
+}
+
+CoglBufferTarget
+SvCoglBufferTarget (SV *sv)
+{
+  return gperl_convert_flags (COGL_TYPE_BUFFER_TARGET, sv);
+}
+
+
 SV *
 newSVCoglHandle (CoglHandle handle)
 {
@@ -180,6 +316,92 @@ is_valid (CoglHandle handle)
     OUTPUT:
         RETVAL
 
+=for apidoc
+Whether the given I<handle> references an existing texture object
+=cut
+gboolean
+is_texture (CoglHandle handle)
+    CODE:
+        RETVAL = cogl_is_texture (handle);
+    OUTPUT:
+        RETVAL
+
+=for apidoc
+Whether the given I<handle> references an existing shader object
+=cut
+gboolean
+is_shader (CoglHandle handle)
+    CODE:
+        RETVAL = cogl_is_shader (handle);
+    OUTPUT:
+        RETVAL
+
+=for apidoc
+Whether the given I<handle> references an existing program object
+=cut
+gboolean
+is_program (CoglHandle handle)
+    CODE:
+        RETVAL = cogl_is_program (handle);
+    OUTPUT:
+        RETVAL
+
+=for apidoc
+Whether the given I<handle> references an existing offscreen
+buffer object
+=cut
+gboolean
+is_offscreen (CoglHandle handle)
+    CODE:
+        RETVAL = cogl_is_offscreen (handle);
+    OUTPUT:
+        RETVAL
+
+void
+DESTROY (SV *sv)
+    PREINIT:
+        CoglHandle handle = COGL_INVALID_HANDLE;
+    CODE:
+        if (handle == COGL_INVALID_HANDLE)
+          return;
+        if (cogl_is_texture (handle))
+          cogl_texture_unref (handle);
+        else if (cogl_is_shader (handle))
+          cogl_shader_unref (handle);
+        else if (cogl_is_program (handle))
+          cogl_program_unref (handle);
+        else if (cogl_is_offscreen (handle))
+          cogl_offscreen_unref (handle);
+        else
+          g_return_if_reached ();
+        sv_unmagic (sv, PERL_MAGIC_ext);
+
+MODULE = Clutter::Cogl  PACKAGE = Clutter::Cogl::Texture PREFIX = cogl_texture_
+
+BOOT:
+        gperl_set_isa ("Clutter::Cogl::TextureHandle",
+                       "Clutter::Cogl::Handle");
+
+SV *
+cogl_texture_new_with_size (class=NULL, width, height, max_waste, auto_mipmap, internal_format)
+        guint width
+        guint height
+        gint max_waste
+        gboolean auto_mipmap
+        CoglPixelFormat internal_format
+    PREINIT:
+        CoglHandle handle = COGL_INVALID_HANDLE;
+    CODE:
+        /* we own the handle */
+        handle = cogl_texture_new_with_size (width, height,
+                                             max_waste,
+                                             auto_mipmap,
+                                             internal_format);
+        RETVAL = newSVCoglHandle (handle);
+        sv_setref_pv (RETVAL, "Clutter::Cogl::TextureHandle", (void *) handle);
+    OUTPUT:
+        RETVAL
+
 MODULE = Clutter::Cogl  PACKAGE = Clutter::Cogl PREFIX = cogl_
 
 =for position DESCRIPTION
@@ -197,6 +419,31 @@ by the Perl OpenGL wrapper module).
 =cut
 
 =for apidoc
+Retrieves all the features supported by Cogl on the current
+platform
+=cut
+CoglFeatureFlags
+cogl_get_features (class=NULL)
+    C_ARGS:
+        /* void */
+
+=for apidoc
+Checks whether the given I<features> are available.
+=cut
+gboolean
+cogl_features_available (class=NULL, CoglFeatureFlags features)
+    C_ARGS:
+        features
+
+=for
+Checks whether I<name> occurs in the list of extensions inside I<ext>
+=cut
+gboolean
+cogl_check_extension (class=NULL, const gchar *name, const gchar *ext)
+    C_ARGS:
+        name, ext
+
+=for apidoc
 Multiplies the current set matrix with a projection matrix based
 on the provided values
 =cut
@@ -207,6 +454,30 @@ cogl_perspective (class=NULL, gdouble fovy, gdouble aspect, gdouble z_near, gdou
                           CLUTTER_FLOAT_TO_FIXED (aspect),
                           CLUTTER_FLOAT_TO_FIXED (z_near),
                           CLUTTER_FLOAT_TO_FIXED (z_far));
+
+#if CLUTTER_CHECK_VERSION (0, 8, 2)
+
+=for apidoc
+Replaces the current projection matrix with a perspective
+matrix for the given viewing frustum
+=cut
+void
+cogl_frustum (class=NULL, left, right, bottom, top, z_near, z_far)
+        gdouble left
+        gdouble right
+        gdouble bottom
+        gdouble top
+        gdouble z_near
+        gdouble z_far
+    CODE:
+        cogl_frustum (CLUTTER_FLOAT_TO_FIXED (left),
+                      CLUTTER_FLOAT_TO_FIXED (right),
+                      CLUTTER_FLOAT_TO_FIXED (bottom)
+                      CLUTTER_FLOAT_TO_FIXED (top)
+                      CLUTTER_FLOAT_TO_FIXED (z_near)
+                      CLUTTER_FLOAT_TO_FIXED (z_far));
+
+#endif /* CLUTTER_CHECK_VERSION */
 
 =for apidoc
 Replaces the current viewport and projection matrix with the given
@@ -265,9 +536,9 @@ model along all three axes according to the given values
 void
 cogl_translate (class=NULL, gdouble x, gdouble y, gdouble z)
     CODE:
-        cogl_translate (CLUTTER_FLOAT_TO_FIXED (x),
-                        CLUTTER_FLOAT_TO_FIXED (y),
-                        CLUTTER_FLOAT_TO_FIXED (z));
+        cogl_translatex (CLUTTER_FLOAT_TO_FIXED (x),
+                         CLUTTER_FLOAT_TO_FIXED (y),
+                         CLUTTER_FLOAT_TO_FIXED (z));
 
 =for apidoc
 Multiplies the current model-view matrix by one that rotates the
@@ -279,7 +550,7 @@ rotation
 void
 cogl_rotate (class=NULL, gdouble angle, gint x, gint y, gint z)
     CODE:
-        cogl_rotate (CLUTTER_FLOAT_TO_FIXED (angle), x, y, z);
+        cogl_rotatex (CLUTTER_FLOAT_TO_FIXED (angle), x, y, z);
 
 =for apidoc
 =for signature (x, y, width, height) = Clutter::Cogl->get_viewport
@@ -291,10 +562,10 @@ cogl_get_viewport (class=NULL)
     PPCODE:
         cogl_get_viewport (v);
         EXTEND (SP, 4);
-        PUSHs (sv_2mortal (newSVnv (v[0]))); /* x */
-        PUSHs (sv_2mortal (newSVnv (v[1]))); /* y */
-        PUSHs (sv_2mortal (newSVnv (v[2]))); /* width */
-        PUSHs (sv_2mortal (newSVnv (v[3]))); /* height */
+        PUSHs (sv_2mortal (newSVnv (CLUTTER_FIXED_TO_FLOAT (v[0])))); /* x */
+        PUSHs (sv_2mortal (newSVnv (CLUTTER_FIXED_TO_FLOAT (v[1])))); /* y */
+        PUSHs (sv_2mortal (newSVnv (CLUTTER_FIXED_TO_FLOAT (v[2])))); /* width */
+        PUSHs (sv_2mortal (newSVnv (CLUTTER_FIXED_TO_FLOAT (v[3])))); /* height */
 
 =for apidoc
 Specifies a rectangular clipping area for all subsequent drawing

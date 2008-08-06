@@ -28,11 +28,20 @@
 
 G_BEGIN_DECLS
 
-SV *newSVCoglHandle (CoglHandle handle);
-CoglHandle SvCoglHandle (SV *sv);
+SV *               newSVCoglPixelFormat   (CoglPixelFormat    format);
+CoglPixelFormat    SvCoglPixelFormat      (SV                *sv);
 
-SV *newSVCoglTextureVertext (CoglTextureVertex vertex);
-CoglTextureVertex *SvCoglTextureVertex (SV *sv);
+SV *               newSVCoglFeatureFlags  (CoglFeatureFlags   flags);
+CoglFeatureFlags   SvCoglFeatureFlags     (SV                *sv);
+
+SV *               newSVCoglBufferTarget  (CoglBufferTarget   flags);
+CoglBufferTarget   SvCoglBufferTarget     (SV                *sv);
+
+SV *               newSVCoglHandle        (CoglHandle         handle);
+CoglHandle         SvCoglHandle           (SV                *sv);
+
+SV *               newSVCoglTextureVertex (CoglTextureVertex *vertex);
+CoglTextureVertex *SvCoglTextureVertex    (SV                *sv);
 
 const char *clutterperl_event_get_package (ClutterEvent *event);
 
