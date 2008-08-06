@@ -1,5 +1,14 @@
 2008-08-07  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* examples/behaviour.pl: Small fixes.
+
+	* xs/ClutterBackend.xs: Bind the font options accessors of
+	the Clutter::Backend class.
+
+	* xs/ClutterContainer.xs: Documentation fixes.
+
+2008-08-07  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* tools/mk-html-docs.sh: Add a simple script using
 	mpod2html to convert the pod files to HTML files. Still
 	not hooked up to anything, so it needs to be run

@@ -74,7 +74,7 @@ sub INIT_INSTANCE {
     $self->{angle_start} =   0.0;
     $self->{angle_end}   = 359.0;
     $self->{direction}   = 'clockwise';
-    $self->{axis}        = 'z';
+    $self->{axis}        = 'z-axis';
 }
 
 sub ALPHA_NOTIFY {
@@ -109,17 +109,15 @@ $stage->signal_connect(key_press_event => sub { Clutter->main_quit(); });
 
 my $group = Clutter::Group->new();
 $stage->add($group);
-$group->show();
 
 my $rect = Clutter::Rectangle->new();
 $rect->set_size(100, 100);
 $rect->set_position(0, 0);
 $rect->set_color(Clutter::Color->new(0x33, 0x22, 0x22, 0xff));
-$rect->set_border_width(10);
+$rect->set_border_width(5);
 $rect->set_border_color(Clutter::Color->new(0xff, 0xcc, 0xcc, 0xff));
 
 $group->add($rect);
-$rect->show();
 
 my $hand;
 eval { $hand = Clutter::Texture->new('redhand.png') };
@@ -129,14 +127,13 @@ if ($@) {
 else {
     $hand->set_position(5, 5);
 
-    $rect->set_size($hand->get_width()  + 5,
-                    $hand->get_height() + 5);
+    $rect->set_size($hand->get_width()  + 10,
+                    $hand->get_height() + 10);
 
     $group->add($hand);
-    $hand->show();
 }
 
-my $timeline = Clutter::Timeline->new(100, 26);
+my $timeline = Clutter::Timeline->new_for_duration(4000);
 $timeline->set(loop => TRUE);
 
 my $alpha = Clutter::Alpha->new($timeline, sub {
@@ -152,9 +149,9 @@ $o_behave->apply($group);
 my $p_behave
     = Clutter::Behaviour::Path->new($alpha,
         [   0,   0 ],
-        [   0, 300 ],
-        [ 300, 300 ],
-        [ 300,   0 ],
+        [   0, 150 ],
+        [ 240, 150 ],
+        [ 240,   0 ],
         [   0,   0 ],
       );
 $p_behave->apply($group);

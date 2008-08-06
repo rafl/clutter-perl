@@ -373,7 +373,7 @@ sub:
     $self->set_child_meta_type('My::ChildMeta');
   }
 
-This is enough for start using the Clutter::Container::child_set() and
+This is enough to start using the Clutter::Container::child_set() and
 Clutter::Container::child_get() methods to store and retrieve values for
 the properties specified inside the ChildMeta subclass, like:
 
@@ -411,8 +411,17 @@ following methods is required:
 
 =back
 
-Called to add I<actor> to I<container>. The implementation should emit
-the B<::actor-added> signal once the actor has been added.
+Called to add I<actor> to I<container>. The implementation should
+queue a relayout of I<container> and emit the B<::actor-added> signal
+once the actor has been added.
+
+For instance:
+
+  push @{$self->{children}}, $actor;
+  $actor->set_parent($self);
+
+  $self->queue_relayout();
+  $self->signal_emit('actor-added', $actor);
 
 =item B<< REMOVE ($container, $actor) >>
 
@@ -504,6 +513,24 @@ inside I<container>. This function should be overridden only if the
 metadata class used to implement child properties needs special code
 or needs to be stored inside a different data structure within I<container>.
 
+For instance:
+
+  sub CREATE_CHILD_META {
+      my ($self, $child) = @_;
+
+      my $meta = My::ChildMeta->new(
+          container => $self,
+          actor     => $child,
+      );
+
+      # store the ChildMeta into a hash using the
+      # actor itself as the key
+      $self->{meta}->{$child} = $meta;
+  }
+
+When overriding the I<CREATE_CHILD_META>, the I<GET_CHILD_META> and
+the I<DESTROY_CHILD_META> methods should be overridden as well.
+
 This function is called before Clutter::Container::ADD_ACTOR.
 
 =item B<< DESTROY_CHILD_META ($container, $actor) >>
@@ -518,6 +545,14 @@ This function is called before Clutter::Container::ADD_ACTOR.
 
 Called when destroying a L<Clutter::ChildMeta> instance for I<actor>.
 
+For instance:
+
+  sub DESTROY_CHILD_META {
+      my ($self, $child) = @_;
+
+      delete $self->{meta}->{$child};
+  }
+
 This function is called before Clutter::Actor::REMOVE_ACTOR
 
 =item B<< childmeta = GET_CHILD_META ($container, $actor) >>
@@ -531,6 +566,14 @@ This function is called before Clutter::Actor::REMOVE_ACTOR
 =back
 
 Called when retrieving a L<Clutter::ChildMeta> instance for I<actor>.
+
+For instance:
+
+  sub GET_CHILD_META {
+      my ($self, $child) = @_;
+
+      return $self->{meta}->{$child};
+  }
 
 =back
 
@@ -708,7 +751,7 @@ clutter_container_get_child_meta_type (ClutterContainer *container)
     OUTPUT:
         RETVAL
 
-=for apidoc
+=for apidoc __gerror__
 Sets the ChildMeta type used by I<container>. This type can only be
 set once and only if the container implementation does not have any
 ChildMeta type set already. If you try to set the ChildMeta type on
