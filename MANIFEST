@@ -20,7 +20,6 @@ maps
 maps-cairo
 maps-gst
 maps-gtk
-META.yml
 NEWS
 README
 t/0.t
