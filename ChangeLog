@@ -1,5 +1,12 @@
 2008-08-07  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* tools/mk-html-docs.sh: Add a simple script using
+	mpod2html to convert the pod files to HTML files. Still
+	not hooked up to anything, so it needs to be run
+	manually.
+
+2008-08-07  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* clutter.typemap:
 	* clutterperl.h:
 	* xs/ClutterCogl.xs: Start wrapping the COGL API for
