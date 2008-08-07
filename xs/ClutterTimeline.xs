@@ -140,15 +140,22 @@ clutter_timeline_remove_marker (timeline, marker_name)
         ClutterTimeline *timeline
         const gchar     *marker_name
 
+=for apidoc
+=for signature markers = $timeline->list_markers ($frame_num)
+Retrieves all the markers at I<frame_num>. If I<frame_num> is
+omitted or is a negative number, all the markers of I<timeline>
+are returned
+=cut
 void
-clutter_timeline_list_markers (timeline, frame_num)
+clutter_timeline_list_markers (timeline, frame_num=-1)
         ClutterTimeline *timeline
         gint             frame_num
     PREINIT:
         gchar **markers;
         gsize n_markers, i;
     PPCODE:
-        markers = clutter_timeline_list_markers (timeline, frame_num,
+        markers = clutter_timeline_list_markers (timeline,
+                                                 frame_num,
                                                  &n_markers);
         if (markers) {
                 EXTEND (SP, n_markers);

@@ -1,5 +1,13 @@
 2008-08-07  Emmanuele Bassi  <ebassi@openedhand.com>
 
+	* xs/ClutterTimeline.xs: Provide a sensible default value
+	for the list_markers() method argument.
+
+	* t/ClutterTimeline.t: Enhance the Clutter::Timeline test
+	suite by exercising the markers API.
+
+2008-08-07  Emmanuele Bassi  <ebassi@openedhand.com>
+
 	* examples/behaviour.pl: Small fixes.
 
 	* xs/ClutterBackend.xs: Bind the font options accessors of
