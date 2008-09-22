@@ -87,6 +87,11 @@ MODULE = Clutter::Effect        PACKAGE = Clutter::Effect
 =for object Clutter::Effect
 =cut
 
+=for apidoc
+=for arg func a code reference
+=for arg data a scalar to pass to I<func>
+Moves I<actor> from its current position to the I<x> and I<y> coordinates
+=cut
 ClutterTimeline_noinc *
 move (class, template, actor, x, y, func=NULL, data=NULL)
         ClutterEffectTemplate *template
@@ -208,10 +213,18 @@ reuse a template for multiple animations.
 After you have created a Clutter::EffectTemplate you can call one of the
 simple class methods, providing the template object and the parameters for
 the animation. You can optionally pass a function reference, which will be
-invoked when the animation stops. Every Clutter::Effect class method returns
-a copy of the L<Clutter::Timeline> used in the template, so you can control
-the animation with it.
+invoked when the animation stops; the function reference has this signature:
 
+  sub effect_complete {
+      my $actor = shift;
+      my $data  = shift;
+
+      # ...
+  }
+
+Every Clutter::Effect class method returns a copy of the L<Clutter::Timeline>
+used in the template, so you can control the animation with it. B<NOTE>: you
+cannot loop an effect.
 =cut
 
 ClutterEffectTemplate *
