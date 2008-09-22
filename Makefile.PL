@@ -172,14 +172,16 @@ $clutter->install(qw(clutterperl.h build/clutterperl-autogen.h));
 $clutter->save_config('build/IFiles.pm');
 
 WriteMakefile(
-    AUTHOR        => 'Emmanuele Bassi <ebassi@openedhand.com>',
+    AUTHOR        => 'Emmanuele Bassi <ebassi@linux.intel.com>',
     NAME          => 'Clutter',
     VERSION_FROM  => 'Clutter.pm', # finds $VERSION
+
+    # what the module requires to run
     PREREQ_PM     => {
-        'Cairo'     => $build_reqs{'perl-Cairo'},
-        'Glib'      => $build_reqs{'perl-Glib'},
-        'Gtk2'      => $build_reqs{'perl-Gtk2'},
-        'GStreamer' => 0,
+        'Cairo'      => $build_reqs{'perl-Cairo'},
+        'Glib'       => $build_reqs{'perl-Glib'},
+        'Gtk2'       => $build_reqs{'perl-Gtk2'},
+        'GStreamer'  => 0,
     },
     PREREQ_FATAL  => 1, # we need Glib and Gtk2 to be
                         # able to write the Makefile
@@ -187,12 +189,16 @@ WriteMakefile(
     XSPROTOARG    => '-noprototypes ',
     MAN3PODS	  => \%pod_files,
     LICENSE       => 'perl, lgpl',
+
+    # what the module requires to run configure
     EXTRA_META    => Glib::MakeHelper->get_configure_requires_yaml(
         'ExtUtils::Depends'   => $build_reqs{'perl-ExtUtils-Depends'},
         'ExtUtils::PkgConfig' => $build_reqs{'perl-ExtUtils-PkgConfig'},
         'Glib'                => $build_reqs{'perl-Glib'},
+        'Cairo'               => $build_reqs{'perl-Cairo'},
         'Gtk2'                => $build_reqs{'perl-Gtk2'},
     ),
+
     $clutter->get_makefile_vars(),
 );
 

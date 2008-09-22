@@ -15,3 +15,4 @@ Makefile\.old$
 \.sw.$
 \.tar\.gz$
 clutter-perl.doap
+tools/mk-html-docs.sh

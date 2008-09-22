@@ -1,3 +1,11 @@
+======== Clutter 0.801 =======================================================
+2008-09-22  Emmanuele Bassi  <ebassi@linux.intel.com>
+
+	* Makefile.PL:
+	* Clutter.pm:
+	* README:
+	* NEWS: Release 0.802.
+
 2008-09-22  Emmanuele Bassi  <ebassi@linux.intel.com>
 
 	* xs/ClutterBehaviour.xs:

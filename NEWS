@@ -1,3 +1,14 @@
+Clutter 0.802
+=============
+* Update the META.yml generation so that the contents are useful
+  for CPAN and testers
+* Add some initial wrappers for the COGL texture API; still
+  experimental, will require more testing
+* Fix the assignment of built-in alpha functions when creating
+  a new Clutter::Alpha [Andrew Ruthven]
+* Documentation fixes
+* Better coverage for the test suite
+
 Clutter 0.801
 =============
 * Compilation fixes required for compiling with Clutter installed
