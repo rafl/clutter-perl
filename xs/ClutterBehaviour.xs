@@ -111,7 +111,7 @@ implementation of the following method:
 
 =over
 
-=item ALPHA_NOTIFY ($behaviour, $alpha_value)
+=item B<ALPHA_NOTIFY ($behaviour, $alpha_value)>
 
 =over
 
@@ -123,8 +123,10 @@ implementation of the following method:
 
 This is called each time the value of the alpha function held by the
 L<Clutter::Alpha> object bound to the behaviour changes.  You should update
-the property, or the properties, of the actors your behaviour controls
+the property, or the properties, of the actors controlled by your behaviour
 using I<alpha_value>, scaled accordingly.
+
+=back
 
 =cut
 
