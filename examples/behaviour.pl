@@ -136,12 +136,7 @@ else {
 my $timeline = Clutter::Timeline->new_for_duration(4000);
 $timeline->set(loop => TRUE);
 
-my $alpha = Clutter::Alpha->new($timeline, sub {
-    my $alpha = shift;
-    my $timeline = $alpha->get_timeline();
-
-    return int($timeline->get_progress() * Clutter::Alpha->MAX_ALPHA);
-});
+my $alpha = Clutter::Alpha->new($timeline, \&Clutter::Alpha::ramp_inc);
 
 my $o_behave = Clutter::Behaviour::Opacity->new($alpha, 0x33, 0xff);
 $o_behave->apply($group);

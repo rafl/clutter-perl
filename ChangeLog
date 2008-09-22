@@ -1,3 +1,15 @@
+2008-09-22  Emmanuele Bassi  <ebassi@linux.intel.com>
+
+	* examples/behaviour.pl: Use a built-in alpha function.
+
+	* t/ClutterAlpha.t: Test setting built-in alpha functions.
+
+	* xs/ClutterAlpha.xs: Fix the handling of alpha functions
+	using closures. Not sure why this has happened, but apparently
+	switching to gperl_closure_new() broke the assignment from
+	built-in alpha functions such as \&Clutter::Alpha::ramp_inc.
+	Thanks to Andrew Ruthven for spotting this.
+
 2008-08-07  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* xs/ClutterTimeline.xs: Provide a sensible default value

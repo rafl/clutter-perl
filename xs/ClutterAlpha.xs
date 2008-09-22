@@ -64,6 +64,31 @@ exponential and square waves.
 
 =cut
 
+=for apidoc
+=for arg func a code reference or undef
+=for arg data a scalar to pass to I<func> or undef
+Creates a new Clutter::Alpha instance binding I<timeline> to
+the function referenced by I<func>. The function reference can
+be a custom function or one of the alpha functions provided by
+Clutter, for instance:
+
+  \&Clutter::Alpha::ramp_inc
+  \&Clutter::Alpha::sine
+  \&Clutter::Alpha::exp_dec
+
+The function reference must have a signature like:
+
+  sub alpha_function {
+      my ($alpha, $data) = @_;
+
+      # $alpha is the Clutter::Alpha instance
+      # $data is the scalar passed
+
+      return $integer;
+  }
+
+Where I<integer> is an unsigned integer between 0 and MAX_ALPHA.
+=cut
 ClutterAlpha_noinc *
 clutter_alpha_new (class, timeline=NULL, func=NULL, data=NULL)
         ClutterTimeline *timeline
@@ -75,8 +100,7 @@ clutter_alpha_new (class, timeline=NULL, func=NULL, data=NULL)
                 clutter_alpha_set_timeline (RETVAL, timeline);
         }
         if (func) {
-                GClosure *closure = gperl_closure_new (func, data, FALSE);
-                clutter_alpha_set_closure (RETVAL, closure);
+                clutter_alpha_set_closure (RETVAL, gperl_closure_new (func, data, FALSE));
         }
     OUTPUT:
         RETVAL
@@ -84,10 +108,13 @@ clutter_alpha_new (class, timeline=NULL, func=NULL, data=NULL)
 guint32
 clutter_alpha_get_alpha (ClutterAlpha *alpha)
 
+=for apidoc
+=for arg func a code reference or undef
+=for arg data a scalar to pass to I<func> or undef
+Sets the alpha function for I<alpha>.
+=cut
 void
 clutter_alpha_set_func (ClutterAlpha *alpha, SV *func, SV *data=NULL)
-    PREINIT:
-        GPerlCallback *callback;
     CODE:
         clutter_alpha_set_closure (alpha, gperl_closure_new (func, data, FALSE));
 
@@ -98,7 +125,7 @@ ClutterTimeline *
 clutter_alpha_get_timeline (ClutterAlpha *alpha)
 
 guint32
-MAX_ALPHA (class)
+MAX_ALPHA (class=NULL)
     CODE:
         RETVAL = CLUTTER_ALPHA_MAX_ALPHA;
     OUTPUT:
@@ -109,10 +136,57 @@ MAX_ALPHA (class)
 ## implementations which might end up slower and are definitely harder
 ## to maintain. -- Emmanuele
 
+=for arg Clutter::Alpha::ramp
+=for arg ... other arguments ignored (data, etc.)
+=cut
+
+=for apidoc Clutter::Alpha::ramp_inc
+=for arg ... other arguments ignored (data, etc.)
+=cut
+
+=for apidoc Clutter::Alpha::ramp_dec
+=for arg ... other arguments ignored (data, etc.)
+=cut
+
+=for apidoc Clutter::Alpha::sine
+=for arg ... other arguments ignored (data, etc.)
+=cut
+
+=for apidoc Clutter::Alpha::sine_inc
+=for arg ... other arguments ignored (data, etc.)
+=cut
+
+=for apidoc Clutter::Alpha::sine_dec
+=for arg ... other arguments ignored (data, etc.)
+=cut
+
+=for apidoc Clutter::Alpha::sine_half
+=for arg ... other arguments ignored (data, etc.)
+=cut
+
+=for apidoc Clutter::Alpha::square
+=for arg ... other arguments ignored (data, etc.)
+=cut
+
+=for apidoc Clutter::Alpha::smoothstep_inc
+=for arg ... other arguments ignored (data, etc.)
+=cut
+
+=for apidoc Clutter::Alpha::smoothstep_dec
+=for arg ... other arguments ignored (data, etc.)
+=cut
+
+=for apidoc Clutter::Alpha::exp_inc
+=for arg ... other arguments ignored (data, etc.)
+=cut
+
+=for apidoc Clutter::Alpha::exp_dec
+=for arg ... other arguments ignored (data, etc.)
+=cut
+
 guint32
-ramp (class=NULL, ClutterAlpha *alpha)
+clutter_alpha_ramp (ClutterAlpha *alpha, ...)
     ALIAS:
-        Clutter::Alpha::ramp           =  0
         Clutter::Alpha::ramp_inc       =  1
         Clutter::Alpha::ramp_dec       =  2
         Clutter::Alpha::sine           =  3
