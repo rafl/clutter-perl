@@ -1,5 +1,10 @@
 2008-09-22  Emmanuele Bassi  <ebassi@linux.intel.com>
 
+	* xs/ClutterBehaviour.xs:
+	* xs/ClutterEffect.xs: Documentation fixes.
+
+2008-09-22  Emmanuele Bassi  <ebassi@linux.intel.com>
+
 	* examples/behaviour.pl: Use a built-in alpha function.
 
 	* t/ClutterAlpha.t: Test setting built-in alpha functions.
