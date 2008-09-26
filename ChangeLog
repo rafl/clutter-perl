@@ -1,4 +1,11 @@
+2008-09-26  Emmanuele Bassi  <ebassi@linux.intel.com>
+
+	* Cookbook.pod:
+	* MANIFEST:
+	* Makefile.PL: Add a Cookbook document.
+
 ======== Clutter 0.802 =======================================================
+
 2008-09-22  Emmanuele Bassi  <ebassi@linux.intel.com>
 
 	* Makefile.PL:
@@ -62,6 +69,7 @@
 	the rpms magic from the postamble.
 
 ======== Clutter 0.801 =======================================================
+
 2008-07-22  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* xs/ClutterModel.xs:
@@ -93,6 +101,7 @@
 	* xs_files_gst: Add ClutterGstVideoSink bindings.
 
 ======== Clutter 0.800 =======================================================
+
 2008-07-21  Emmanuele Bassi  <ebassi@openedhand.com>
 
 	* xs/ClutterContainer.xs: Documentation fixes.

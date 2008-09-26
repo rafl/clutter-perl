@@ -3,6 +3,7 @@ ChangeLog
 Clutter.pm
 clutter.typemap
 clutterperl.h
+Cookbook.pod
 copyright.pod
 doctypes
 examples/behaviour.pl

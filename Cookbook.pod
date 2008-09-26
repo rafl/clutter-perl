@@ -1,0 +1,73 @@
+
+=head1 NAME
+
+Clutter::Cookbook - Examples of how to use Clutter
+
+=head1 DESCRIPTION
+
+This document tries to provide examples on how to perform some common tasks
+when building an application or a toolkit using the Clutter Perl bindings.
+
+The original version of this document can be found on the Clutter project
+main site; the online version is aimed at the C API.
+
+=head1 ACTORS
+
+=head2 Maintaining the aspect ratio when loading a texture
+
+L<Clutter::Texture> already provides a property that maintains the aspect
+ratio of an image loaded on a texture:
+
+  Clutter::Texture:keep-aspect-ratio
+    type: boolean
+    default: FALSE
+
+Usually, you just need to set it to TRUE before setting the image data:
+
+  $texture = Clutter::Texture->new();
+  $texture->set(keep_aspect_ratio => TRUE);
+  $texture->set_from_file($filename);
+  $texture->set_width(100);
+
+This will set up a texture with the contents of I<filename>, a width of
+100 pixels and an height maintaining the same aspect ratio of the original
+image.
+
+L<Clutter::Texture>, like the rest of Clutter's actors, is a
+I<height-for-width actor>. This means that the width will be queried first
+and then the height set for the given width. If you need to set the height
+of a texture and maintain the same aspect ratio, you will need to change
+the texture to be a I<width-for-height> actor instead, by using this
+property:
+
+  Clutter::Actor:request-mode
+    type: Clutter::RequestMode
+    default: CLUTTER_REQUEST_HEIGHT_FOR_WIDTH
+
+And then setting the height for the actor:
+
+  $texture = Clutter::Texture->new();
+  $texture->set(
+      keep_aspect_ratio => TRUE,
+      request_mode      => 'width-for-height',
+  );
+  $texture->set_from_file($filename);
+  $texture->set_height(100);
+
+This will set up a texture with the contents of I<filename>, a height
+of 100 pixels and a width maintaining the same aspect ratio of the
+original image.
+
+=head1 AUTHOR
+
+Emmanuele Bassi E<lt>ebassi@linux.intel.comE<gt>
+
+=head1 COPYRIGHT
+
+Copyright (C) 2008 Intel Corporation
+
+=head1 SEE ALSO
+
+L<perl>(1), L<Clutter>(3pm)
+
+=cut
