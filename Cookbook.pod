@@ -58,6 +58,46 @@ This will set up a texture with the contents of I<filename>, a height
 of 100 pixels and a width maintaining the same aspect ratio of the
 original image.
 
+=head1 ANIMATIONS
+
+=head2 Inverting animations
+
+If an animation is composed by two identical parts with the latter part
+"flipping" the animation of the former one, e.g.:
+
+                        / scale from 2.0 to 1.0
+  begin                /
+  +--------------------|--------------------+------> time
+  \                                         end
+   \ scale from 1.0 to 2.0
+
+Instead of using two different effects or two different behaviours you might
+simply use the
+
+  Clutter::Timeline:direction
+    type: Clutter::TimelineDirection
+    default: CLUTTER_TIMELINE_FORWARD
+
+Property of L<Clutter::Timeline>. Set up the I<timeline> duration to be the
+exact half of the overall animation and connect a callback to the
+
+  Clutter::Timeline::completed
+
+Signal and change the I<direction> property; you will also need to rewind the
+I<timeline> so that the state is reset at the right frame number:
+
+  $timeline = Clutter::Timeline->new();
+  $timeline->set_duration(250); # 250 msecs
+  $timeline->signal_connect(completed => sub {
+      $timeline->set_direction('backward');
+      $timeline->rewind();
+      $timeline->start();
+  });
+
+When the I<timeline> is complete it will be restarted from the end and go
+backward to the start. Any L<Clutter::Behaviour> attached to the I<timeline>
+will be reversed as well, giving you the desired effect.
+
 =head1 AUTHOR
 
 Emmanuele Bassi E<lt>ebassi@linux.intel.comE<gt>
