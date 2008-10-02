@@ -97,6 +97,7 @@ clutter_script_new (class)
         /* void */
 
 =for apidoc __gerror__
+Loads all the object definitions from I<filename>.
 =cut
 guint
 clutter_script_load_from_file (ClutterScript *script, const gchar *filename)
@@ -110,6 +111,7 @@ clutter_script_load_from_file (ClutterScript *script, const gchar *filename)
         RETVAL
 
 =for apidoc __gerror__
+Loads all the object definitions from I<data>.
 =cut
 guint
 clutter_script_load_from_data (ClutterScript *script, const gchar *data)
@@ -128,6 +130,7 @@ clutter_script_load_from_data (ClutterScript *script, const gchar *data)
 =for signature objects = $script->get_object ($name, ...)
 =for arg name (string) first object's name
 =for arg ... list of object names
+Returns a list of all the requested objects built by I<script>
 =cut
 void
 clutter_script_get_object (ClutterScript *script, const gchar *name, ...)
@@ -224,6 +227,10 @@ MODULE = Clutter::Script        PACKAGE = Clutter
 =for object Clutter::main
 =cut
 
+=for apidoc
+If I<gobject> has been built by a L<Clutter::Script>, this method returns
+the script id of the object.
+=cut
 const gchar_ornull *
 get_script_id (GObject *gobject)
     CODE:
