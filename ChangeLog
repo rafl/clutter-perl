@@ -1,3 +1,21 @@
+2008-10-02  Emmanuele Bassi  <ebassi@linux.intel.com>
+
+	* Makefile.PL: Depend on Clutter 0.8.2.
+
+	* Clutter.pm: Bump to 0.820.
+
+	* NEWS:
+	* README: Update
+
+	* t/ClutterAlpha.t: Test manually advancing the timeline and
+	retrieving the alpha value without a main loop spinning.
+
+	* xs/ClutterCogl.xs: Fix cut-and-paste bug in cogl_frustum()
+	binding.
+
+	* xs/ClutterScript.xs: Add clutter_script_list_objects()
+	binding, and more documentation.
+
 2008-09-26  Emmanuele Bassi  <ebassi@linux.intel.com>
 
 	* Cookbook.pod: Add another recipe to the Cookbook.
