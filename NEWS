@@ -1,3 +1,9 @@
+Clutter 0.820
+=============
+* Depend on Clutter 0.8.2
+* Fix a typo in Clutter::Cogl->frustum()
+* Add a Clutter::Cookbook POD
+
 Clutter 0.802
 =============
 * Update the META.yml generation so that the contents are useful
