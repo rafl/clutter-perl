@@ -16,7 +16,7 @@ our %build_reqs = (
     'perl-Cairo'              => '1.00',  # for the Cairo typemaps and
                                           # for ClutterCairo
     'perl-GStreamer'          => 0,
-    'Clutter'                 => '0.8.1',
+    'Clutter'                 => '0.8.2',
 );
 
 # Writing a fake Makefile ensures that CPAN will pick up the correct
