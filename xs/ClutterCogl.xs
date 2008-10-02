@@ -472,9 +472,9 @@ cogl_frustum (class=NULL, left, right, bottom, top, z_near, z_far)
     CODE:
         cogl_frustum (CLUTTER_FLOAT_TO_FIXED (left),
                       CLUTTER_FLOAT_TO_FIXED (right),
-                      CLUTTER_FLOAT_TO_FIXED (bottom)
-                      CLUTTER_FLOAT_TO_FIXED (top)
-                      CLUTTER_FLOAT_TO_FIXED (z_near)
+                      CLUTTER_FLOAT_TO_FIXED (bottom),
+                      CLUTTER_FLOAT_TO_FIXED (top),
+                      CLUTTER_FLOAT_TO_FIXED (z_near),
                       CLUTTER_FLOAT_TO_FIXED (z_far));
 
 #endif /* CLUTTER_CHECK_VERSION */
