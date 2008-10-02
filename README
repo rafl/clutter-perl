@@ -1,4 +1,4 @@
-Clutter version 0.802
+Clutter version 0.820
 =====================
 
 Perl bindings to the Clutter OpenGL canvas.  Clutter aims to give a nice
@@ -42,7 +42,7 @@ This module requires these other modules and libraries:
   Glib >= 1.180 (Perl module)
   Cairo >= 1.0.0 (Perl module)
   Gtk2 >= 1.140 (Perl module)
-  Clutter >= 0.8.0 (C library)
+  Clutter >= 0.8.2 (C library)
   Clutter-GStreamer >= 0.8.0 (C library) [optional]
   Clutter-GTK+ >= 0.8.1 (C library) [optional]
   Clutter-Cairo >= 0.8.1 (C library) [optional]
@@ -68,7 +68,8 @@ Please report bugs to the Clutter product in OpenedHand's Bugzilla:
 COPYRIGHT AND LICENSE
 ---------------------
 
-Copyright (C) 2006  OpenedHand Ltd.  (see the file AUTHORS)
+Copyright (C) 2006  OpenedHand Ltd
+Copyright (C) 2008  Intel Corporation
 
 This library is free software; you can redistribute it and/or modify it under
 the terms of the GNU Library General Public License as published by the Free
