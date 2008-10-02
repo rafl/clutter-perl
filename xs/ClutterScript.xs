@@ -148,6 +148,25 @@ clutter_script_unmerge_objects (ClutterScript *script, guint merge_id)
 void
 clutter_script_ensure_objects (ClutterScript *script)
 
+=for apidoc
+=for signature objects = $script->list_objects()
+Returns a list of all the objects built by I<script>
+=cut
+void
+clutter_script_list_objects (ClutterScript *script)
+    PREINIT:
+        GList *objects, *l;
+    PPCODE:
+        objects = clutter_script_list_objects (script);
+        if (objects) {
+                EXTEND (SP, g_list_length (objects));
+                for (l = objects; l != NULL; l = l->next) {
+                        GObject *gobject = l->data;
+                        PUSHs (sv_2mortal (newSVGObject (gobject)));
+                }
+                g_list_free (objects);
+        }
+
 #if 0 /* evil hack to convince Glib::GenPod to output docs for connect_signals */
 
 # connect_signals is implemented in Clutter.pm
