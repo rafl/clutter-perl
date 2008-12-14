@@ -25,7 +25,8 @@ Clutter::Ex::TextureReflection - Reflection of a texture
 =head1 DESCRIPTION
 
 This page describes the API of C<Clutter::Ex::TextureReflection>, a subclass
-of L<Clutter::Texture::Clone> that paints a reflection of the parent texture.
+of L<Clutter::Texture::Clone> that efficiently paints a reflection of the
+parent texture.
 
 =head1 HIERARCHY
 
@@ -56,12 +57,15 @@ sub PAINT {
     my $parent = $self->get_parent_texture();
     return unless $parent;
 
+    # get the handle from the parent texture
     my $cogl_tex = $parent->get_cogl_texture();
     return unless $cogl_tex;
 
     my ($width, $height) = $self->get_size();
 
     my $r_height = $self->{reflection_height};
+
+    # clamp the reflection height if needed
     $r_height = $height if $r_height < 0 or $r_height > $height;
 
     my $rty = $r_height / $height;
@@ -71,6 +75,20 @@ sub PAINT {
     my $start = Clutter::Color->new(255, 255, 255, $opacity);
     my $stop  = Clutter::Color->new(255, 255, 255,        0);
 
+    # these are the reflection vertices. each vertex
+    # is an arrayref in the form:
+    #
+    #   [
+    #     x, y, z: coordinates in the modelview
+    #     tx, ty: texture coordinates
+    #     color: color of the vertex
+    #   ]
+    #
+    # to paint the reflection of the parent texture we paint
+    # the texture using four vertices in clockwise order, with
+    # the upper left and the upper right at full opacity and
+    # the lower right and lower left and 0 opacity; OpenGL will
+    # do the gradient for us
     my $vertices = [
         [      0,         0, 0, 0.0, $rty,   $start],
         [ $width,         0, 0, 1.0, $rty,   $start],
@@ -80,6 +98,7 @@ sub PAINT {
 
     Clutter::Cogl->push_matrix();
 
+    # paint the original texture again, at the new vertices
     $cogl_tex->texture_polygon($vertices, TRUE);
 
     Clutter::Cogl->pop_matrix();
