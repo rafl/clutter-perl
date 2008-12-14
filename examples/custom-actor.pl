@@ -257,7 +257,7 @@ released within the actor's area.
 
 =over
 
-=item 'color' (Clutter::Color : readable / writable / private)
+=item 'color' (Clutter::Color : readable / writable)
 
 Color of the triangle
 
