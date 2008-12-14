@@ -39,3 +39,25 @@ clutter_behaviour_rotate_set_direction (ClutterBehaviourRotate *rotate, ClutterR
 
 void
 clutter_behaviour_rotate_set_bounds (ClutterBehaviourRotate *rotate, gdouble angle_begin, gdouble angle_end)
+
+void
+clutter_behaviour_rotate_set_center (rotate, x, y, z)
+        ClutterBehaviourRotate *rotate
+        gint x
+        gint y
+        gint z
+
+=for apidoc
+=for signature (x, y, z) = $rotate->get_center
+=cut
+void
+clutter_behaviour_rotate_get_center (ClutterBehaviourRotate *rotate)
+    PREINIT:
+        gint x, y, z;
+    PPCODE:
+        x = y = z = 0;
+        clutter_behaviour_rotate_get_center (rotate, &x, &y, &z);
+        EXTEND (SP, 3);
+        PUSHs (sv_2mortal (newSViv (x)));
+        PUSHs (sv_2mortal (newSViv (y)));
+        PUSHs (sv_2mortal (newSViv (z)));
