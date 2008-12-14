@@ -130,11 +130,23 @@ sub INIT_INSTANCE {
 
 =over
 
-=item B<< actor = Clutter::Ex::TextureReflection->new >>
+=item B<< actor = Clutter::Ex::TextureReflection->new ($parent_texture) >>
 
-Creates a new Clutter::Ex::TextureReflection actor.
+  * $parent_texture (Clutter::Texture) the parent texture
+
+Creates a new Clutter::Ex::TextureReflection actor for the given
+I<parent_texture>
 
 =cut
+
+sub new {
+    my ($class, $parent_texture) = @_;
+
+    return Glib::Object::new(
+        'Clutter::Ex::TextureReflection',
+        parent_texture => $parent_texture,
+    );
+}
 
 =pod
 
@@ -216,19 +228,20 @@ $stage->add($group);
 my $tex;
 eval { $tex = Clutter::Texture->new($filename) };
 if ($@) {
-    warn ("Unable to load '$ARGV[0]': $@");
+    warn ("Unable to load '$filename': $@");
     exit 1;
 }
 
-my $reflect = Clutter::Ex::TextureReflection->new();
-$reflect->set_parent_texture($tex);
+my $reflect = Clutter::Ex::TextureReflection->new($tex);
 $reflect->set_opacity(100);
 
-my $x_pos = ($stage->get_width() - $tex->get_width()) / 2;
 $group->add($tex, $reflect);
-$group->set_position($x_pos, 20);
 
-$reflect->set_position(0, $tex->get_height() + 20);
+$tex->set_position(0, 0);
+$reflect->set_position(0, $tex->get_height() + 10);
+
+my $x_pos = ($stage->get_width() - $tex->get_width()) / 2;
+$group->set_position($x_pos, 20);
 
 my $timeline = Clutter::Timeline->new_for_duration(3000);
 $timeline->set_loop(TRUE);
