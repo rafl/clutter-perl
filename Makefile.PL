@@ -79,24 +79,6 @@ if ($@) {
     warn("*** No clutter-gst found, skipping Clutter::Gst\n");
 }
 
-# Integration libraries: Clutter::Texture::Cairo
-our $have_clutter_cairo = 0;
-eval {
-    my %cairopkgcfg = ExtUtils::PkgConfig->find('clutter-cairo-0.8');
-
-    $module_cflags .= ' ' . $cairopkgcfg{cflags} . '-DCLUTTERPERL_CAIRO';
-    $module_libs   .= ' ' . $cairopkgcfg{libs};
-
-    $have_clutter_cairo = 1;
-
-    my @names = Glib::MakeHelper->read_source_list_file ('xs_files_cairo');
-    print "Loaded " . scalar(@names) . " xs files for Clutter::Cairo\n";
-    push @xs_files, @names;
-};
-if ($@) {
-    warn("*** No clutter-cairo found, skipping Clutter::Cairo\n");
-}
-
 # Integration libraries: Gtk2::ClutterEmbed
 our $have_clutter_gtk = 0;
 eval {
@@ -139,9 +121,8 @@ our %pod_files = (
 
 # typemaps generation files
 my @input_maps = qw/ maps /;
-push @input_maps, 'maps-gst'   if $have_clutter_gst   == 1;
-push @input_maps, 'maps-gtk'   if $have_clutter_gtk   == 1;
-push @input_maps, 'maps-cairo' if $have_clutter_cairo == 1;
+push @input_maps, 'maps-gst'   if $have_clutter_gst == 1;
+push @input_maps, 'maps-gtk'   if $have_clutter_gtk == 1;
 
 # autogeneration
 Gtk2::CodeGen->parse_maps('clutterperl', input => \@input_maps);

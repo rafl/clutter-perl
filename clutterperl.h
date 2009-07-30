@@ -13,11 +13,6 @@
 #define clutter_gst_init        clutter_gst_init_dummy
 #endif
 
-#ifdef CLUTTERPERL_CAIRO
-#include <clutter-cairo.h>
-#include <cairo-perl.h>
-#endif
-
 #ifdef CLUTTERPERL_GTK
 #include <clutter-gtk/gtk-clutter-embed.h>
 #else
