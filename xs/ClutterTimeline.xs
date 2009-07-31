@@ -28,17 +28,9 @@
 MODULE = Clutter::Timeline	PACKAGE = Clutter::Timeline	PREFIX = clutter_timeline_
 
 ClutterTimeline_noinc *
-clutter_timeline_new (class, n_frames, fps)
-	guint n_frames
-	guint fps
+clutter_timeline_new (class=NULL, guint duration)
     C_ARGS:
-        n_frames, fps
-
-ClutterTimeline_noinc *
-clutter_timeline_new_for_duration (class, msecs)
-        guint msecs
-    C_ARGS:
-        msecs
+        duration
 
 ClutterTimeline_noinc *
 clutter_timeline_clone (class, ClutterTimeline *timeline)
@@ -50,12 +42,6 @@ clutter_timeline_get_duration (ClutterTimeline *timeline)
 
 void
 clutter_timeline_set_duration (ClutterTimeline *timeline, guint msecs)
-
-guint
-clutter_timeline_get_speed (ClutterTimeline *timeline)
-
-void
-clutter_timeline_set_speed (ClutterTimeline *timeline, guint fps)
 
 ClutterTimelineDirection
 clutter_timeline_get_direction (ClutterTimeline *timeline)
@@ -82,19 +68,10 @@ void
 clutter_timeline_rewind (ClutterTimeline *timeline)
 
 void
-clutter_timeline_skip (ClutterTimeline *timeline, guint nframes)
+clutter_timeline_skip (ClutterTimeline *timeline, guint n_msecs)
 
 void
-clutter_timeline_advance (ClutterTimeline *timeline, guint frame_num)
-
-gint
-clutter_timeline_get_current_frame (ClutterTimeline *timeline)
-
-void
-clutter_timeline_set_n_frames (ClutterTimeline *timeline, guint n_frames)
-
-guint
-clutter_timeline_get_n_frames (ClutterTimeline *timeline)
+clutter_timeline_advance (ClutterTimeline *timeline, guint n_msecs)
 
 gboolean
 clutter_timeline_is_playing (ClutterTimeline *timeline)
@@ -108,26 +85,8 @@ clutter_timeline_get_delay (ClutterTimeline *timeline)
 gdouble
 clutter_timeline_get_progress (ClutterTimeline *timeline)
 
-=for apidoc
-=for signature frames = $timeline->get_delta
-=for signature (frames, msecs) = $timeline->get_delta
-=cut
-void
+guint
 clutter_timeline_get_delta (ClutterTimeline *timeline)
-    PREINIT:
-        guint frames, msecs;
-    PPCODE:
-        frames = clutter_timeline_get_delta (timeline, &msecs);
-        XPUSHs (sv_2mortal (newSVuv (frames)));
-        if (GIMME_V == G_ARRAY) {
-                XPUSHs (sv_2mortal (newSVuv (msecs)));
-        }
-
-void
-clutter_timeline_add_marker_at_frame (timeline, marker_name, frame_num)
-        ClutterTimeline *timeline
-        const gchar     *marker_name
-        guint            frame_num
 
 void
 clutter_timeline_add_marker_at_time (timeline, marker_name, msecs)
@@ -141,21 +100,19 @@ clutter_timeline_remove_marker (timeline, marker_name)
         const gchar     *marker_name
 
 =for apidoc
-=for signature markers = $timeline->list_markers ($frame_num)
-Retrieves all the markers at I<frame_num>. If I<frame_num> is
+=for signature markers = $timeline->list_markers ($msecs)
+Retrieves all the markers at I<msecs>. If I<msecs> is
 omitted or is a negative number, all the markers of I<timeline>
 are returned
 =cut
 void
-clutter_timeline_list_markers (timeline, frame_num=-1)
-        ClutterTimeline *timeline
-        gint             frame_num
+clutter_timeline_list_markers (ClutterTimeline *timeline, guint msecs=-1)
     PREINIT:
         gchar **markers;
         gsize n_markers, i;
     PPCODE:
         markers = clutter_timeline_list_markers (timeline,
-                                                 frame_num,
+                                                 msecs,
                                                  &n_markers);
         if (markers) {
                 EXTEND (SP, n_markers);

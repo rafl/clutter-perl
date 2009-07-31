@@ -24,10 +24,10 @@ use warnings;
 
 use Glib;
 use Cairo;
-use Gtk2;
+use Pango;
 
+use Exporter;
 require DynaLoader;
-our @ISA = qw( DynaLoader Exporter );
 
 # the version scheme is:
 #   CLUTTER_MAJOR
@@ -38,38 +38,35 @@ our @ISA = qw( DynaLoader Exporter );
 # of the bindings for each point release of libclutter,
 # which should be enough even in case of brown paper
 # bag releases. -- ebassi
-our $VERSION = '0.820';
+our $VERSION = '0.900';
+
+our @ISA = qw( DynaLoader Exporter );
+
+sub dl_load_flags { $^O eq 'darwin' ? 0x00 : 0x01 }
+
+use constant {
+    EVENT_STOP      => 1,
+    EVENT_PROPAGATE => !1,
+};
 
 sub import {
     my $class = shift;
 
-    # Clutter::Gst->init() is a wrapper around the GStreamer init and
-    # Clutter init calls, so using gst-init or init is equivalent for
-    # us. in case Clutter::Gst wasn't compiled in, Clutter::Gst->init()
-    # will expand to Clutter->init() anyway.
-
     # Clutter::Threads->init() must be called before calling Clutter->init(),
     # but we don't want to force the order of the options passed, so we store
     # the choices and call everything in the correct order later.
-
     my $init         = 0;
     my $threads_init = 0;
 
     foreach (@_) {
         if    (/^[-:]?init$/)         { $init = 1;           }
-        elsif (/^[-:]?gst-init$/)     { $init = 2;           }
-        elsif (/^[-:]?gtk-init$/)     { $init = 3;           }
         elsif (/^[-:]?threads-init$/) { $threads_init = 1;   }
         else                          { $class->VERSION($_); }
     }
 
-    Clutter::Threads->init() if $threads_init;
-    Clutter->init()          if $init == 1;
-    Clutter::Gst->init()     if $init == 2;
-    Clutter::Gtk->init()     if $init == 3
+    Clutter::Threads->init() if $threads_init == 1;
+    Clutter->init()          if $init         == 1;
 }
-
-sub dl_load_flags { $^O eq 'darwin' ? 0x00 : 0x01 }
 
 Clutter->bootstrap($VERSION);
 

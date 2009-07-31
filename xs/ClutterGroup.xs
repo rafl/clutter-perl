@@ -40,6 +40,3 @@ clutter_group_get_n_children (ClutterGroup *group)
 
 ClutterActor *
 clutter_group_get_nth_child (ClutterGroup *group, gint index)
-
-void
-clutter_group_sort_depth_order (ClutterGroup *group)

@@ -17,9 +17,7 @@ lib/Clutter.pm
 Makefile.PL
 MANIFEST			This list of files
 MANIFEST.SKIP
-maps
-maps-gst
-maps-gtk
+maps-1.0
 NEWS
 README
 t/0.t
@@ -32,12 +30,10 @@ t/ClutterBehaviourPath.t
 t/ClutterBehaviourScale.t
 t/ClutterContainer.t
 t/ClutterGroup.t
-t/ClutterLabel.t
 t/ClutterModel.t
 t/ClutterRectangle.t
 t/ClutterStage.t
 t/ClutterTimeline.t
-t/GtkClutterEmbed.t
 tools/genkeysyms.pl
 tools/TestHelper.pm
 xs/Clutter.xs
@@ -45,7 +41,6 @@ xs/ClutterActor.xs
 xs/ClutterAlpha.xs
 xs/ClutterBackend.xs
 xs/ClutterBehaviour.xs
-xs/ClutterBehaviourBspline.xs
 xs/ClutterBehaviourDepth.xs
 xs/ClutterBehaviourEllipse.xs
 xs/ClutterBehaviourOpacity.xs
@@ -53,20 +48,9 @@ xs/ClutterBehaviourPath.xs
 xs/ClutterBehaviourRotate.xs
 xs/ClutterBehaviourScale.xs
 xs/ClutterChildMeta.xs
-xs/ClutterCloneTexture.xs
-xs/ClutterCogl.xs
 xs/ClutterContainer.xs
-xs/ClutterEffect.xs
-xs/ClutterEntry.xs
 xs/ClutterEvent.xs
-xs/ClutterFixed.xs
 xs/ClutterGroup.xs
-xs/ClutterGst.xs
-xs/ClutterGstAudio.xs
-xs/ClutterGstVideoSink.xs
-xs/ClutterGstVideoTexture.xs
-xs/ClutterGtk.xs
-xs/ClutterLabel.xs
 xs/ClutterListModel.xs
 xs/ClutterMedia.xs
 xs/ClutterModel.xs
@@ -80,9 +64,6 @@ xs/ClutterStageManager.xs
 xs/ClutterTexture.xs
 xs/ClutterTimeline.xs
 xs/ClutterTypes.xs
-xs/ClutterUnits.xs
-xs/GtkClutterEmbed.xs
-xs/GtkClutterUtil.xs
-xs_files
-xs_files_gst
-xs_files_gtk
+xs/Cogl.xs
+xs/CoglPath.xs
+xs_files-1.0

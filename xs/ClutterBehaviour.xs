@@ -27,7 +27,7 @@
 
 static void
 clutterperl_behaviour_alpha_notify (ClutterBehaviour *behaviour,
-                                    guint32           alpha_value)
+                                    gdouble           alpha_value)
 {
         HV *stash = gperl_object_stash_from_type (G_OBJECT_TYPE (behaviour));
         GV *slot = gv_fetchmethod (stash, "ALPHA_NOTIFY");
@@ -41,7 +41,7 @@ clutterperl_behaviour_alpha_notify (ClutterBehaviour *behaviour,
 
                 EXTEND (SP, 2);
                 PUSHs (newSVClutterBehaviour (behaviour));
-                PUSHs (sv_2mortal (newSVuv (alpha_value)));
+                PUSHs (sv_2mortal (newSVnv (alpha_value)));
 
                 PUTBACK;
                 call_sv ((SV *) GvCV (slot), G_VOID | G_DISCARD);

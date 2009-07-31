@@ -25,85 +25,41 @@
 
 #include "clutterperl.h"
 
+#define CALL_METHOD(actor,name)                                 G_STMT_START {  \
+        HV *_stash = gperl_object_stash_from_type (G_OBJECT_TYPE ((actor)));    \
+        GV *_slot = gv_fetchmethod (_stash, name);                              \
+        if (_slot && GvCV (_slot)) {                                            \
+                dSP;                                                            \
+                ENTER; SAVETMPS; PUSHMARK (SP);                                 \
+                PUSHs (newSVClutterActor ((actor)));                            \
+                PUTBACK;                                                        \
+                call_sv ((SV *) GvCV (_slot), G_VOID | G_DISCARD);              \
+                SPAGAIN;                                                        \
+                PUTBACK; FREETMPS; LEAVE;                                       \
+        }                                                       } G_STMT_END
+
 static void
 clutterperl_actor_show_all (ClutterActor *actor)
 {
-        HV *stash = gperl_object_stash_from_type (G_OBJECT_TYPE (actor));
-        GV *slot = gv_fetchmethod (stash, "SHOW_ALL");
-
-        if (slot && GvCV (slot)) {
-                dSP;
-
-                ENTER;
-                SAVETMPS;
-                PUSHMARK (SP);
-
-                PUSHs (newSVClutterActor (actor));
-                
-                PUTBACK;
-                call_sv ((SV *) GvCV (slot), G_VOID | G_DISCARD);
-                SPAGAIN;
-
-                PUTBACK;
-                FREETMPS;
-                LEAVE;
-        }
+        CALL_METHOD (actor, "SHOW_ALL");
 }
 
 static void
 clutterperl_actor_hide_all (ClutterActor *actor)
 {
-        HV *stash = gperl_object_stash_from_type (G_OBJECT_TYPE (actor));
-        GV *slot = gv_fetchmethod (stash, "HIDE_ALL");
-
-        if (slot && GvCV (slot)) {
-                dSP;
-
-                ENTER;
-                SAVETMPS;
-                PUSHMARK (SP);
-
-                PUSHs (newSVClutterActor (actor));
-                
-                PUTBACK;
-                call_sv ((SV *) GvCV (slot), G_VOID | G_DISCARD);
-                SPAGAIN;
-
-                PUTBACK;
-                FREETMPS;
-                LEAVE;
-        }
+        CALL_METHOD (actor, "HIDE_ALL");
 }
 
 static void
 clutterperl_actor_paint (ClutterActor *actor)
 {
-        HV *stash = gperl_object_stash_from_type (G_OBJECT_TYPE (actor));
-        GV *slot = gv_fetchmethod (stash, "PAINT");
-
-        if (slot && GvCV (slot)) {
-                dSP;
-
-                ENTER;
-                SAVETMPS;
-                PUSHMARK (SP);
-
-                PUSHs (newSVClutterActor (actor));
-                
-                PUTBACK;
-                call_sv ((SV *) GvCV (slot), G_VOID | G_DISCARD);
-                SPAGAIN;
-
-                PUTBACK;
-                FREETMPS;
-                LEAVE;
-        }
+        CALL_METHOD (actor, "PAINT");
 }
 
 static void
-clutterperl_actor_allocate (ClutterActor          *actor,
-                            const ClutterActorBox *box,
-                            gboolean               origin_changed)
+clutterperl_actor_allocate (ClutterActor           *actor,
+                            const ClutterActorBox  *box,
+                            ClutterAllocationFlags  flags)
 {
         HV *stash = gperl_object_stash_from_type (G_OBJECT_TYPE (actor));
         GV *slot = gv_fetchmethod (stash, "ALLOCATE");
@@ -118,7 +74,7 @@ clutterperl_actor_allocate (ClutterActor          *actor,
                 EXTEND (SP, 3);
                 PUSHs (newSVClutterActor (actor));
                 PUSHs (sv_2mortal (newSVClutterActorBox (box)));
-                PUSHs (sv_2mortal (newSViv (origin_changed)));
+                PUSHs (sv_2mortal (newSVClutterAllocationFlags (flags)));
                 
                 PUTBACK;
                 call_sv ((SV *) GvCV (slot), G_VOID | G_DISCARD);
@@ -132,9 +88,9 @@ clutterperl_actor_allocate (ClutterActor          *actor,
 
 static void
 clutterperl_actor_get_preferred_width (ClutterActor *actor,
-                                       ClutterUnit   for_height,
-                                       ClutterUnit  *min_width_p,
-                                       ClutterUnit  *natural_width_p)
+                                       gfloat        for_height,
+                                       gfloat       *min_width_p,
+                                       gfloat       *natural_width_p)
 {
         HV *stash = gperl_object_stash_from_type (G_OBJECT_TYPE (actor));
         GV *slot = gv_fetchmethod (stash, "GET_PREFERRED_WIDTH");
@@ -149,7 +105,7 @@ clutterperl_actor_get_preferred_width (ClutterActor *actor,
 
                 EXTEND (SP, 2);
                 PUSHs (newSVClutterActor (actor));
-                PUSHs (newSViv (for_height));
+                PUSHs (newSVnv (for_height));
 
                 PUTBACK;
                 count = call_sv ((SV *) GvCV (slot), G_ARRAY);
@@ -160,10 +116,10 @@ clutterperl_actor_get_preferred_width (ClutterActor *actor,
                                "with two items -- (min_width, natural_width)");
 
                 if (natural_width_p)
-                        *natural_width_p = POPi;
+                        *natural_width_p = POPn;
 
                 if (min_width_p)
-                        *min_width_p = POPi;
+                        *min_width_p = POPn;
 
                 PUTBACK;
                 FREETMPS;
@@ -173,9 +129,9 @@ clutterperl_actor_get_preferred_width (ClutterActor *actor,
 
 static void
 clutterperl_actor_get_preferred_height (ClutterActor *actor,
-                                        ClutterUnit   for_width,
-                                        ClutterUnit  *min_height_p,
-                                        ClutterUnit  *natural_height_p)
+                                        gfloat        for_width,
+                                        gfloat       *min_height_p,
+                                        gfloat       *natural_height_p)
 {
         HV *stash = gperl_object_stash_from_type (G_OBJECT_TYPE (actor));
         GV *slot = gv_fetchmethod (stash, "GET_PREFERRED_HEIGHT");
@@ -190,7 +146,7 @@ clutterperl_actor_get_preferred_height (ClutterActor *actor,
 
                 EXTEND (SP, 2);
                 PUSHs (newSVClutterActor (actor));
-                PUSHs (newSViv (for_width));
+                PUSHs (newSVnv (for_width));
 
                 PUTBACK;
                 count = call_sv ((SV *) GvCV (slot), G_ARRAY);
@@ -201,10 +157,10 @@ clutterperl_actor_get_preferred_height (ClutterActor *actor,
                                "with two items -- (min_height, natural_height)");
 
                 if (natural_height_p)
-                        *natural_height_p = POPi;
+                        *natural_height_p = POPn;
 
                 if (min_height_p)
-                        *min_height_p = POPi;
+                        *min_height_p = POPn;
 
                 PUTBACK;
                 FREETMPS;
@@ -215,51 +171,13 @@ clutterperl_actor_get_preferred_height (ClutterActor *actor,
 static void
 clutterperl_actor_realize (ClutterActor *actor)
 {
-        HV *stash = gperl_object_stash_from_type (G_OBJECT_TYPE (actor));
-        GV *slot = gv_fetchmethod (stash, "REALIZE");
-
-        if (slot && GvCV (slot)) {
-                dSP;
-
-                ENTER;
-                SAVETMPS;
-                PUSHMARK (SP);
-
-                PUSHs (newSVClutterActor (actor));
-                
-                PUTBACK;
-                call_sv ((SV *) GvCV (slot), G_VOID | G_DISCARD);
-                SPAGAIN;
-
-                PUTBACK;
-                FREETMPS;
-                LEAVE;
-        }
+        CALL_METHOD (actor, "REALIZE");
 }
 
 static void
 clutterperl_actor_unrealize (ClutterActor *actor)
 {
-        HV *stash = gperl_object_stash_from_type (G_OBJECT_TYPE (actor));
-        GV *slot = gv_fetchmethod (stash, "UNREALIZE");
-
-        if (slot && GvCV (slot)) {
-                dSP;
-
-                ENTER;
-                SAVETMPS;
-                PUSHMARK (SP);
-
-                PUSHs (newSVClutterActor (actor));
-                
-                PUTBACK;
-                call_sv ((SV *) GvCV (slot), G_VOID | G_DISCARD);
-                SPAGAIN;
-
-                PUTBACK;
-                FREETMPS;
-                LEAVE;
-        }
+        CALL_METHOD (actor, "UNREALIZE");
 }
 
 static void
@@ -291,6 +209,18 @@ clutterperl_actor_pick (ClutterActor       *actor,
 }
 
 static void
+clutterperl_actor_map (ClutterActor *actor)
+{
+        CALL_METHOD (actor, "MAP");
+}
+
+static void
+clutterperl_actor_unmap (ClutterActor *actor)
+{
+        CALL_METHOD (actor, "UNMAP");
+}
+
+static void
 clutterperl_actor_class_init (ClutterActorClass *klass)
 {
         klass->show_all             = clutterperl_actor_show_all;
@@ -302,6 +232,8 @@ clutterperl_actor_class_init (ClutterActorClass *klass)
         klass->allocate             = clutterperl_actor_allocate;
         klass->get_preferred_width  = clutterperl_actor_get_preferred_width;
         klass->get_preferred_height = clutterperl_actor_get_preferred_height;
+        klass->map                  = clutterperl_actor_map;
+        klass->unmap                = clutterperl_actor_unmap;
 }
 
 static void
@@ -365,7 +297,7 @@ of the transformation set up
 
 =over
 
-=item Actors emit pointer events only if set reactive
+=item Actors emit events only if set reactive
 
 =item The stage is always reactive by default
 
@@ -429,7 +361,7 @@ actor class, you should provide a new implementation of the following methods:
 
 =item o $box (Clutter::ActorBox)
 
-=item o $origin_changed (boolean)
+=item o $flags (Clutter::AllocationFlags)
 
 =back
 
@@ -439,7 +371,7 @@ box surrounding the actor. Every class overriding the C< ALLOCATE >
 method B<must> chain up to the parent's class method, using the usual
 C< SUPER > mechanism provided by Perl, for instance:
 
-  $actor->SUPER::ALLOCATE($box, $origin_changed);
+  $actor->SUPER::ALLOCATE($box, $flags);
 
 See L<perlobj>.
 
@@ -449,7 +381,7 @@ See L<perlobj>.
 
 =item o $actor (Clutter::Actor)
 
-=item o $for_height (Clutter::Unit)
+=item o $for_height (pixels)
 
 =back
 
@@ -464,7 +396,7 @@ the actor for the given height passed in I<for_height>.
 
 =item o $actor (Clutter::Actor)
 
-=item o $for_width (Clutter::Unit)
+=item o $for_width (pixels)
 
 =back
 
@@ -527,6 +459,22 @@ C< realized > flag, or chain up to the parent class C< REALIZE > method.
 The C< UNREALIZE > virtual function will be called when destroying the
 actor, and allows the release of the resources allocated inside C< REALIZE >.
 
+=item MAP ($actor)
+
+=item UNMAP ($actor)
+
+=over
+
+=item o $actor (Clutter::Actor)
+
+=back
+
+Composite actors should map and unmap their children inside these two
+virtual functions, respectively.
+
+Every class overriding the C< MAP > and C< UNMAP > virtual functions must
+chain up to the parent's implementation.
+
 =item PICK ($actor, $pick_color)
 
 =over
@@ -550,14 +498,12 @@ of:
   sub PICK {
     my ($self, $pick_color) = @_;
 
-    glColor4ub($pick_color->red,
-               $pick_color->green,
-               $pick_color->blue,
-               $pick_color->alpha);
-    glRecti($self->get_x(),
-            $self->get_y(),
-            $self->get_x() + $self->get_width(),
-            $self->get_y() + $self->get_height());
+    return unless $self->should_pick_paint();
+
+    my $allocation = $self->get_allocation_box();
+
+    Clutter::Cogl->set_source_color4ub($pick_color->values());
+    Clutter::Cogl->rectangle(0, 0, $box->width(), $box->height());
   }
 
 Which will render the actor as a rectangle the size of its bounding box (Note:
@@ -646,17 +592,17 @@ realized (actor, ...)
 		switch (ix) {
 			case 0: flag = CLUTTER_ACTOR_REALIZED; break;
 			case 1: flag = CLUTTER_ACTOR_MAPPED;   break;
-			case 2: croak ("actor flag visible is read only"); break;
+                        case 2: flag = CLUTTER_ACTOR_VISIBLE;  break;
 			case 3: flag = CLUTTER_ACTOR_REACTIVE; break;
 			default:
 				flag = FALSE;
 				g_assert_not_reached ();
 		}
 		if (value) {
-			CLUTTER_ACTOR_SET_FLAGS (actor, flag);
+			clutter_actor_set_flags (actor, flag);
 		}
 		else {
-			CLUTTER_ACTOR_UNSET_FLAGS (actor, flag);
+			clutter_actor_unset_flags (actor, flag);
 		}
 		RETVAL = value;
 	}
@@ -672,7 +618,7 @@ flags (ClutterActor *actor)
         get_flags = 1
     CODE:
         PERL_UNUSED_VAR (ix);
-	RETVAL = actor->flags;
+	RETVAL = clutter_actor_get_flags (actor);
     OUTPUT:
         RETVAL
 
@@ -680,17 +626,13 @@ flags (ClutterActor *actor)
 Sets the given flags on the actor
 =cut
 void
-set_flags (ClutterActor *actor, ClutterActorFlags flags)
-    CODE:
-        CLUTTER_ACTOR_SET_FLAGS (actor, flags);
+clutter_actor_set_flags (ClutterActor *actor, ClutterActorFlags flags)
 
 =for apidoc
 Unsets the given flags on the actor
 =cut
 void
-unset_flags (ClutterActor *actor, ClutterActorFlags flags)
-    CODE:
-        CLUTTER_ACTOR_UNSET_FLAGS (actor, flags);
+clutter_actor_unset_flags (ClutterActor *actor, ClutterActorFlags flags)
 
 ## factoring out all the methods with signature
 ##    void $actor->method (void)
@@ -711,6 +653,9 @@ show (ClutterActor *actor)
         Clutter::Actor::queue_relayout = 10
         Clutter::Actor::raise_top      = 11
         Clutter::Actor::lower_bottom   = 12
+        Clutter::Actor::map            = 13
+        Clutter::Actor::unmap          = 14
+        Clutter::Actor::remove_clip    = 15
     CODE:
         switch (ix) {
 		case  0: clutter_actor_show           (actor); break;
@@ -726,6 +671,9 @@ show (ClutterActor *actor)
                 case 10: clutter_actor_queue_relayout (actor); break;
                 case 11: clutter_actor_raise_top      (actor); break;
                 case 12: clutter_actor_lower_bottom   (actor); break;
+                case 13: clutter_actor_map            (actor); break;
+                case 14: clutter_actor_unmap          (actor); break;
+                case 15: clutter_actor_remove_clip    (actor); break;
 		default:
 			g_assert_not_reached ();
 	}
@@ -754,26 +702,7 @@ clutter_actor_get_geometry (ClutterActor *actor)
         RETVAL
 
 =for apidoc
-=for signature (x1, y1, x2, y2) = $actor->get_allocation_coords
-
-Retrieves the coordinates of the allocation (top left corner, bottom
-right corner), in pixels.
-=cut
-void
-clutter_actor_get_allocation_coords (ClutterActor *actor)
-    PREINIT:
-        gint x1, y1;
-	gint x2, y2;
-    PPCODE:
-        clutter_actor_get_allocation_coords (actor, &x1, &y1, &x2, &y2);
-	EXTEND (SP, 4);
-	PUSHs (sv_2mortal (newSViv (x1)));
-	PUSHs (sv_2mortal (newSViv (y1)));
-	PUSHs (sv_2mortal (newSViv (x2)));
-	PUSHs (sv_2mortal (newSViv (y2)));
-
-=for apidoc
-Retrieves the allocation box in pixels
+Retrieves the allocation box as a Clutter::Geometry
 =cut
 ClutterGeometry_copy *
 clutter_actor_get_allocation_geometry (ClutterActor *actor)
@@ -786,7 +715,7 @@ clutter_actor_get_allocation_geometry (ClutterActor *actor)
         RETVAL
 
 =for apidoc
-Retrieves the allocation box in units
+Retrieves the allocation box as a Clutter::ActorBox
 =cut
 ClutterActorBox_copy *
 clutter_actor_get_allocation_box (ClutterActor *actor)
@@ -799,13 +728,7 @@ clutter_actor_get_allocation_box (ClutterActor *actor)
         RETVAL
 
 void
-clutter_actor_set_position (ClutterActor *actor, gint x, gint y)
-
-=for apidoc
-Unit-based version of Clutter::Actor::set_position().
-=cut
-void
-clutter_actor_set_positionu (ClutterActor *actor, ClutterUnit x, ClutterUnit y)
+clutter_actor_set_position (ClutterActor *actor, gfloat x, gfloat y)
 
 =for apidoc
 =for signature (x, y) = $actor->get_position
@@ -813,27 +736,12 @@ clutter_actor_set_positionu (ClutterActor *actor, ClutterUnit x, ClutterUnit y)
 void
 clutter_actor_get_position (ClutterActor *actor)
     PREINIT:
-        gint x, y;
+        gfloat x, y;
     PPCODE:
         clutter_actor_get_position (actor, &x, &y);
         EXTEND (SP, 2);
-        PUSHs (sv_2mortal (newSViv (x)));
-        PUSHs (sv_2mortal (newSViv (y)));
-
-=for apidoc
-=for signature (x, y) = $actor->get_positionu
-
-Unit-based version of Clutter::Actor::get_position().
-=cut
-void
-clutter_actor_get_positionu (ClutterActor *actor)
-    PREINIT:
-        ClutterUnit x, y;
-    PPCODE:
-        clutter_actor_get_positionu (actor, &x, &y);
-        EXTEND (SP, 2);
-        PUSHs (sv_2mortal (newSViv (x)));
-        PUSHs (sv_2mortal (newSViv (y)));
+        PUSHs (sv_2mortal (newSVnv (x)));
+        PUSHs (sv_2mortal (newSVnv (y)));
 
 =for apidoc
 =for signature (x, y) = $actor->get_transformed_position
@@ -842,35 +750,15 @@ Gets the absolute position of an actor in pixels relative to the stage
 void
 clutter_actor_get_transformed_position (ClutterActor *actor)
     PREINIT:
-        gint x, y;
+        gfloat x, y;
     PPCODE:
         clutter_actor_get_transformed_position (actor, &x, &y);
 	EXTEND (SP, 2);
-	PUSHs (sv_2mortal (newSViv (x)));
-	PUSHs (sv_2mortal (newSViv (y)));
-
-=for apidoc
-=for signature (x, y) = $actor->get_transformed_positionu
-Gets the absolute position of an actor in units relative to the stage
-=cut
-void
-clutter_actor_get_transformed_positionu (ClutterActor *actor)
-    PREINIT:
-        ClutterUnit x, y;
-    PPCODE:
-        clutter_actor_get_transformed_positionu (actor, &x, &y);
-	EXTEND (SP, 2);
-	PUSHs (sv_2mortal (newSViv (x)));
-	PUSHs (sv_2mortal (newSViv (y)));
+	PUSHs (sv_2mortal (newSVnv (x)));
+	PUSHs (sv_2mortal (newSVnv (y)));
 
 void
-clutter_actor_set_size (ClutterActor *actor, gint width, gint height)
-
-=for apidoc
-Unit-based version of Clutter::Actor::set_size().
-=cut
-void
-clutter_actor_set_sizeu (ClutterActor *actor, ClutterUnit width, ClutterUnit height)
+clutter_actor_set_size (ClutterActor *actor, gfloat width, gfloat height)
 
 =for apidoc
 =for signature (width, height) = $actor->get_size
@@ -878,27 +766,12 @@ clutter_actor_set_sizeu (ClutterActor *actor, ClutterUnit width, ClutterUnit hei
 void
 clutter_actor_get_size (ClutterActor *actor)
     PREINIT:
-        guint width, height;
+        gfloat width, height;
     PPCODE:
         clutter_actor_get_size (actor, &width, &height);
         EXTEND (SP, 2);
-        PUSHs (sv_2mortal (newSVuv (width)));
-        PUSHs (sv_2mortal (newSVuv (height)));
-
-=for apidoc
-=for signature (width, height) = $actor->get_sizeu
-
-Unit-based version of Clutter::Actor::get_size().
-=cut
-void
-clutter_actor_get_sizeu (ClutterActor *actor)
-    PREINIT:
-        ClutterUnit width, height;
-    PPCODE:
-        clutter_actor_get_sizeu (actor, &width, &height);
-        EXTEND (SP, 2);
-        PUSHs (sv_2mortal (newSViv (width)));
-        PUSHs (sv_2mortal (newSViv (height)));
+        PUSHs (sv_2mortal (newSVnv (width)));
+        PUSHs (sv_2mortal (newSVnv (height)));
 
 =for apidoc
 =for signature (width, height) = $actor->get_transformed_size
@@ -908,75 +781,36 @@ any transformation
 void
 clutter_actor_get_transformed_size (ClutterActor *actor)
     PREINIT:
-        guint width, height;
+        gfloat width, height;
     PPCODE:
         clutter_actor_get_transformed_size (actor, &width, &height);
         EXTEND (SP, 2);
-        PUSHs (sv_2mortal (newSVuv (width)));
-        PUSHs (sv_2mortal (newSVuv (height)));
-
-=for apidoc
-=for signature (width, height) = $actor->get_transformed_sizeu
-Gets the absolute size of an actor in units taking into account
-any transformation
-=cut
-void
-clutter_actor_get_transformed_sizeu (ClutterActor *actor)
-    PREINIT:
-        ClutterUnit width, height;
-    PPCODE:
-        clutter_actor_get_transformed_size (actor, &width, &height);
-        EXTEND (SP, 2);
-        PUSHs (sv_2mortal (newSViv (width)));
-        PUSHs (sv_2mortal (newSViv (height)));
+        PUSHs (sv_2mortal (newSVnv (width)));
+        PUSHs (sv_2mortal (newSVnv (height)));
 
 void
-clutter_actor_set_width (ClutterActor *actor, guint width)
+clutter_actor_set_width (ClutterActor *actor, gfloat width)
 
-void
-clutter_actor_set_widthu (ClutterActor *actor, ClutterUnit width)
-
-guint
+gfloat
 clutter_actor_get_width (ClutterActor *actor)
 
-ClutterUnit
-clutter_actor_get_widthu (ClutterActor *actor)
-
 void
-clutter_actor_set_height (ClutterActor *actor, guint height)
+clutter_actor_set_height (ClutterActor *actor, gfloat height)
 
-void
-clutter_actor_set_heightu (ClutterActor *actor, ClutterUnit height)
-
-guint
+gfloat
 clutter_actor_get_height (ClutterActor *actor)
 
-ClutterUnit
-clutter_actor_get_heightu (ClutterActor *actor)
-
 void
-clutter_actor_set_x (ClutterActor *actor, gint x)
+clutter_actor_set_x (ClutterActor *actor, gfloat x)
 
-void
-clutter_actor_set_xu (ClutterActor *actor, ClutterUnit x)
-
-gint
+gfloat
 clutter_actor_get_x (ClutterActor *actor)
 
-ClutterUnit
-clutter_actor_get_xu (ClutterActor *actor)
-
 void
-clutter_actor_set_y (ClutterActor *actor, gint y)
+clutter_actor_set_y (ClutterActor *actor, gfloat y)
 
-void
-clutter_actor_set_yu (ClutterActor *actor, ClutterUnit y)
-
-gint
+gfloat
 clutter_actor_get_y (ClutterActor *actor)
-
-ClutterUnit
-clutter_actor_get_yu (ClutterActor *actor)
 
 =for apidoc
 Sets the rotation angle of I<actor> around the given I<axis>.
@@ -1012,15 +846,15 @@ void
 clutter_actor_get_rotation (ClutterActor *actor, ClutterRotateAxis axis)
     PREINIT:
         gdouble angle;
-        gint x, y, z;
+        gfloat x, y, z;
     PPCODE:
         angle = clutter_actor_get_rotation (actor, axis, &x, &y, &z);
         XPUSHs (sv_2mortal (newSVnv (angle)));
         if (GIMME_V == G_ARRAY) {
                 EXTEND (SP, 3);
-                PUSHs (sv_2mortal (newSViv (x)));
-                PUSHs (sv_2mortal (newSViv (y)));
-                PUSHs (sv_2mortal (newSViv (z)));
+                PUSHs (sv_2mortal (newSVnv (x)));
+                PUSHs (sv_2mortal (newSVnv (y)));
+                PUSHs (sv_2mortal (newSVnv (z)));
         }
 
 =for apidoc
@@ -1046,51 +880,30 @@ guint32
 clutter_actor_get_gid (ClutterActor *actor)
 
 void
-clutter_actor_set_clip (ClutterActor *actor, gint x_offset, gint y_offset, gint width, gint height)
-
-void
-clutter_actor_set_clipu (actor, x_offset, y_offset, width, height)
+clutter_actor_set_clip (actor, x_offset, y_offset, width, height)
         ClutterActor *actor
-        ClutterUnit x_offset
-        ClutterUnit y_offset
-        ClutterUnit width
-        ClutterUnit height
-
-void
-clutter_actor_remove_clip (ClutterActor *actor)
+        gfloat x_offset
+        gfloat y_offset
+        gfloat width
+        gfloat height
 
 gboolean
 clutter_actor_has_clip (ClutterActor *actor)
 
 =for apidoc
-=for signature (x_offset, y_offset, width, height) = $actor->get_clip
+=for signature (x_offset, y_offset, width, height) = $actor->get_clipu
 =cut
 void
 clutter_actor_get_clip (ClutterActor *actor)
     PREINIT:
-        gint xoff, yoff, width, height;
+        gfloat xoff, yoff, width, height;
     PPCODE:
         clutter_actor_get_clip (actor, &xoff, &yoff, &width, &height);
         EXTEND (SP, 4);
-        PUSHs (sv_2mortal (newSViv (xoff)));
-        PUSHs (sv_2mortal (newSViv (yoff)));
-        PUSHs (sv_2mortal (newSViv (width)));
-        PUSHs (sv_2mortal (newSViv (height)));
-
-=for apidoc
-=for signature (x_offset, y_offset, width, height) = $actor->get_clipu
-=cut
-void
-clutter_actor_get_clipu (ClutterActor *actor)
-    PREINIT:
-        ClutterUnit xoff, yoff, width, height;
-    PPCODE:
-        clutter_actor_get_clipu (actor, &xoff, &yoff, &width, &height);
-        EXTEND (SP, 4);
-        PUSHs (sv_2mortal (newSViv (xoff)));
-        PUSHs (sv_2mortal (newSViv (yoff)));
-        PUSHs (sv_2mortal (newSViv (width)));
-        PUSHs (sv_2mortal (newSViv (height)));
+        PUSHs (sv_2mortal (newSVnv (xoff)));
+        PUSHs (sv_2mortal (newSVnv (yoff)));
+        PUSHs (sv_2mortal (newSVnv (width)));
+        PUSHs (sv_2mortal (newSVnv (height)));
 
 void
 clutter_actor_set_parent (ClutterActor *actor, ClutterActor *parent)
@@ -1105,22 +918,16 @@ void
 clutter_actor_reparent (ClutterActor *actor, ClutterActor *new_parent)
 
 void
-clutter_actor_raise (ClutterActor *actor, ClutterActor *below)
+clutter_actor_raise (ClutterActor *actor, ClutterActor_ornull *below=NULL)
 
 void
-clutter_actor_lower (ClutterActor *actor, ClutterActor *above)
+clutter_actor_lower (ClutterActor *actor, ClutterActor_ornull *above=NULL)
 
 void
-clutter_actor_set_depth (ClutterActor *actor, gint depth)
+clutter_actor_set_depth (ClutterActor *actor, gfloat depth)
 
-void
-clutter_actor_set_depthu (ClutterActor *actor, ClutterUnit depth)
-
-gint
+gfloat
 clutter_actor_get_depth (ClutterActor *actor)
-
-ClutterUnit
-clutter_actor_get_depthu (ClutterActor *actor)
 
 void
 clutter_actor_set_scale (ClutterActor *actor, gdouble scale_x, gdouble scale_y)
@@ -1151,13 +958,7 @@ void
 clutter_actor_set_fixed_position_set (ClutterActor *actor, gboolean is_set)
 
 void
-clutter_actor_move_by (ClutterActor *actor, gint dx, gint dy)
-
-void
-clutter_actor_move_byu (ClutterActor *actor, ClutterUnit dx, ClutterUnit dy)
-
-void
-clutter_actor_pick (ClutterActor *actor, ClutterColor *color)
+clutter_actor_move_by (ClutterActor *actor, gfloat dx, gfloat dy)
 
 =for apidoc
 Sets whether the actor should react to events
@@ -1216,9 +1017,29 @@ clutter_actor_get_shader (ClutterActor *actor)
 
 void
 clutter_actor_set_shader_param (actor, param, value)
-      ClutterActor *actor
-      const gchar *param
-      gfloat value
+        ClutterActor *actor
+        const gchar *param
+        SV *value
+    PREINIT:
+        GValue v = { 0, };
+    CODE:
+        if (looks_like_number (value)) {
+                if (SvIOK (value)) {
+                        g_value_init (&v, G_TYPE_INT);
+                }
+                else if (SvNOK (value)) {
+                        g_value_init (&v, G_TYPE_FLOAT);
+                }
+                else {
+                        croak("Invalid value: only integers and floats accepted");
+                }
+        }
+        else {
+                croak("Invalid value: only integers and floats accepted");
+        }
+        gperl_value_from_sv (&v, value);
+        clutter_actor_set_shader_param (actor, param, &v);
+        g_value_unset (&v);
 
 =for apidoc
 Sets the I<anchor point> of the I<actor>. The anchor is a point in the
@@ -1227,10 +1048,7 @@ of the bounding box). The anchor point is taken into account when applying
 any transformation to an actor.
 =cut
 void
-clutter_actor_set_anchor_point (ClutterActor *actor, gint x, gint y)
-
-void
-clutter_actor_set_anchor_pointu (ClutterActor *actor, ClutterUnit x, ClutterUnit y)
+clutter_actor_set_anchor_point (ClutterActor *actor, gfloat x, gfloat y)
 
 =for apidoc
 =for signature (x, y) = $actor->get_anchor_point
@@ -1238,25 +1056,12 @@ clutter_actor_set_anchor_pointu (ClutterActor *actor, ClutterUnit x, ClutterUnit
 void
 clutter_actor_get_anchor_point (ClutterActor *actor)
     PREINIT:
-        gint x, y;
+        gfloat x, y;
     PPCODE:
         clutter_actor_get_anchor_point (actor, &x, &y);
         EXTEND (SP, 2);
-        PUSHs (sv_2mortal (newSViv (x)));
-        PUSHs (sv_2mortal (newSViv (y)));
-
-=for apidoc
-=for signature (x, y) = $actor->get_anchor_pointu
-=cut
-void
-clutter_actor_get_anchor_pointu (ClutterActor *actor)
-    PREINIT:
-        ClutterUnit x, y;
-    PPCODE:
-        clutter_actor_get_anchor_pointu (actor, &x, &y);
-        EXTEND (SP, 2);
-        PUSHs (sv_2mortal (newSViv (x)));
-        PUSHs (sv_2mortal (newSViv (y)));
+        PUSHs (sv_2mortal (newSVnv (x)));
+        PUSHs (sv_2mortal (newSVnv (y)));
 
 void
 clutter_actor_set_anchor_point_from_gravity (actor, gravity)
@@ -1269,15 +1074,15 @@ clutter_actor_set_anchor_point_from_gravity (actor, gravity)
 void
 clutter_actor_transform_stage_point (actor, x, y)
         ClutterActor *actor
-        gint32 x
-        gint32 y
+        gfloat x
+        gfloat y
     PREINIT:
-        ClutterUnit out_x, out_y;
+        gfloat out_x, out_y;
     PPCODE:
         if (clutter_actor_transform_stage_point (actor, x, y, &out_x, &out_y)) {
                 EXTEND (SP, 2);
-                PUSHs (sv_2mortal (newSViv (out_x)));
-                PUSHs (sv_2mortal (newSViv (out_y)));
+                PUSHs (sv_2mortal (newSVnv (out_x)));
+                PUSHs (sv_2mortal (newSVnv (out_y)));
         }
 
 =for apidoc
@@ -1286,8 +1091,8 @@ clutter_actor_transform_stage_point (actor, x, y)
 void
 clutter_actor_get_preferred_size (ClutterActor *actor)
     PREINIT:
-        ClutterUnit min_width, min_height;
-        ClutterUnit natural_width, natural_height;
+        gfloat min_width, min_height;
+        gfloat natural_width, natural_height;
     PPCODE:
         clutter_actor_get_preferred_size (actor,
                                           &min_width,
@@ -1295,51 +1100,60 @@ clutter_actor_get_preferred_size (ClutterActor *actor)
                                           &natural_width,
                                           &natural_height);
         EXTEND (SP, 4);
-        PUSHs (sv_2mortal (newSViv (min_width)));
-        PUSHs (sv_2mortal (newSViv (min_height)));
-        PUSHs (sv_2mortal (newSViv (natural_width)));
-        PUSHs (sv_2mortal (newSViv (natural_height)));
+        PUSHs (sv_2mortal (newSVnv (min_width)));
+        PUSHs (sv_2mortal (newSVnv (min_height)));
+        PUSHs (sv_2mortal (newSVnv (natural_width)));
+        PUSHs (sv_2mortal (newSVnv (natural_height)));
 
 void
-clutter_actor_allocate (actor, box, origin_changed)
+clutter_actor_allocate (actor, box, flags)
         ClutterActor *actor
         const ClutterActorBox *box
-        gboolean origin_changed
+        ClutterAllocationFlags flags
 
 void
-clutter_actor_allocate_preferred_size (ClutterActor *actor, gboolean origin_changed)
+clutter_actor_allocate_preferred_size (ClutterActor *actor, ClutterAllocationFlags flags)
+
+void
+clutter_actor_allocate_available_size (actor, x, y, available_width, available_height, flags)
+        ClutterActor *actor
+        gfloat x
+        gfloat y
+        gfloat available_width
+        gfloat available_height
+        ClutterAllocationFlags flags
 
 =for apidoc
 =for signature (min_width, natural_width) = $actor->get_preferred_width ($for_height)
 =cut
 void
-clutter_actor_get_preferred_width (ClutterActor *actor, ClutterUnit for_height)
+clutter_actor_get_preferred_width (ClutterActor *actor, gfloat for_height)
     PREINIT:
-        ClutterUnit min_width, natural_width;
+        gfloat min_width, natural_width;
     PPCODE:
         min_width = natural_width = 0;
         clutter_actor_get_preferred_width (actor, for_height,
                                            &min_width,
                                            &natural_width);
         EXTEND (SP, 2);
-        PUSHs (sv_2mortal (newSViv (min_width)));
-        PUSHs (sv_2mortal (newSViv (natural_width)));
+        PUSHs (sv_2mortal (newSVnv (min_width)));
+        PUSHs (sv_2mortal (newSVnv (natural_width)));
 
 =for apidoc
 =for signature (min_height, natural_height) = $actor->get_preferred_height ($for_width)
 =cut
 void
-clutter_actor_get_preferred_height (ClutterActor *actor, ClutterUnit for_width)
+clutter_actor_get_preferred_height (ClutterActor *actor, gfloat for_width)
     PREINIT:
-        ClutterUnit min_height, natural_height;
+        gfloat min_height, natural_height;
     PPCODE:
         min_height = natural_height = 0;
         clutter_actor_get_preferred_height (actor, for_width,
                                             &min_height,
                                             &natural_height);
         EXTEND (SP, 2);
-        PUSHs (sv_2mortal (newSViv (min_height)));
-        PUSHs (sv_2mortal (newSViv (natural_height)));
+        PUSHs (sv_2mortal (newSVnv (min_height)));
+        PUSHs (sv_2mortal (newSVnv (natural_height)));
 
 =for apidoc Clutter::Actor::_INSTALL_OVERRIDES __hide__
 =cut
@@ -1488,13 +1302,13 @@ ALLOCATE (ClutterActor *actor, const ClutterActorBox *box, gboolean origin_chang
 void
 GET_PREFERRED_WIDTH (actor, for_height)
         ClutterActor *actor
-        ClutterUnit for_height
+        gfloat for_height
     PREINIT:
         ClutterActorClass *klass;
         GType thisclass, parent_class;
         SV *saveddefsv;
-        ClutterUnit min_width = 0;
-        ClutterUnit natural_width = 0;
+        gfloat min_width = 0;
+        gfloat natural_width = 0;
     PPCODE:
         saveddefsv = newSVsv (DEFSV);
         eval_pv ("$_ = caller;", 0);
@@ -1520,13 +1334,13 @@ GET_PREFERRED_WIDTH (actor, for_height)
 void
 GET_PREFERRED_HEIGHT (actor, for_width)
         ClutterActor *actor
-        ClutterUnit for_width
+        gfloat for_width
     PREINIT:
         ClutterActorClass *klass;
         GType thisclass, parent_class;
         SV *saveddefsv;
-        ClutterUnit min_height = 0;
-        ClutterUnit natural_height = 0;
+        gfloat min_height = 0;
+        gfloat natural_height = 0;
     PPCODE:
         saveddefsv = newSVsv (DEFSV);
         eval_pv ("$_ = caller;", 0);

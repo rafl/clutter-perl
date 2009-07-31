@@ -70,7 +70,3 @@ clutter_shader_set_fragment_source (ClutterShader *shader, const gchar *source)
 
 const gchar *
 clutter_shader_get_fragment_source (ClutterShader *shader)
-
-void
-clutter_shader_set_uniform_1f (ClutterShader *shader, const gchar *name, gfloat value)
-

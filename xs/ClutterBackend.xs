@@ -79,5 +79,5 @@ const cairo_font_options_t *
 clutter_backend_get_font_options (ClutterBackend *backend)
 
 void
-clutter_backend_set_font_options (ClutterBackend *backend, cairo_font_options_t_ornull *options)
+clutter_backend_set_font_options (ClutterBackend *backend, const cairo_font_options_t_ornull *options)
 

@@ -102,9 +102,6 @@ BOOT:
 #include "register.xsh"
 #include "boot.xsh"
 	gperl_handle_logs_for ("Clutter");
-        gperl_handle_logs_for ("Clutter-Gst");
-        gperl_handle_logs_for ("Clutter-Gtk");
-        gperl_handle_logs_for ("Clutter-Cairo");
 
 guint
 MAJOR_VERSION ()
@@ -194,15 +191,6 @@ void
 SUPPORTED_MODULES (class)
     PPCODE:
         XPUSHs (sv_2mortal (newSVpv ("core", 0)));
-#ifdef CLUTTERPERL_GST
-        XPUSHs (sv_2mortal (newSVpv ("gst", 0)));
-#endif
-#ifdef CLUTTERPERL_CAIRO
-        XPUSHs (sv_2mortal (newSVpv ("cairo", 0)));
-#endif
-#ifdef CLUTTERPERL_GTK
-        XPUSHs (sv_2mortal (newSVpv ("gtk", 0)));
-#endif
 
 =for object Clutter::main
 =cut
@@ -218,58 +206,6 @@ clutter_init (class=NULL)
 	gperl_argv_free (pargv);
     OUTPUT:
         RETVAL
-
-#ifndef CLUTTERPERL_GST
-
-# /* in case we are not building Clutter without the GStreamer support
-#  * we need a stub for clutter_gst_init(), to warn the user if the
-#  * Clutter module was imported using the '-gst-init' parameter or if
-#  * there's an explicit call to Clutter::Gst->init()
-#  */
-
-ClutterInitError
-clutter_gst_init_dummy (class=NULL)
-    ALIAS:
-        Clutter::Gst::init = 0
-    PREINIT:
-        GPerlArgv *pargv;
-    CODE:
-        PERL_UNUSED_VAR (ax);
-        pargv = gperl_argv_new ();
-        g_warning ("Clutter was built without support for GStreamer");
-        RETVAL = clutter_init (&pargv->argc, &pargv->argv);
-        gperl_argv_update (pargv); 
-        gperl_argv_free (pargv);
-    OUTPUT:
-        RETVAL
-
-#endif /* CLUTTERPERL_GST */
-
-#ifndef CLUTTERPERL_GTK
-
-# /* in case we are not building Clutter without the GTK+ support
-#  * we need a stub for clutter_gtk_init(), to warn the user if the
-#  * Clutter module was imported using the '-gtk-init' parameter or if
-#  * there's an explicit call to Clutter::Gtk->init()
-#  */
-
-ClutterInitError
-clutter_gtk_init_dummy (class=NULL)
-    ALIAS:
-        Clutter::Gst::init = 0
-    PREINIT:
-        GPerlArgv *pargv;
-    CODE:
-        PERL_UNUSED_VAR (ax);
-        pargv = gperl_argv_new ();
-        g_warning ("Clutter was built without support for GStreamer");
-        RETVAL = clutter_init (&pargv->argc, &pargv->argv);
-        gperl_argv_update (pargv); 
-        gperl_argv_free (pargv);
-    OUTPUT:
-        RETVAL
-
-#endif /* CLUTTERPERL_GTK */
 
 void
 clutter_main (class)
@@ -308,16 +244,6 @@ clutter_set_motion_events_enabled (class=NULL, gboolean enable)
 
 gboolean
 clutter_get_motion_events_enabled (class=NULL)
-    C_ARGS:
-        /* void */
-
-void
-clutter_set_motion_events_frequency (class=NULL, guint frequency)
-    C_ARGS:
-        frequency
-
-guint
-clutter_get_motion_events_frequency (class=NULL)
     C_ARGS:
         /* void */
 

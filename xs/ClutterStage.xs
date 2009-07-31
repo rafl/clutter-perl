@@ -50,14 +50,14 @@ clutter_stage_get_color (ClutterStage *stage)
     OUTPUT:
         RETVAL
 
-ClutterActor *
-clutter_stage_get_actor_at_pos (ClutterStage *stage, gint x, gint y)
+ClutterActor_noinc *
+clutter_stage_get_actor_at_pos (ClutterStage *stage, ClutterPickMode mode, gfloat x, gfloat y)
 
 void
-clutter_stage_fullscreen (ClutterStage *stage)
+clutter_stage_set_fullscreen (ClutterStage *stage, gboolean fullscreen)
 
-void
-clutter_stage_unfullscreen (ClutterStage *stage)
+gboolean
+clutter_stage_get_fullscreen (ClutterStage *stage)
 
 void
 clutter_stage_show_cursor (ClutterStage *stage)
@@ -82,12 +82,12 @@ clutter_stage_get_perspective (ClutterStage *stage)
     PREINIT:
         ClutterPerspective persp;
     PPCODE:
-        clutter_stage_get_perspectivex (stage, &persp);
+        clutter_stage_get_perspective (stage, &persp);
         EXTEND (SP, 4);
-        PUSHs (sv_2mortal (newSVnv (CLUTTER_FIXED_TO_DOUBLE (persp.fovy))));
-        PUSHs (sv_2mortal (newSVnv (CLUTTER_FIXED_TO_DOUBLE (persp.aspect))));
-        PUSHs (sv_2mortal (newSVnv (CLUTTER_FIXED_TO_DOUBLE (persp.z_near))));
-        PUSHs (sv_2mortal (newSVnv (CLUTTER_FIXED_TO_DOUBLE (persp.z_far))));
+        PUSHs (sv_2mortal (newSVnv (persp.fovy)));
+        PUSHs (sv_2mortal (newSVnv (persp.aspect)));
+        PUSHs (sv_2mortal (newSVnv (persp.z_near)));
+        PUSHs (sv_2mortal (newSVnv (persp.z_far)));
 
 void
 clutter_stage_set_perspective (stage, fovy, aspect, z_near, z_far)
@@ -99,11 +99,11 @@ clutter_stage_set_perspective (stage, fovy, aspect, z_near, z_far)
     PREINIT:
         ClutterPerspective persp;
     CODE:
-        persp.fovy = CLUTTER_FLOAT_TO_FIXED (fovy);
-        persp.aspect = CLUTTER_FLOAT_TO_FIXED (aspect);
-        persp.z_near = CLUTTER_FLOAT_TO_FIXED (z_near);
-        persp.z_far = CLUTTER_FLOAT_TO_FIXED (z_far);
-        clutter_stage_set_perspectivex (stage, &persp);
+        persp.fovy = fovy;
+        persp.aspect = aspect;
+        persp.z_near = z_near;
+        persp.z_far = z_far;
+        clutter_stage_set_perspective (stage, &persp);
 
 void
 clutter_stage_set_user_resizable (ClutterStage *stage, gboolean resizable)
@@ -118,42 +118,29 @@ gboolean
 clutter_stage_get_use_fog (ClutterStage *stage)
 
 void
-clutter_stage_set_fog (stage, density, z_near, z_far)
+clutter_stage_set_fog (stage, z_near, z_far)
         ClutterStage *stage
-        gdouble density
         gdouble z_near
         gdouble z_far
     PREINIT:
-        ClutterFog fog = { 0, };
+        ClutterFog fog;
     CODE:
-        fog.density = CLUTTER_FLOAT_TO_FIXED (density);
-        fog.z_near  = CLUTTER_FLOAT_TO_FIXED (z_near);
-        fog.z_far   = CLUTTER_FLOAT_TO_FIXED (z_far);
-        clutter_stage_set_fogx (stage, &fog);
+        fog.z_near = z_near;
+        fog.z_far = z_far;
+        clutter_stage_set_fog (stage, &fog);
 
 =for apidoc
-=for signature (density, z_near, z_far) = $stage->get_fog
+=for signature (z_near, z_far) = $stage->get_fog
 =cut
 void
 clutter_stage_get_fog (ClutterStage *stage)
     PREINIT:
         ClutterFog fog = { 0, };
     PPCODE:
-        clutter_stage_get_fogx (stage, &fog);
-        EXTEND (SP, 3);
-        PUSHs (sv_2mortal (newSVnv (CLUTTER_FIXED_TO_DOUBLE (fog.density))));
-        PUSHs (sv_2mortal (newSVnv (CLUTTER_FIXED_TO_DOUBLE (fog.z_near))));
-        PUSHs (sv_2mortal (newSVnv (CLUTTER_FIXED_TO_DOUBLE (fog.z_far))));
-
-gdouble
-clutter_stage_get_resolution (ClutterStage *stage)
-    PREINIT:
-        ClutterFixed res;
-    CODE:
-        res = clutter_stage_get_resolutionx (stage);
-        RETVAL = CLUTTER_FIXED_TO_DOUBLE (res);
-    OUTPUT:
-        RETVAL
+        clutter_stage_get_fog (stage, &fog);
+        EXTEND (SP, 2);
+        PUSHs (sv_2mortal (newSVnv (fog.z_near)));
+        PUSHs (sv_2mortal (newSVnv (fog.z_far)));
 
 void
 clutter_stage_set_key_focus (ClutterStage *stage, ClutterActor_ornull *actor)

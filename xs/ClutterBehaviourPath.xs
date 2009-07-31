@@ -96,62 +96,16 @@ MODULE = Clutter::Behaviour::Path       PACKAGE = Clutter::Behaviour::Path      
 =for arg ... list of knots
 =cut
 ClutterBehaviour_noinc *
-clutter_behaviour_path_new (class, alpha, knot=NULL, ...)
+clutter_behaviour_path_new (class, alpha=NULL, path=NULL)
         ClutterAlpha_ornull *alpha
-        ClutterKnot_ornull *knot
-    PREINIT:
-        ClutterBehaviourPath *path;
-        int i;
+        ClutterPath_ornull *path
     CODE:
-        RETVAL = clutter_behaviour_path_new (alpha, NULL, 0);
-        path = CLUTTER_BEHAVIOUR_PATH (RETVAL);
-        for (i = 2; i < items; i++) {
-                clutter_behaviour_path_append_knot (path,
-                                                    SvClutterKnot (ST (i)));
-        }
+        RETVAL = clutter_behaviour_path_new (alpha, path);
     OUTPUT:
         RETVAL
 
-=for apidoc
-=for arg knot (__hide__)
-=for arg ... list of knots
-=cut
-void
-clutter_behaviour_path_append_knot (behaviour, knot, ...)
-        ClutterBehaviourPath *behaviour
-        ClutterKnot *knot
-    PREINIT:
-        int i;
-    CODE:
-        clutter_behaviour_path_append_knot (behaviour, knot);
-        for (i = 2; i < items; i++) {
-                clutter_behaviour_path_append_knot (behaviour,
-                                                    SvClutterKnot (ST (i)));
-        }
+ClutterPath_noinc *
+clutter_behaviour_path_get_path (ClutterBehaviourPath *behaviour)
 
 void
-clutter_behaviour_path_insert_knot (behaviour, offset, knot)
-        ClutterBehaviourPath *behaviour
-        guint offset
-        ClutterKnot *knot
-
-void
-clutter_behaviour_path_remove_knot (behaviour, offset)
-        ClutterBehaviourPath *behaviour
-        guint offset
-
-void
-clutter_behaviour_path_get_knots (behaviour)
-        ClutterBehaviourPath *behaviour
-    PREINIT:
-        GSList *knots, *l;
-    PPCODE:
-        knots = clutter_behaviour_path_get_knots (behaviour);
-        for (l = knots; l; l = l->next) {
-                XPUSHs (sv_2mortal (newSVClutterKnot (l->data)));
-        }
-        g_slist_free (knots);
-
-void
-clutter_behaviour_path_clear (behaviour)
-        ClutterBehaviourPath *behaviour
+clutter_behaviour_path_set_path (ClutterBehaviourPath *behaviour, ClutterPath_ornull *path)

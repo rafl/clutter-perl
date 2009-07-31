@@ -144,16 +144,16 @@ from_pixel (class, guint32 pixel)
 void
 to_hls (ClutterColor *color)
     PREINIT:
-        guint8 h, l, s;
+        gfloat h, l, s;
     PPCODE:
         clutter_color_to_hls (color, &h, &l, &s);
         EXTEND (SP, 3);
-        PUSHs (sv_2mortal (newSVuv (h)));
-        PUSHs (sv_2mortal (newSVuv (l)));
-        PUSHs (sv_2mortal (newSVuv (s)));
+        PUSHs (sv_2mortal (newSVnv (h)));
+        PUSHs (sv_2mortal (newSVnv (l)));
+        PUSHs (sv_2mortal (newSVnv (s)));
 
 ClutterColor_copy *
-from_hls (class, guint hue, guint luminance, guint saturation)
+from_hls (class, gfloat hue, gfloat luminance, gfloat saturation)
     PREINIT:
         ClutterColor color = { 0, };
     CODE:
@@ -214,17 +214,17 @@ shade (ClutterColor *color, gdouble factor)
     PREINIT:
         ClutterColor shade = { 0, };
     CODE:
-        clutter_color_shade (color, &shade, factor);
+        clutter_color_shade (color, factor, &shade);
         RETVAL = &shade;
     OUTPUT:
         RETVAL
 
 ClutterColor_copy *
-parse (class, const gchar *str)
+from_string (class, const gchar *str)
     PREINIT:
         ClutterColor parsed = { 0, };
     CODE:
-        clutter_color_parse (str, &parsed);
+        clutter_color_from_string (&parsed, str);
         RETVAL = &parsed;
     OUTPUT:
         RETVAL
@@ -340,10 +340,10 @@ upper left and lower right corners:
 
 ClutterActorBox_copy *
 new (class, x1, y1, x2, y2)
-	gint32 x1
-	gint32 y1
-	gint32 x2
-	gint32 y2
+	gfloat x1
+	gfloat y1
+	gfloat x2
+	gfloat y2
     PREINIT:
         ClutterActorBox box;
     CODE:
@@ -379,12 +379,12 @@ new (class, x1, y1, x2, y2)
 =for arg newvalue (integer)
 =cut
 
-gint32
+gfloat
 x1 (ClutterActorBox *box, SV *newvalue = 0)
     ALIAS:
-        Clutter::ActorBox::y1 = 1
-	Clutter::ActorBox::x2 = 2
-	Clutter::ActorBox::y2 = 3
+        Clutter::ActorBox::y1     = 1
+	Clutter::ActorBox::x2     = 2
+	Clutter::ActorBox::y2     = 3
     CODE:
         switch (ix) {
 		case 0: RETVAL = box->x1; break;
@@ -397,10 +397,10 @@ x1 (ClutterActorBox *box, SV *newvalue = 0)
 	}
 	if (newvalue) {
 	        switch (ix) {
-			case 0: box->x1 = SvIV (newvalue); break;
-			case 1: box->y1 = SvIV (newvalue); break;
-			case 2: box->x2 = SvIV (newvalue); break;
-			case 3: box->y2 = SvIV (newvalue); break;
+			case 0: box->x1 = SvNV (newvalue); break;
+			case 1: box->y1 = SvNV (newvalue); break;
+			case 2: box->x2 = SvNV (newvalue); break;
+			case 3: box->y2 = SvNV (newvalue); break;
 			default:
 				g_assert_not_reached ();
 		}
@@ -415,10 +415,10 @@ void
 values (ClutterActorBox *box)
     PPCODE:
         EXTEND (SP, 4);
-	PUSHs (sv_2mortal (newSViv (box->x1)));
-	PUSHs (sv_2mortal (newSViv (box->y1)));
-	PUSHs (sv_2mortal (newSViv (box->x2)));
-	PUSHs (sv_2mortal (newSViv (box->y2)));
+	PUSHs (sv_2mortal (newSVnv (box->x1)));
+	PUSHs (sv_2mortal (newSVnv (box->y1)));
+	PUSHs (sv_2mortal (newSVnv (box->x2)));
+	PUSHs (sv_2mortal (newSVnv (box->y2)));
 
 =for apidoc
 =for signature (x, y) = $box->origin
@@ -427,8 +427,8 @@ void
 origin (ClutterActorBox *box)
     PPCODE:
         EXTEND (SP, 2);
-        PUSHs (sv_2mortal (newSViv (box->x1)));
-        PUSHs (sv_2mortal (newSViv (box->y1)));
+        PUSHs (sv_2mortal (newSVnv (box->x1)));
+        PUSHs (sv_2mortal (newSVnv (box->y1)));
 
 
 =for apidoc
@@ -438,16 +438,62 @@ void
 size (ClutterActorBox *box)
     PPCODE:
         EXTEND (SP, 2);
-        PUSHs (sv_2mortal (newSViv (box->x2 - box->x1)));
-        PUSHs (sv_2mortal (newSViv (box->y2 - box->y1)));
+        PUSHs (sv_2mortal (newSVnv (box->x2 - box->x1)));
+        PUSHs (sv_2mortal (newSVnv (box->y2 - box->y1)));
+
+=for apidoc Clutter::ActorBox::x
+=for signature x = $box->x
+=cut
+
+=for apidoc Clutter::ActorBox::y
+=for signature y = $box->y
+=cut
+
+=for apidoc Clutter::ActorBox::width
+=for signature width = $box->width
+=cut
+
+=for apidoc Clutter::ActorBox::height
+=for signature height = $box->height
+=cut
+
+gfloat
+x (ClutterActorBox *box)
+    ALIAS:
+        Clutter::ActorBox::y      = 1
+        Clutter::ActorBox::width  = 2
+        Clutter::ActorBox::height = 3
+    CODE:
+        switch (ix) {
+                case 0: RETVAL = box->x1;           break;
+                case 1: RETVAL = box->y2;           break;
+                case 2: RETVAL = box->x2 - box->x1; break;
+                case 3: RETVAL = box->y2 - box->y1; break;
+                default:
+                        g_assert_not_reached ();
+        }
+    OUTPUT:
+        RETVAL
+
+gfloat
+get_area (ClutterActorBox *box)
+    CODE:
+        RETVAL = clutter_actor_box_get_area (box);
+    OUTPUT:
+        RETVAL
+
+gboolean
+contains (ClutterActorBox *box, gfloat x, gfloat y)
+    CODE:
+        RETVAL = clutter_actor_box_contains (box, x, y);
+    OUTPUT:
+        RETVAL
 
 MODULE = Clutter::Types		PACKAGE = Clutter::Knot
 
 
 ClutterKnot_copy *
-new (class, x, y)
-	gint x
-	gint y
+new (class, gint x, gint y)
     PREINIT:
         ClutterKnot knot;
     CODE:

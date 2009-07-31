@@ -1,7 +1,5 @@
 #include "clutterperl.h"
 
-#include <clutter/clutter-stage-manager.h>
-
 MODULE = Clutter::StageManager  PACKAGE = Clutter::StageManager PREFIX = clutter_stage_manager_
 
 ClutterStageManager_noinc *
@@ -14,7 +12,7 @@ clutter_stage_manager_set_default_stage (manager, stage)
         ClutterStageManager *manager
         ClutterStage *stage
 
-ClutterStage *
+ClutterStage_noinc *
 clutter_stage_manager_get_default_stage (ClutterStageManager *manager)
 
 void

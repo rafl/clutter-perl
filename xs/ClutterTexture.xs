@@ -73,9 +73,6 @@ clutter_texture_set_filter_quality (ClutterTexture *texture, ClutterTextureQuali
 ClutterTextureQuality
 clutter_texture_get_filter_quality (ClutterTexture *texture)
 
-void
-clutter_texture_set_max_tile_waste (ClutterTexture *texture, gint max_tile_waste)
-
 gint
 clutter_texture_get_max_tile_waste (ClutterTexture *texture)
 

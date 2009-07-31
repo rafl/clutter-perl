@@ -364,12 +364,12 @@ clutter_event_get_state (event, ...)
 void
 clutter_event_get_coords (ClutterEvent_ornull *event)
     PREINIT:
-        gint x, y;
+        gfloat x, y;
     PPCODE:
         clutter_event_get_coords (event, &x, &y);
         EXTEND (SP, 2);
-        PUSHs (sv_2mortal (newSViv (x)));
-        PUSHs (sv_2mortal (newSViv (y)));
+        PUSHs (sv_2mortal (newSVnv (x)));
+        PUSHs (sv_2mortal (newSVnv (y)));
 
 ClutterActor_ornull *
 clutter_event_get_source (ClutterEvent *event)
@@ -559,7 +559,7 @@ hardware_keycode (ClutterEvent *event, guint16 newvalue=0)
 guint32
 unicode (ClutterEvent *event)
     CODE:
-        RETVAL = clutter_key_event_unicode ((ClutterKeyEvent *) event);
+        RETVAL = clutter_event_get_key_unicode (event);
     OUTPUT:
         RETVAL
 

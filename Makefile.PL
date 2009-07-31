@@ -1,104 +1,75 @@
-use 5.008;
+BEGIN { require 5.008; }
 
 use strict;
 use warnings;
 
-use Cwd;
-use File::Spec;
 use ExtUtils::MakeMaker;
+use File::Spec;
+use Cwd;
 
 # minimum required version of dependancies we need to build
 our %build_reqs = (
-    'perl-ExtUtils-Depends'   => '0.2',
-    'perl-ExtUtils-PkgConfig' => '1.03',
-    'perl-Glib'               => '1.180', # for Glib::MakeHelper
-    'perl-Gtk2'               => '1.140', # for Gtk2::Pango
-    'perl-Cairo'              => '1.00',  # for the Cairo typemaps and
-                                          # for ClutterCairo
-    'perl-GStreamer'          => 0,
-    'Clutter'                 => '0.8.2',
+    'perl-ExtUtils-Depends'   => '0.300',
+    'perl-ExtUtils-PkgConfig' => '1.030',
+    'perl-Glib'               => '1.220', # for Glib::MakeHelper
+    'perl-Cairo'              => '1.000', # for the Cairo typemaps
+    'perl-Pango'              => '1.140', # for Pango
+    'clutter'                 => '1.0.0',
+);
+
+my %PREREQ_PM = (
+    'ExtUtils::Depends'   => $build_reqs{'perl-ExtUtils-Depends'},
+    'ExtUtils::PkgConfig' => $build_reqs{'perl-ExtUtils-PkgConfig'},
+    'Glib'                => $build_reqs{'perl-Glib'},
+    'Cairo'               => $build_reqs{'perl-Cairo'},
+    'Pango'               => $build_reqs{'perl-Pango'},
 );
 
 # Writing a fake Makefile ensures that CPAN will pick up the correct
 # dependencies and install them.
 unless (eval "use ExtUtils::Depends '$build_reqs{'perl-ExtUtils-Depends'}';"
            . "use ExtUtils::PkgConfig '$build_reqs{'perl-ExtUtils-PkgConfig'}';"
-           # just seeing if Glib is available isn't enough, make sure
-           # it's recent enough, too 
            . "use Glib '$build_reqs{'perl-Glib'}';"
            . "use Cairo '$build_reqs{'perl-Cairo'}';"
-           . "use Gtk2 '$build_reqs{'perl-Gtk2'}';"
-           . "use Glib::MakeHelper;"
-           # we need Gtk2::CodeGen because we use GtkObject in ClutterGtk
-           . "use Gtk2::CodeGen;"
+           . "use Pango '$build_reqs{'perl-Pango'}';"
+	   . "use Glib::CodeGen;"
+	   . "use Glib::MakeHelper;"
            . "1") {
-   warn "$@\n";
-   WriteMakefile(
-         PREREQ_FATAL => 1,
-         PREREQ_PM    => {
-            'Glib'                => $build_reqs{'perl-Glib'},
-            'Gtk2'                => $build_reqs{'perl-Gtk2'},
-            'Cairo'               => $build_reqs{'perl-Cairo'},
-            'ExtUtils::Depends'   => $build_reqs{'perl-ExtUtils-Depends'},
-            'ExtUtils::PkgConfig' => $build_reqs{'perl-ExtUtils-PkgConfig'},
-         },
-   );
-   exit 1; # not reached
+   warn <<"__EOW__";
+Pre-requisites not found:
+$@
+Please install them manually.
+__EOW__
+   exit 0;
 }
 
 mkdir 'build', 0777;
 
-our @xs_files = ();
-
 # Base module
-our %pkgcfg =
-    ExtUtils::PkgConfig->find('clutter-0.8 >= ' . $build_reqs{Clutter});
-
-my @names = Glib::MakeHelper->read_source_list_file('xs_files');
-print "Loaded " . scalar(@names) . " xs files for Clutter\n";
-push @xs_files, @names;
-
-our $module_cflags = $pkgcfg{cflags};
-our $module_libs   = $pkgcfg{libs};
-
-# Integration libraries: Clutter::Gst
-our $have_clutter_gst = 0;
-eval {
-    my %gstpkgcfg = ExtUtils::PkgConfig->find('clutter-gst-0.8');
-
-    $module_cflags .= ' ' . $gstpkgcfg{cflags} . '-DCLUTTERPERL_GST';
-    $module_libs   .= ' ' . $gstpkgcfg{libs};
-
-    $have_clutter_gst = 1;
-
-    my @names = Glib::MakeHelper->read_source_list_file ('xs_files_gst');
-    print "Loaded " . scalar(@names) . " xs files for Clutter::Gst\n";
-    push @xs_files, @names;
-};
-if ($@) {
-    warn("*** No clutter-gst found, skipping Clutter::Gst\n");
+my %pkgcfg;
+unless (eval { %pkgcfg = ExtUtils::PkgConfig->find('clutter-1.0'); 1; }) {
+    warn $@;
+    exit 0;
 }
 
-# Integration libraries: Gtk2::ClutterEmbed
-our $have_clutter_gtk = 0;
-eval {
-    my %gtkpkgcfg = ExtUtils::PkgConfig->find('clutter-gtk-0.8');
+#
+# retrieve pango's version
+#
+my @clutter_version = split /\./, $pkgcfg{modversion};
 
-    $module_cflags .= ' ' . $gtkpkgcfg{cflags} . '-DCLUTTERPERL_GTK';
-    $module_libs   .= ' ' . $gtkpkgcfg{libs};
-
-    $have_clutter_gtk = 1;
-
-    my @names = Glib::MakeHelper->read_source_list_file ('xs_files_gtk');
-    print "Loaded " . scalar(@names) . " xs files for Clutter::Gtk\n";
+#
+# decide what files to use in the build based on the version we found.
+#
+my @xs_files = ();
+my @xs_lists = Glib::MakeHelper->select_files_by_version("xs_files", @clutter_version);
+foreach my $filename (@xs_lists) {
+    my @names = Glib::MakeHelper->read_source_list_file($filename);
     push @xs_files, @names;
-};
-if ($@) {
-    warn("*** No clutter-gtk found, skipping Clutter::Gtk\n");
 }
 
+print "Loaded " . scalar(@xs_files) . " xs files for Clutter\n";
 
-our %pm_files = (
+my %pm_files = (
     'lib/Clutter.pm' => '$(INST_LIBDIR)/Clutter.pm',
     'Cookbook.pod' => '$(INST_LIBDIR)/Clutter/Cookbook.pod',
 
@@ -109,7 +80,7 @@ our %pm_files = (
     'tools/TestHelper.pm' => '$(INST_LIBDIR)/Clutter/TestHelper.pm',
 );
 
-our %pod_files = (
+my %pod_files = (
     'lib/Clutter.pm' => '$(INST_MAN3DIR)/Clutter.$(MAN3EXT)',
     'Cookbook.pod' => '$(INST_MAN3DIR)/Clutter::Cookbook.$(MAN3EXT)',
 
@@ -121,72 +92,55 @@ our %pod_files = (
 
 # typemaps generation files
 my @input_maps = qw/ maps /;
-push @input_maps, 'maps-gst'   if $have_clutter_gst == 1;
-push @input_maps, 'maps-gtk'   if $have_clutter_gtk == 1;
 
 # autogeneration
-Gtk2::CodeGen->parse_maps('clutterperl', input => \@input_maps);
-Gtk2::CodeGen->write_boot(xs_files => \@xs_files);
+Glib::CodeGen->parse_maps('clutterperl', input => [<maps-[0-9]\.[0-9]*>]);
+Glib::CodeGen->write_boot(xs_files => \@xs_files);
 
 # this one turns the long list of #defines in clutter-keysyms.h into a
 # large hash of key names and values, %Clutter::Gdk::Keysyms.
 system "$^X tools/genkeysyms.pl >\"build/Keysyms.pm\"";
 
-my @deps = qw/ Glib /;
-push @deps, 'GStreamer' if $have_clutter_gst   == 1;
-push @deps, 'Cairo';    # core depends on Cairo
-push @deps, 'Gtk2';     # core depends on Gtk2 for Pango
-
+my @deps = qw/ Glib Cairo Pango/;
 my $cwd = cwd();
 
-our $clutter = ExtUtils::Depends->new('Clutter', @deps);
+my $module_cflags = $pkgcfg{cflags};
+my $module_libs   = $pkgcfg{libs};
+
+my @typemaps = map { File::Spec->catfile($cwd, $_) }
+               qw( build/clutterperl.typemap clutter.typemap );
+
+my $clutter = ExtUtils::Depends->new('Clutter', @deps);
 $clutter->set_inc($module_cflags . ' -I./build ');
 $clutter->set_libs($module_libs);
 $clutter->add_xs(@xs_files);
 $clutter->add_pm(%pm_files);
-$clutter->add_typemaps(
-    map {
-        File::Spec->catfile($cwd, $_)
-    }
-    'build/clutterperl.typemap',
-    'clutter.typemap'
-);
-$clutter->install(qw(clutterperl.h build/clutterperl-autogen.h));
+$clutter->add_typemaps(@typemaps);
+$clutter->install(qw(clutterperl.h build/clutterperl-autogen.h doctypes));
 $clutter->save_config('build/IFiles.pm');
 
 WriteMakefile(
     AUTHOR        => 'Emmanuele Bassi <ebassi@linux.intel.com>',
     NAME          => 'Clutter',
-    VERSION_FROM  => 'lib/Clutter.pm', # finds $VERSION
+    VERSION_FROM  => 'lib/Clutter.pm',
 
     # what the module requires to run
-    PREREQ_PM     => {
-        'Cairo'      => $build_reqs{'perl-Cairo'},
-        'Glib'       => $build_reqs{'perl-Glib'},
-        'Gtk2'       => $build_reqs{'perl-Gtk2'},
-        'GStreamer'  => 0,
-    },
-    PREREQ_FATAL  => 1, # we need Glib and Gtk2 to be
-                        # able to write the Makefile
-    ABSTRACT_FROM => 'lib/Clutter.pm', # retrieve abstract from module
+    PREREQ_PM     => \%PREREQ_PM,
+    PREREQ_FATAL  => 1,
+
+    ABSTRACT_FROM => 'lib/Clutter.pm',
     XSPROTOARG    => '-noprototypes ',
     MAN3PODS	  => \%pod_files,
     LICENSE       => 'perl, lgpl',
+    DL_FUNCS      => { Clutter => [] },
 
-    # what the module requires to run configure
-    EXTRA_META    => Glib::MakeHelper->get_configure_requires_yaml(
-        'ExtUtils::Depends'   => $build_reqs{'perl-ExtUtils-Depends'},
-        'ExtUtils::PkgConfig' => $build_reqs{'perl-ExtUtils-PkgConfig'},
-        'Glib'                => $build_reqs{'perl-Glib'},
-        'Cairo'               => $build_reqs{'perl-Cairo'},
-        'Gtk2'                => $build_reqs{'perl-Gtk2'},
-    ),
+    META_MERGE    => { configure_requires => \%PREREQ_PM },
 
     $clutter->get_makefile_vars(),
 );
 
 
-=pod
+#=pod
 #=unstable
 
 print "
@@ -199,7 +153,7 @@ bugs to clutter AT openedhand DOT com as soon as possible.
 WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
 ";
 
-=cut
+#=cut
 
 sub MY::postamble
 {
