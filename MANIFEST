@@ -2,6 +2,7 @@ AUTHORS
 ChangeLog
 clutter.typemap
 clutterperl.h
+clutterperl-private.h
 Cookbook.pod
 copyright.pod
 doctypes
@@ -66,5 +67,9 @@ xs/ClutterTexture.xs
 xs/ClutterTimeline.xs
 xs/ClutterTypes.xs
 xs/Cogl.xs
+xs/CoglColor.xs
+xs/CoglHandle.xs
+xs/CoglMatrix.xs
 xs/CoglPath.xs
+xs/CoglTexture.xs
 xs_files-1.0

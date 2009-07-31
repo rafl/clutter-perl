@@ -27,4 +27,8 @@ xs/ClutterTexture.xs
 xs/ClutterTimeline.xs
 xs/ClutterTypes.xs
 xs/Cogl.xs
+xs/CoglColor.xs
+xs/CoglHandle.xs
+xs/CoglMatrix.xs
 xs/CoglPath.xs
+xs/CoglTexture.xs

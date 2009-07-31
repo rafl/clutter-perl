@@ -23,263 +23,58 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "clutterperl.h"
+#include "clutterperl-private.h"
 
-SV *
-newSVCoglHandle (CoglHandle handle)
-{
-  HV *stash, *hnd = newHV ();
-
-  if (handle == COGL_INVALID_HANDLE)
-    return &PL_sv_undef;
-
-  sv_magic ((SV *) hnd, 0, PERL_MAGIC_ext, (const char *) handle, 0);
-
-  stash = gv_stashpv ("Clutter::Cogl::Handle", TRUE);
-
-  return sv_bless ((SV *) newRV_noinc ((SV *) hnd), stash);
-}
-
-CoglHandle
-SvCoglHandle (SV *sv)
-{
-  MAGIC *mg;
-
-  if (!gperl_sv_is_defined (sv) || !SvROK (sv) || !(mg = mg_find (SvRV (sv), PERL_MAGIC_ext)))
-    return COGL_INVALID_HANDLE;
-
-  return (CoglHandle) mg->mg_ptr;
-}
-
+/* taken from Glib/GType.xs */
 void
-coglperl_sv_to_color (SV *sv, CoglColor *color)
+cogl_perl_set_isa (const char *child_package,
+                   const char *parent_package)
 {
-  AV *a;
-  SV **s;
-  guint8 red, green, blue, alpha;
+        char *child_isa_full;
+        AV *isa;
 
-  a = (AV *) SvRV (sv);
+        New (0, child_isa_full, strlen(child_package) + 5 + 1, char);
+        child_isa_full = strcpy (child_isa_full, child_package);
+        child_isa_full = strcat (child_isa_full, "::ISA");
+        isa = get_av (child_isa_full, TRUE); /* create on demand */
+        Safefree (child_isa_full);
 
-  if (av_len (a) != 4)
-    croak ("A Clutter::Cogl color must be a reference to an "
-           "array of 4 integers in the [0, 255] interval.");
+        av_push (isa, newSVpv (parent_package, 0));
+}
 
-  if ((s = av_fetch (a, 0, 0)) && gperl_sv_is_defined (*s))
-    red = SvUV (*s);
-
-  if ((s = av_fetch (a, 1, 0)) && gperl_sv_is_defined (*s))
-    green = SvUV (*s);
-
-  if ((s = av_fetch (a, 2, 0)) && gperl_sv_is_defined (*s))
-    blue = SvUV (*s);
-
-  if ((s = av_fetch (a, 3, 0)) && gperl_sv_is_defined (*s))
-    alpha = SvUV (*s);
-
-  cogl_color_set_from_4ub (color, red, green, blue, alpha);
+gpointer
+cogl_perl_object_from_sv (SV *sv, const char *package)
+{
+        if (!SvOK (sv) || !SvROK (sv) || !sv_derived_from (sv, package))
+                croak("Cannot convert scalar %p to an object of type %s",
+                      sv, package);
+        return INT2PTR (void *, SvIV ((SV *) SvRV (sv)));
 }
 
 SV *
-coglperl_color_to_sv (CoglColor *color)
+cogl_perl_object_to_sv (gpointer object, const char *package)
 {
-  return &PL_sv_undef;
+        SV *sv = newSV (0);
+        sv_setref_pv(sv, package, object);
+        return sv;
 }
 
-static void
-read_texture_vertex (SV *sv, CoglTextureVertex *vertex)
+gpointer
+cogl_perl_struct_from_sv (SV *sv, const char *package)
 {
-  SV **s;
-
-  if (gperl_sv_is_hash_ref (sv))
-    {
-      HV *h = (HV *) SvRV (sv);
-
-      if ((s = hv_fetch (h, "x", 1, 0)) && gperl_sv_is_defined (*s))
-        vertex->x = SvNV (*s);
-
-      if ((s = hv_fetch (h, "y", 1, 0)) && gperl_sv_is_defined (*s))
-        vertex->y = SvNV (*s);
-
-      if ((s = hv_fetch (h, "z", 1, 0)) && gperl_sv_is_defined (*s))
-        vertex->z = SvNV (*s);
-
-      if ((s = hv_fetch (h, "tx", 2, 0)) && gperl_sv_is_defined (*s))
-        vertex->tx = SvNV (*s);
-
-      if ((s = hv_fetch (h, "ty", 2, 0)) && gperl_sv_is_defined (*s))
-        vertex->ty = SvNV (*s);
-
-      if ((s = hv_fetch (h, "color", 5, 0)) && gperl_sv_is_array_ref (*s))
-        coglperl_sv_to_color (*s, &vertex->color);
-    }
-  else if (gperl_sv_is_array_ref (sv))
-    {
-      AV *a = (AV *) SvRV (sv);
-
-      if ((s = av_fetch (a, 0, 0)) && gperl_sv_is_defined (*s))
-        vertex->x = SvNV (*s);
-
-      if ((s = av_fetch (a, 1, 0)) && gperl_sv_is_defined (*s))
-        vertex->y = SvNV (*s);
-
-      if ((s = av_fetch (a, 2, 0)) && gperl_sv_is_defined (*s))
-        vertex->z = SvNV (*s);
-
-      if ((s = av_fetch (a, 3, 0)) && gperl_sv_is_defined (*s))
-        vertex->tx = SvNV (*s);
-
-      if ((s = av_fetch (a, 4, 0)) && gperl_sv_is_defined (*s))
-        vertex->ty = SvNV (*s);
-
-      if ((s = av_fetch (a, 5, 0)) && gperl_sv_is_array_ref (*s))
-        coglperl_sv_to_color (*s, &vertex->color);
-    }
-  else
-    croak ("A texture vertex must be a reference to a hash "
-           "containing the keys 'x', 'y', 'z', 'tx', 'ty' "
-           "and 'color', or a reference to an array containing "
-           "the same information in the order: x, y, z, tx, ty, "
-           "color");
+        if (!SvOK (sv) || !SvROK (sv) || !sv_derived_from (sv, package))
+                croak("Cannot convert scalar %p to a struct of type %s",
+                      sv, package);
+        return INT2PTR (void *, SvIV ((SV *) SvRV (sv)));
 }
 
 SV *
-newSVCoglTextureVertex (CoglTextureVertex *vertex)
+cogl_perl_struct_to_sv (gpointer object, const char *package)
 {
-  HV *stash, *hv = newHV ();
-
-  if (!vertex)
-    return &PL_sv_undef;
-
-  /* model coordinates; we store them into floats to avoid exposing
-   * fixed point values in the bindings
-   */
-  hv_store (hv, "x", 1, newSVnv (vertex->x), 0);
-  hv_store (hv, "y", 1, newSVnv (vertex->y), 0);
-  hv_store (hv, "z", 1, newSVnv (vertex->z), 0);
-
-  /* texture coordinates */
-  hv_store (hv, "tx", 2, newSVnv (vertex->tx), 0);
-  hv_store (hv, "ty", 2, newSVnv (vertex->ty), 0);
-
-  /* color */
-  hv_store (hv, "color", 5, coglperl_color_to_sv (&vertex->color), 0);
-
-  stash = gv_stashpv ("Clutter::Cogl::TextureVertex", TRUE);
-
-  return sv_bless ((SV *) newRV_noinc ((SV *) hv), stash);
+        SV *sv = newSV (0);
+        sv_setref_pv(sv, package, object);
+        return sv;
 }
-
-CoglTextureVertex *
-SvCoglTextureVertex (SV *sv)
-{
-  CoglTextureVertex *vertex;
-  
-  vertex = gperl_alloc_temp (sizeof (CoglTextureVertex));
-  read_texture_vertex (sv, vertex);
-
-  return vertex;
-}
-
-MODULE = Clutter::Cogl  PACKAGE = Clutter::Cogl::Handle
-
-=for position DESCRIPTION
-
-=head1 DESCRIPTION
-
-B<Clutter::Cogl::Handle> is an opaque data type that is used to
-store a handle to a GL or GLES resource. A handle can point to a
-texture, or a shader program, or an offscreen buffer.
-
-The nature and contents of the handle are completely shielded
-from the Perl developer; a handle can only be used with the
-Clutter::Cogl functions.
-
-=cut
-
-=for apidoc
-Checks whether the passed I<handle> is valid or not
-=cut
-gboolean
-is_valid (CoglHandle handle)
-    CODE:
-        RETVAL = (handle != COGL_INVALID_HANDLE) ? TRUE : FALSE;
-    OUTPUT:
-        RETVAL
-
-=for apidoc
-Whether the given I<handle> references an existing texture object
-=cut
-gboolean
-is_texture (CoglHandle handle)
-    CODE:
-        RETVAL = cogl_is_texture (handle);
-    OUTPUT:
-        RETVAL
-
-=for apidoc
-Whether the given I<handle> references an existing shader object
-=cut
-gboolean
-is_shader (CoglHandle handle)
-    CODE:
-        RETVAL = cogl_is_shader (handle);
-    OUTPUT:
-        RETVAL
-
-=for apidoc
-Whether the given I<handle> references an existing program object
-=cut
-gboolean
-is_program (CoglHandle handle)
-    CODE:
-        RETVAL = cogl_is_program (handle);
-    OUTPUT:
-        RETVAL
-
-=for apidoc
-Whether the given I<handle> references an existing offscreen
-buffer object
-=cut
-gboolean
-is_offscreen (CoglHandle handle)
-    CODE:
-        RETVAL = cogl_is_offscreen (handle);
-    OUTPUT:
-        RETVAL
-
-void
-DESTROY (SV *sv)
-    PREINIT:
-        CoglHandle handle = COGL_INVALID_HANDLE;
-    CODE:
-        handle = SvCoglHandle (sv);
-        if (handle != COGL_INVALID_HANDLE)
-          cogl_handle_unref (handle);
-        sv_unmagic (sv, PERL_MAGIC_ext);
-
-MODULE = Clutter::Cogl  PACKAGE = Clutter::Cogl::Texture PREFIX = cogl_texture_
-
-BOOT:
-        gperl_set_isa ("Clutter::Cogl::TextureHandle",
-                       "Clutter::Cogl::Handle");
-
-SV *
-cogl_texture_new_with_size (class=NULL, width, height, flags, internal_format)
-        guint width
-        guint height
-        CoglTextureFlags flags
-        CoglPixelFormat internal_format
-    PREINIT:
-        CoglHandle handle = COGL_INVALID_HANDLE;
-    CODE:
-        /* we own the handle */
-        handle = cogl_texture_new_with_size (width, height,
-                                             flags,
-                                             internal_format);
-        RETVAL = newSVCoglHandle (handle);
-        sv_setref_pv (RETVAL, "Clutter::Cogl::TextureHandle", (void *) handle);
-    OUTPUT:
-        RETVAL
 
 MODULE = Clutter::Cogl  PACKAGE = Clutter::Cogl PREFIX = cogl_
 
