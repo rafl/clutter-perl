@@ -857,6 +857,15 @@ clutter_actor_get_rotation (ClutterActor *actor, ClutterRotateAxis axis)
                 PUSHs (sv_2mortal (newSVnv (z)));
         }
 
+void
+clutter_actor_set_z_rotation_from_gravity (actor, angle, gravity)
+        ClutterActor *actor
+        gdouble angle
+        ClutterGravity gravity
+
+ClutterGravity
+clutter_actor_get_z_rotation_gravity (ClutterActor *actor)
+
 =for apidoc
 Sets the actor's opacity, with 0 being fully transparent and 255 being
 fully opaque
@@ -869,6 +878,9 @@ clutter_actor_get_opacity (ClutterActor *actor)
 
 guint8
 clutter_actor_get_paint_opacity (ClutterActor *actor)
+
+gboolean
+clutter_actor_get_paint_visibility (ClutterActor *actor)
 
 void
 clutter_actor_set_name (ClutterActor *actor, const gchar *id)
@@ -944,6 +956,34 @@ clutter_actor_get_scale (ClutterActor *actor)
         EXTEND (SP, 2);
         PUSHs (sv_2mortal (newSVnv (scale_x)));
         PUSHs (sv_2mortal (newSVnv (scale_y)));
+
+void
+clutter_actor_set_scale_full (actor, scale_x, scale_y, center_x, center_y)
+        ClutterActor *actor
+        gdouble scale_x
+        gdouble scale_y
+        gfloat center_x
+        gfloat center_y
+
+void
+clutter_actor_set_scale_with_gravity (actor, scale_x, scale_y, gravity)
+        ClutterActor *actor
+        gdouble scale_x
+        gdouble scale_y
+        ClutterGravity gravity
+
+=for apidoc
+=for signature (center_x, center_y) = $actor->get_scale_center
+=cut
+void
+clutter_actor_get_scale_center (ClutterActor *actor)
+    PREINIT:
+        gfloat x, y;
+    PPCODE:
+        clutter_actor_get_scale_center (actor, &x, &y);
+        EXTEND (SP, 2);
+        PUSHs (sv_2mortal (newSVnv (x)));
+        PUSHs (sv_2mortal (newSVnv (y)));
 
 gboolean
 clutter_actor_is_scaled (ClutterActor *actor)
@@ -1068,6 +1108,14 @@ clutter_actor_set_anchor_point_from_gravity (actor, gravity)
         ClutterActor *actor
         ClutterGravity gravity
 
+void
+clutter_actor_move_anchor_point_from_gravity (actor, gravity)
+        ClutterActor *actor
+        ClutterGravity gravity
+
+ClutterGravity
+clutter_actor_get_anchor_point_gravity (ClutterActor *actor)
+
 =for apidoc
 =for signature (actor_x, actor_y) = $actor->transform_stage_point ($x, $y)
 =cut
@@ -1155,6 +1203,18 @@ clutter_actor_get_preferred_height (ClutterActor *actor, gfloat for_width)
         PUSHs (sv_2mortal (newSVnv (min_height)));
         PUSHs (sv_2mortal (newSVnv (natural_height)));
 
+PangoContext *
+clutter_actor_get_pango_context (ClutterActor *actor)
+
+PangoContext_noinc *
+clutter_actor_create_pango_context (ClutterActor *actor)
+
+PangoLayout_noinc *
+clutter_actor_create_pango_layout (ClutterActor *actor, const gchar_ornull *text)
+
+gboolean
+clutter_actor_is_in_clone_paint (ClutterActor *actor)
+
 =for apidoc Clutter::Actor::_INSTALL_OVERRIDES __hide__
 =cut
 
@@ -1207,6 +1267,12 @@ _INSTALL_OVERRIDES (const char *package)
 =cut
 
 =for apidoc Clutter::Actor::UNREALIZE __hide__
+=cut
+
+=for apidoc Clutter::Actor::MAP __hide__
+=cut
+
+=for apidoc Clutter::Actor::UNMAP __hide__
 =cut
 
 void
@@ -1407,6 +1473,52 @@ UNREALIZE (ClutterActor *actor)
         klass = g_type_class_peek (parent_class);
         if (klass->unrealize) {
                 klass->unrealize (actor);
+        }
+
+void
+MAP (ClutterActor *actor)
+    PREINIT:
+        ClutterActorClass *klass;
+        GType thisclass, parent_class;
+        SV *saveddefsv;
+    CODE:
+        saveddefsv = newSVsv (DEFSV);
+        eval_pv ("$_ = caller;", 0);
+        thisclass = gperl_type_from_package (SvPV_nolen (DEFSV));
+        SvSetSV (DEFSV, saveddefsv);
+        if (!thisclass)
+                thisclass = G_OBJECT_TYPE (actor);
+        parent_class = g_type_parent (thisclass);
+        if (!g_type_is_a (parent_class, CLUTTER_TYPE_ACTOR)) {
+                croak ("parent of %s is not a Clutter::Actor",
+                       g_type_name (thisclass));
+        }
+        klass = g_type_class_peek (parent_class);
+        if (klass->map) {
+                klass->map (actor);
+        }
+
+void
+UNMAP (ClutterActor *actor)
+    PREINIT:
+        ClutterActorClass *klass;
+        GType thisclass, parent_class;
+        SV *saveddefsv;
+    CODE:
+        saveddefsv = newSVsv (DEFSV);
+        eval_pv ("$_ = caller;", 0);
+        thisclass = gperl_type_from_package (SvPV_nolen (DEFSV));
+        SvSetSV (DEFSV, saveddefsv);
+        if (!thisclass)
+                thisclass = G_OBJECT_TYPE (actor);
+        parent_class = g_type_parent (thisclass);
+        if (!g_type_is_a (parent_class, CLUTTER_TYPE_ACTOR)) {
+                croak ("parent of %s is not a Clutter::Actor",
+                       g_type_name (thisclass));
+        }
+        klass = g_type_class_peek (parent_class);
+        if (klass->unmap) {
+                klass->unmap (actor);
         }
 
 void
