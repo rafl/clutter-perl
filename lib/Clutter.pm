@@ -92,6 +92,12 @@ use overload
     '==' => \&Clutter::Vertex::equal,
     fallback => 1;
 
+package Clutter::Cogl::Matrix;
+
+use overload
+    '*' => \&Clutter::Cogl::Matrix::multiply,
+    fallback => 1;
+
 package Clutter::Script;
 
 sub _do_connect {
@@ -270,7 +276,7 @@ Copyright (C) 2006  OpenedHand Ltd.
 This module is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
 License as published by the Free Software Foundation, version 2.1;
-or, at your option, under the terms of The Artistic License.
+or, at your option, under the terms of The Artistic License, version 2.0.
 
 This module is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
