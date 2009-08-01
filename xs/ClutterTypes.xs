@@ -424,7 +424,7 @@ values (ClutterActorBox *box)
 =for signature (x, y) = $box->origin
 =cut
 void
-origin (ClutterActorBox *box)
+get_origin (ClutterActorBox *box)
     PPCODE:
         EXTEND (SP, 2);
         PUSHs (sv_2mortal (newSVnv (box->x1)));
@@ -435,7 +435,7 @@ origin (ClutterActorBox *box)
 =for signature (width, height) = $box->size
 =cut
 void
-size (ClutterActorBox *box)
+get_size (ClutterActorBox *box)
     PPCODE:
         EXTEND (SP, 2);
         PUSHs (sv_2mortal (newSVnv (box->x2 - box->x1)));
