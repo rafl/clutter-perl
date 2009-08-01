@@ -23,7 +23,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "clutterperl.h"
+#include "clutterperl-private.h"
 
 #define CALL_METHOD(actor,name)                                 G_STMT_START {  \
         HV *_stash = gperl_object_stash_from_type (G_OBJECT_TYPE ((actor)));    \
@@ -221,6 +221,34 @@ clutterperl_actor_unmap (ClutterActor *actor)
 }
 
 static void
+clutterperl_actor_apply_transform (ClutterActor *actor,
+                                   CoglMatrix   *matrix)
+{
+        HV *stash = gperl_object_stash_from_type (G_OBJECT_TYPE (actor));
+        GV *slot = gv_fetchmethod (stash, "APPLY_TRANSFORM");
+
+        if (slot && GvCV (slot)) {
+                dSP;
+
+                ENTER;
+                SAVETMPS;
+                PUSHMARK (SP);
+
+                EXTEND (SP, 2);
+                PUSHs (newSVClutterActor (actor));
+                PUSHs (newSVCoglMatrix (matrix));
+
+                PUTBACK;
+                call_sv ((SV *) GvCV (slot), G_VOID | G_DISCARD);
+                SPAGAIN;
+
+                PUTBACK;
+                FREETMPS;
+                LEAVE;
+        }
+}
+
+static void
 clutterperl_actor_class_init (ClutterActorClass *klass)
 {
         klass->show_all             = clutterperl_actor_show_all;
@@ -234,6 +262,7 @@ clutterperl_actor_class_init (ClutterActorClass *klass)
         klass->get_preferred_height = clutterperl_actor_get_preferred_height;
         klass->map                  = clutterperl_actor_map;
         klass->unmap                = clutterperl_actor_unmap;
+        klass->apply_transform      = clutterperl_actor_apply_transform;
 }
 
 static void
@@ -1215,6 +1244,16 @@ clutter_actor_create_pango_layout (ClutterActor *actor, const gchar_ornull *text
 gboolean
 clutter_actor_is_in_clone_paint (ClutterActor *actor)
 
+CoglMatrix *
+clutter_actor_get_transformation_matrix (ClutterActor *actor)
+    PREINIT:
+        CoglMatrix matrix;
+    CODE:
+        clutter_actor_get_transformation_matrix (actor, &matrix);
+        RETVAL = cogl_perl_copy_matrix (&matrix);
+    OUTPUT:
+        RETVAL
+
 =for apidoc Clutter::Actor::_INSTALL_OVERRIDES __hide__
 =cut
 
@@ -1273,6 +1312,9 @@ _INSTALL_OVERRIDES (const char *package)
 =cut
 
 =for apidoc Clutter::Actor::UNMAP __hide__
+=cut
+
+=for apidoc Clutter::Actor::APPLY_TRANSFORM __hide__
 =cut
 
 void
@@ -1544,3 +1586,25 @@ PICK (ClutterActor *actor, const ClutterColor *pick_color)
                 klass->pick (actor, pick_color);
         }
 
+void
+APPLY_TRANSFORM (ClutterActor *actor, CoglMatrix *matrix)
+    PREINIT:
+        ClutterActorClass *klass;
+        GType thisclass, parent_class;
+        SV *saveddefsv;
+    CODE:
+        saveddefsv = newSVsv (DEFSV);
+        eval_pv ("$_ = caller;", 0);
+        thisclass = gperl_type_from_package (SvPV_nolen (DEFSV));
+        SvSetSV (DEFSV, saveddefsv);
+        if (!thisclass)
+                thisclass = G_OBJECT_TYPE (actor);
+        parent_class = g_type_parent (thisclass);
+        if (!g_type_is_a (parent_class, CLUTTER_TYPE_ACTOR)) {
+                croak ("parent of %s is not a Clutter::Actor",
+                       g_type_name (thisclass));
+        }
+        klass = g_type_class_peek (parent_class);
+        if (klass->apply_transform) {
+                klass->apply_transform (actor, matrix);
+        }
