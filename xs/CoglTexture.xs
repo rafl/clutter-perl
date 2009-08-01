@@ -101,61 +101,61 @@ BOOT:
         cogl_perl_set_isa ("Clutter::Cogl::Texture", "Clutter::Cogl::Handle");
 
 
-SV *
+=for position DESCRIPTION
+
+=head1 DESCRIPTION
+
+COGL allows creating and manipulating GL textures using a uniform
+API that tries to hide all the various complexities of creating,
+loading and manipulating textures.
+
+=cut
+
+=for enum Clutter::Cogl::PixelFormat
+=cut
+
+=for enum Clutter::Cogl::TextureFlags
+=cut
+
+CoglHandle
 cogl_texture_new_with_size (class=NULL, width, height, flags, internal_format)
         guint width
         guint height
         CoglTextureFlags flags
         CoglPixelFormat internal_format
-    PREINIT:
-        CoglHandle handle = COGL_INVALID_HANDLE;
-    CODE:
-        /* we own the handle */
-        handle = cogl_texture_new_with_size (width, height,
-                                             flags,
-                                             internal_format);
-        RETVAL = newSVCoglHandle (handle);
-    OUTPUT:
-        RETVAL
+    C_ARGS:
+        width, height, flags, internal_format
 
 =for apidoc __gerror__
 =cut
-SV *
+CoglHandle
 cogl_texture_new_from_file (class=NULL, filename, flags, internal_format)
         const gchar *filename
         CoglTextureFlags flags
         CoglPixelFormat internal_format
     PREINIT:
-        CoglHandle handle = COGL_INVALID_HANDLE;
         GError *error = NULL;
     CODE:
-        handle = cogl_texture_new_from_file (filename,
+        RETVAL = cogl_texture_new_from_file (filename,
                                              flags,
                                              internal_format,
                                              &error);
         if (error)
                 gperl_croak_gerror (NULL, error);
-        RETVAL = newSVCoglHandle (handle);
     OUTPUT:
         RETVAL
 
-guint
-cogl_texture_get_width (CoglHandle handle)
+guint cogl_texture_get_width (CoglHandle handle);
 
-guint
-cogl_texture_get_height (CoglHandle handle)
+guint cogl_texture_get_height (CoglHandle handle);
 
-CoglPixelFormat
-cogl_texture_get_format (CoglHandle handle)
+CoglPixelFormat cogl_texture_get_format (CoglHandle handle);
 
-guint
-cogl_texture_get_rowstride (CoglHandle handle)
+guint cogl_texture_get_rowstride (CoglHandle handle);
 
-gint
-cogl_texture_get_max_waste (CoglHandle handle)
+gint cogl_texture_get_max_waste (CoglHandle handle);
 
-gboolean
-cogl_texture_is_sliced (CoglHandle handle)
+gboolean cogl_texture_is_sliced (CoglHandle handle);
 
 =for apidoc
 =for signature (gl_handle, gl_target) = $handle->get_gl_texture
@@ -175,3 +175,4 @@ cogl_texture_get_gl_texture (CoglHandle handle)
                 PUSHs (sv_2mortal (newSVuv (out_gl_handle)));
                 PUSHs (sv_2mortal (newSViv (out_gl_target)));
         }
+
