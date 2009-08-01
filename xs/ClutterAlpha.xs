@@ -100,15 +100,15 @@ animation.
 =cut
 
 ClutterAlpha_noinc *
-clutter_alpha_new (class, timeline=NULL, mode=CLUTTER_LINEAR)
-        ClutterTimeline *timeline
-        gulong mode
+clutter_alpha_new (class, ClutterTimeline *timeline=NULL, SV *mode=NULL)
     CODE:
         RETVAL = clutter_alpha_new ();
         if (timeline) {
                 clutter_alpha_set_timeline (RETVAL, timeline);
         }
-        clutter_alpha_set_mode (RETVAL, mode);
+        if (mode) {
+                clutter_alpha_set_mode (RETVAL, sv_to_animation_mode (mode));
+        }
     OUTPUT:
         RETVAL
 
