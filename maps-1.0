@@ -4,11 +4,15 @@ CLUTTER_TEXTURE_ERROR           CLUTTER_TYPE_TEXTURE_ERROR      GError  Clutter:
 COGL_BLEND_STRING_ERROR         COGL_TYPE_BLEND_STRING_ERROR    GError  Clutter::Cogl::BlendString::Error
 
 ## Cogl Types
-COGL_TYPE_PIXEL_FORMAT          CoglPixelFormat         GFlags          Clutter::Cogl::PixelFormat
-COGL_TYPE_FEATURE_FLAGS         CoglFeatureFlags        GFlags          Clutter::Cogl::FeatureFlags
-COGL_TYPE_TEXTURE_FLAGS         CoglTextureFlags        GFlags          Clutter::Cogl::TextureFlags
-COGL_TYPE_FOG_MODE              CoglFogMode             GEnum           Clutter::Cogl::FogMode
+COGL_TYPE_BUFFER_BIT            CoglBufferBit           GFlags          Clutter::Cogl::BufferBit
 COGL_TYPE_BUFFER_TARGET         CoglBufferTarget        GFlags          Clutter::Cogl::BufferTarget
+COGL_TYPE_FEATURE_FLAGS         CoglFeatureFlags        GFlags          Clutter::Cogl::FeatureFlags
+COGL_TYPE_FOG_MODE              CoglFogMode             GEnum           Clutter::Cogl::FogMode
+COGL_TYPE_MATERIAL_ALPHA_FUNC   CoglMaterialAlphaFunc   GEnum           Clutter::Cogl::MaterialAlphaFunc
+COGL_TYPE_MATERIAL_FILTER       CoglMaterialFilter      GEnum           Clutter::Cogl::MaterialFilter
+COGL_TYPE_MATERIAL_LAYER_TYPE   CoglMaterialLayerType   GEnum           Clutter::Cogl::MaterialLayerType
+COGL_TYPE_PIXEL_FORMAT          CoglPixelFormat         GFlags          Clutter::Cogl::PixelFormat
+COGL_TYPE_TEXTURE_FLAGS         CoglTextureFlags        GFlags          Clutter::Cogl::TextureFlags
 
 ## Clutter Types
 CLUTTER_TYPE_ACTOR_BOX	        ClutterActorBox	        GBoxed	        Clutter::ActorBox
