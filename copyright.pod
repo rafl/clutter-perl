@@ -1,5 +1,14 @@
 Copyright (C) 2006  OpenedHand Ltd.
 
 This module is free software; you can redistribute it and/or modify it under
-the terms of the GNU Lesser General Public Library version 2.1, or under the
-terms of the Artistic License.  See L<Clutter> for the full copyright notice.
+the terms of either:
+
+=over
+
+=item * the GNU Lesser General Public Library version 2.1; or
+
+=item * the Artistic License, version 2.0.
+
+=back
+
+See L<Clutter> for the full copyright notice.
