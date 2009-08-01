@@ -69,6 +69,7 @@ xs/ClutterTypes.xs
 xs/Cogl.xs
 xs/CoglColor.xs
 xs/CoglHandle.xs
+xs/CoglMaterial.xs
 xs/CoglMatrix.xs
 xs/CoglPath.xs
 xs/CoglTexture.xs
