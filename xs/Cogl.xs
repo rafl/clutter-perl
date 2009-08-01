@@ -78,6 +78,15 @@ cogl_perl_struct_to_sv (gpointer object, const char *package)
 
 MODULE = Clutter::Cogl  PACKAGE = Clutter::Cogl PREFIX = cogl_
 
+=for enum CoglFeatureFlags
+=cut
+
+=for enum CoglBufferBit
+=cut
+
+=for enum CoglFogMode
+=cut
+
 =for position DESCRIPTION
 
 B<Clutter::Cogl> is an abstraction API over GL and GLES, and it is
@@ -213,6 +222,7 @@ cogl_rotate (class=NULL, float angle, float x, float y, float z)
 
 =for apidoc
 =for signature (x, y, width, height) = Clutter::Cogl->get_viewport
+Retrieves the size of the current viewport
 =cut
 void
 cogl_get_viewport (class=NULL)
@@ -228,12 +238,30 @@ cogl_get_viewport (class=NULL)
 
 =for apidoc
 Fills a rectangle at the given coordinates with the current
-drawing color in a highly optimizied fashion
+drawing material in a highly optimizied fashion
 =cut
 void
 cogl_rectangle (class=NULL, float x1, float y1, float x2, float y2)
     C_ARGS:
         x1, y1, x2, y2
+
+=for apidoc
+Draw a rectangle using the current material and supply texture coordinates
+to be used for the first texture layer of the material. To draw the entire
+texture pass in I<tx1>=0.0, I<ty1>=0.0, I<tx2>=1.0 and I<ty2>=1.0.
+=cut
+void
+cogl_rectangle_with_texture_coords (class=NULL, x1, y1, x2, y2, tx1, ty1, tx2, ty2)
+        float x1
+        float y1
+        float x2
+        float y2
+        float tx1
+        float ty1
+        float tx2
+        float ty2
+    C_ARGS:
+        x1, y1, x2, y2, tx1, ty1, tx2, ty2
 
 ##=for apidoc
 ##=cut
@@ -256,4 +284,132 @@ cogl_rectangle (class=NULL, float x1, float y1, float x2, float y2)
 ##          read_texture_vertex (*svp, v + i);
 ##        }
 ##        cogl_texture_polygon (handle, n_vertices, v, use_color);
+
+=for apidoc
+Sets whether depth testing is enabled. If it is disabled then the
+order that actors are layered on the screen depends solely on the
+order specified using Clutter::Actor::raise() and Clutter::Actor::lower(),
+otherwise it will also take into account the actor's depth.
+
+Depth testing is disabled by default.
+=cut
+void cogl_set_depth_test_enabled (class, gboolean enabled);
+    C_ARGS:
+        enabled
+
+gboolean cogl_get_depth_test_enabled (class);
+    C_ARGS:
+        /* void */
+
+=for apidoc
+Sets whether textures positioned so that their backface is showing
+should be hidden. This can be used to efficiently draw two-sided
+textures or fully closed cubes without enabling depth testing. This
+only affects calls to the Clutter::Cogl::rectangle* family of functions
+and Clutter::Cogl::VertexBuffer::draw*.
+
+Backface culling is disabled by default.
+=cut
+void cogl_set_backface_culling_enabled (class, gboolean enabled);
+    C_ARGS:
+        enabled
+
+gboolean cogl_get_backface_culling_enabled (class);
+    C_ARGS:
+        /* void */
+
+=for apidoc
+=for arg fog_color (CoglColor)
+Enables fogging. Fogging causes vertices that are further away from the eye
+to be rendered with a different color. The color is determined according to
+the chosen fog mode; at its simplest the color is linearly interpolated so
+that vertices at I<z_near> are drawn fully with their original color and
+vertices at I<z_far> are drawn fully with I<fog_color>. Fogging will remain
+enabled until you call Clutter::Cogl::disable_fog().
+
+B<Note>: The fogging functions only work correctly when primitives use
+unmultiplied alpha colors. By default Cogl will premultiply textures
+and Clutter::Cogl::set_source_color() will premultiply colors, so unless you
+explicitly load your textures requesting an unmultiplied internal format
+and use Clutter::Cogl::Material::set_color() you can only use fogging with
+fully opaque primitives. This might improve in the future when we can depend
+on fragment shaders.
+=cut
+void
+cogl_set_fog (class, fog_color, mode, density, z_near, z_far)
+        SV *fog_color
+        CoglFogMode mode
+        float density
+        float z_near
+        float z_far
+    PREINIT:
+        CoglColor color;
+    CODE:
+        cogl_perl_color_from_sv (fog_color, &color);
+        cogl_set_fog (&color, mode, density, z_near, z_far);
+
+void cogl_disable_fog (class);
+    C_ARGS:
+        /* void */
+
+=for apidoc
+=for arg color (CoglColor)
+Clears all the auxiliary buffers identified in the I<buffers mask>, and if
+that includes the color buffer then the specified I<color> is used.
+=cut
+void cogl_clear (class, SV *color, CoglBufferBit buffers);
+    PREINIT:
+        CoglColor c;
+    CODE:
+        cogl_perl_color_from_sv (color, &c);
+        cogl_clear (&c, buffers);
+
+=for apidoc
+This function sets the source material that will be used to fill subsequent
+geometry emitted via the cogl API.
+
+B<Note>: in the future we may add the ability to set a front facing material,
+and a back facing material, in which case this function will set both to the
+same.
+=cut
+void cogl_set_source (class, CoglHandle material);
+    C_ARGS:
+        material
+
+=for apidoc
+=for arg color (CoglColor)
+This is a convenience function for creating a solid fill source material
+from the given I<color>. This color will be used for any subsequent drawing
+operation.
+
+The I<color> will be premultiplied by Cogl, so the color should be
+non-premultiplied. For example: use (1.0, 0.0, 0.0, 0.5) for
+semi-transparent red.
+=cut
+void cogl_set_source_color (class, SV *color);
+    PREINIT:
+        CoglColor c;
+    CODE:
+        cogl_perl_color_from_sv (color, &c);
+        cogl_set_source_color (&c);
+
+=for apidoc
+This is a convenience function for creating a material with the first
+layer set to I<texture> and setting that material as the source with
+Clutter::Cogl::set_source()
+
+B<Note>: There is no interaction between calls to
+Clutter::Cogl::set_source_color and Clutter::Cogl::set_source_texture().
+If you need to blend a texture with a color then you can create a simple
+material like this:
+
+    $material = Clutter::Cogl::Material->new ();
+    $material->set_color (material, (0xff, 0x00, 0x00, 0x80));
+    $material->set_layer (material, 0, texture);
+    Clutter::Cogl->set_source ($material);
+
+=cut
+void cogl_set_source_texture (class, CoglHandle texture);
+    C_ARGS:
+        texture
 
