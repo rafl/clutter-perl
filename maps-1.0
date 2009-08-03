@@ -21,6 +21,8 @@ CLUTTER_TYPE_ACTOR_FLAGS	ClutterActorFlags	GFlags  	Clutter::ActorFlags
 CLUTTER_TYPE_ACTOR	        ClutterActor	        GObject 	Clutter::Actor
 CLUTTER_TYPE_ALLOCATION_FLAGS   ClutterAllocationFlags  GFlags          Clutter::AllocationFlags
 CLUTTER_TYPE_ALPHA              ClutterAlpha            GObject         Clutter::Alpha
+CLUTTER_TYPE_ANIMATION_MODE     ClutterAnimationMode    GEnum           Clutter::AnimationMode
+CLUTTER_TYPE_ANIMATION          ClutterAnimation        GObject         Clutter::Animation
 CLUTTER_TYPE_BACKEND            ClutterBackend          GObject         Clutter::Backend
 CLUTTER_TYPE_BEHAVIOUR_DEPTH    ClutterBehaviourDepth   GObject         Clutter::Behaviour::Depth
 CLUTTER_TYPE_BEHAVIOUR_ELLIPSE  ClutterBehaviourEllipse GObject         Clutter::Behaviour::Ellipse
@@ -40,6 +42,7 @@ CLUTTER_TYPE_GROUP	        ClutterGroup	        GObject	        Clutter::Group
 CLUTTER_TYPE_KNOT               ClutterKnot             GBoxed          Clutter::Knot
 CLUTTER_TYPE_INIT_ERROR         ClutterInitError        GEnum           Clutter::InitError
 CLUTTER_TYPE_INPUT_DEVICE_TYPE  ClutterInputDeviceType  GEnum           Clutter::InputDeviceType
+CLUTTER_TYPE_INTERVAL           ClutterInterval         GObject         Clutter::Interval
 CLUTTER_TYPE_LIST_MODEL         ClutterListModel        GObject         Clutter::ListModel
 CLUTTER_TYPE_MEDIA	        ClutterMedia	        GInterface	Clutter::Media
 CLUTTER_TYPE_MODEL              ClutterModel            GObject         Clutter::Model

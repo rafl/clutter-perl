@@ -41,6 +41,7 @@ tools/TestHelper.pm
 xs/Clutter.xs
 xs/ClutterActor.xs
 xs/ClutterAlpha.xs
+xs/ClutterAnimation.xs
 xs/ClutterBackend.xs
 xs/ClutterBehaviour.xs
 xs/ClutterBehaviourDepth.xs

@@ -15,6 +15,9 @@ G_BEGIN_DECLS
 
 const char *clutterperl_event_get_package (ClutterEvent *event);
 
+gulong clutter_perl_animation_mode_from_sv (SV *sv);
+SV *clutter_perl_animation_mode_to_sv (gulong mode);
+
 gpointer cogl_perl_object_from_sv (SV *sv, const char *package);
 SV *cogl_perl_object_to_sv (gpointer object, const char *package);
 

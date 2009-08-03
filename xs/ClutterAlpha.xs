@@ -25,8 +25,8 @@
 
 #include "clutterperl.h"
 
-static gulong
-sv_to_animation_mode (SV *sv)
+gulong
+clutter_perl_animation_mode_from_sv (SV *sv)
 {
         gint n;
 
@@ -40,8 +40,8 @@ sv_to_animation_mode (SV *sv)
         return n;
 }
 
-static SV *
-animation_mode_to_sv (gulong mode)
+SV *
+clutter_perl_animation_mode_to_sv (gulong mode)
 {
         if (mode > CLUTTER_ANIMATION_LAST)
                 return sv_2mortal (newSViv (mode));
@@ -99,6 +99,9 @@ animation.
 
 =cut
 
+=for enum Clutter::AnimationMode
+=cut
+
 ClutterAlpha_noinc *
 clutter_alpha_new (class, ClutterTimeline *timeline=NULL, SV *mode=NULL)
     CODE:
@@ -107,7 +110,7 @@ clutter_alpha_new (class, ClutterTimeline *timeline=NULL, SV *mode=NULL)
                 clutter_alpha_set_timeline (RETVAL, timeline);
         }
         if (mode) {
-                clutter_alpha_set_mode (RETVAL, sv_to_animation_mode (mode));
+                clutter_alpha_set_mode (RETVAL, clutter_perl_animation_mode_from_sv (mode));
         }
     OUTPUT:
         RETVAL
@@ -134,12 +137,12 @@ clutter_alpha_get_timeline (ClutterAlpha *alpha)
 void
 clutter_alpha_set_mode (ClutterAlpha *alpha, SV *mode)
     CODE:
-        clutter_alpha_set_mode (alpha, sv_to_animation_mode (mode));
+        clutter_alpha_set_mode (alpha, clutter_perl_animation_mode_from_sv (mode));
 
 SV *
 clutter_alpha_get_mode (ClutterAlpha *alpha)
     CODE:
-        RETVAL = animation_mode_to_sv (clutter_alpha_get_mode (alpha));
+        RETVAL = clutter_perl_animation_mode_to_sv (clutter_alpha_get_mode (alpha));
     OUTPUT:
         RETVAL
 
@@ -149,3 +152,4 @@ register_func (SV *class, SV *func, SV *data)
         RETVAL = clutter_alpha_register_closure (gperl_closure_new (func, data, FALSE));
     OUTPUT:
         RETVAL
+

@@ -1,6 +1,7 @@
 xs/Clutter.xs
 xs/ClutterActor.xs
 xs/ClutterAlpha.xs
+xs/ClutterAnimation.xs
 xs/ClutterBackend.xs
 xs/ClutterBehaviour.xs
 xs/ClutterBehaviourDepth.xs
@@ -13,6 +14,7 @@ xs/ClutterChildMeta.xs
 xs/ClutterContainer.xs
 xs/ClutterEvent.xs
 xs/ClutterGroup.xs
+xs/ClutterInterval.xs
 xs/ClutterListModel.xs
 xs/ClutterMedia.xs
 xs/ClutterModel.xs
