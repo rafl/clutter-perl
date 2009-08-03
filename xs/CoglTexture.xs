@@ -183,12 +183,12 @@ cogl_texture_new_from_file (class=NULL, filename, flags, internal_format)
 
 CoglHandle
 cogl_texture_new_from_foreign (class=NULL, gl_handle, gl_target, width, height, x_pot_waste, y_pot_waste, format=COGL_PIXEL_FORMAT_ANY)
-        unsigned int gl_handle
-        int gl_target
-        unsigned int width
-        unsigned int height
-        unsigned int x_pot_waste
-        unsigned int y_pot_waste
+        guint gl_handle
+        gint gl_target
+        guint width
+        guint height
+        guint x_pot_waste
+        guint y_pot_waste
         CoglPixelFormat format
     C_ARGS:
         gl_handle, gl_target, width, height, x_pot_waste, y_pot_waste, format
