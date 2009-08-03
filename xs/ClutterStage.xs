@@ -118,10 +118,7 @@ gboolean
 clutter_stage_get_use_fog (ClutterStage *stage)
 
 void
-clutter_stage_set_fog (stage, z_near, z_far)
-        ClutterStage *stage
-        gdouble z_near
-        gdouble z_far
+clutter_stage_set_fog (ClutterStage *stage, gfloat z_near, gfloat z_far)
     PREINIT:
         ClutterFog fog;
     CODE:
