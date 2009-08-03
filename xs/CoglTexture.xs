@@ -134,13 +134,33 @@ loading and manipulating textures.
 =cut
 
 CoglHandle
-cogl_texture_new_with_size (class=NULL, width, height, flags, internal_format)
+cogl_texture_new_with_size (class=NULL, width, height, flags=COGL_TEXTURE_NONE, internal_format=COGL_PIXEL_FORMAT_ANY)
         guint width
         guint height
         CoglTextureFlags flags
         CoglPixelFormat internal_format
     C_ARGS:
         width, height, flags, internal_format
+
+CoglHandle
+cogl_texture_new_from_data (class=NULL, width, height, flags=COGL_TEXTURE_NONE, format=COGL_PIXEL_FORMAT_ANY, internal_format=COGL_PIXEL_FORMAT_ANY, rowstride, data)
+        guint width
+        guint height
+        CoglTextureFlags flags
+        CoglPixelFormat format
+        CoglPixelFormat internal_format
+        guint rowstride
+        SV *data
+    CODE:
+        if (!data || !SvPOK (data))
+                croak ("expecting a packed string for pixel data");
+        RETVAL = cogl_texture_new_from_data (width, height,
+                                             flags,
+                                             format, internal_format,
+                                             rowstride,
+                                             (const guchar *) SvPV_nolen (data));
+    OUTPUT:
+        RETVAL
 
 =for apidoc __gerror__
 =cut
@@ -160,6 +180,18 @@ cogl_texture_new_from_file (class=NULL, filename, flags, internal_format)
                 gperl_croak_gerror (NULL, error);
     OUTPUT:
         RETVAL
+
+CoglHandle
+cogl_texture_new_from_foreign (class=NULL, gl_handle, gl_target, width, height, x_pot_waste, y_pot_waste, format=COGL_PIXEL_FORMAT_ANY)
+        unsigned int gl_handle
+        int gl_target
+        unsigned int width
+        unsigned int height
+        unsigned int x_pot_waste
+        unsigned int y_pot_waste
+        CoglPixelFormat format
+    C_ARGS:
+        gl_handle, gl_target, width, height, x_pot_waste, y_pot_waste, format
 
 guint cogl_texture_get_width (CoglHandle handle);
 
