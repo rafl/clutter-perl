@@ -11,15 +11,11 @@ cogl_perl_color_from_sv (SV *sv, CoglColor *color)
 
         a = (AV *) SvRV (sv);
 
-        if (av_len (a) != 4)
-                croak ("A Clutter::Cogl color must be a reference to an "
-                       "array of 4 values.");
-
         if ((s = av_fetch (a, 0, 0)) && gperl_sv_is_defined (*s)) {
                 /* the first element tells us the format */
                 if (!looks_like_number (*s))
                         croak ("A Clutter::Cogl color must be a reference "
-                               "to an array of 4 numbers.");
+                               "to an array of 4 numbers");
 
                 if (SvIOK (*s)) {
                         use_bytes = TRUE;
@@ -31,7 +27,7 @@ cogl_perl_color_from_sv (SV *sv, CoglColor *color)
                         croak ("A Clutter::Cogl color must be a reference "
                                "to an array of either 4 integers in the "
                                "[0, 255] range or 4 floating point values "
-                               "in the [0, 1] range.");
+                               "in the [0, 1] range");
                 }
 
                 if (use_bytes)
@@ -43,7 +39,7 @@ cogl_perl_color_from_sv (SV *sv, CoglColor *color)
         if ((s = av_fetch (a, 1, 0)) && gperl_sv_is_defined (*s)) {
                 if (!looks_like_number (*s))
                         croak ("A Clutter::Cogl color must be a reference "
-                               "to an array of 4 numbers.");
+                               "to an array of 4 numbers");
 
                 if (use_bytes)
                         green_b = CLAMP (SvUV (*s), 0, 255);
