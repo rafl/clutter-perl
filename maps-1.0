@@ -57,6 +57,7 @@ CLUTTER_TYPE_SHADER             ClutterShader           GObject         Clutter:
 CLUTTER_TYPE_STAGE	        ClutterStage	        GObject	        Clutter::Stage
 CLUTTER_TYPE_STAGE_MANAGER      ClutterStageManager     GObject         Clutter::StageManager
 CLUTTER_TYPE_STAGE_STATE        ClutterStageState       GFlags          Clutter::StageState
+CLUTTER_TYPE_TEXT               ClutterText             GObject         Clutter::Text
 CLUTTER_TYPE_TEXTURE	        ClutterTexture	        GObject	        Clutter::Texture
 CLUTTER_TYPE_TEXTURE_FLAGS      ClutterTextureFlags     GFlags          Clutter::TextureFlags
 CLUTTER_TYPE_TEXTURE_QUALITY    ClutterTextureQuality   GEnum           Clutter::TextureQuality

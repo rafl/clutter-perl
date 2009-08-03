@@ -1,5 +1,5 @@
 AUTHORS
-ChangeLog
+ChangeLog.SVN
 clutter.typemap
 clutterperl.h
 clutterperl-private.h
@@ -63,6 +63,7 @@ xs/ClutterScript.xs
 xs/ClutterShader.xs
 xs/ClutterStage.xs
 xs/ClutterStageManager.xs
+xs/ClutterText.xs
 xs/ClutterTexture.xs
 xs/ClutterTimeline.xs
 xs/ClutterTypes.xs

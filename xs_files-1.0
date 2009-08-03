@@ -23,6 +23,7 @@ xs/ClutterScript.xs
 xs/ClutterShader.xs
 xs/ClutterStage.xs
 xs/ClutterStageManager.xs
+xs/ClutterText.xs
 xs/ClutterTexture.xs
 xs/ClutterTimeline.xs
 xs/ClutterTypes.xs
