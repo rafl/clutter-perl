@@ -26,6 +26,9 @@ SV *cogl_perl_handle_to_sv (CoglHandle handle);
 void cogl_perl_color_from_sv (SV *sv, CoglColor *color);
 SV *cogl_perl_color_to_sv (const CoglColor *color);
 
+void cogl_perl_texture_vertex_from_sv (SV *sv, CoglTextureVertex *vertex);
+SV *cogl_perl_texture_vertex_to_sv (const CoglTextureVertex *vertex);
+
 /* CoglHandle */
 typedef CoglHandle      CoglHandle_noinc;
 typedef CoglHandle      CoglHandle_ornull;

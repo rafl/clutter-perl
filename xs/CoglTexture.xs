@@ -1,7 +1,7 @@
 #include "clutterperl-private.h"
 
-static void
-read_texture_vertex (SV *sv, CoglTextureVertex *vertex)
+void
+cogl_perl_texture_vertex_from_sv (SV *sv, CoglTextureVertex *vertex)
 {
   SV **s;
 
@@ -55,10 +55,20 @@ read_texture_vertex (SV *sv, CoglTextureVertex *vertex)
            "and 'color', or a reference to an array containing "
            "the same information in the order: x, y, z, tx, ty, "
            "color");
+
+#if NOISY
+  g_debug ("vertex: { %.2f, %.2f, %.2f; %.2f, %.2f; { %.2f, %.2f, %.2f, %.2f } }",
+           vertex->x, vertex->y, vertex->z,
+           vertex->tx, vertex->ty,
+           cogl_color_get_red_float (&vertex->color),
+           cogl_color_get_green_float (&vertex->color),
+           cogl_color_get_blue_float (&vertex->color),
+           cogl_color_get_alpha_float (&vertex->color));
+#endif /* NOISY */
 }
 
 SV *
-newSVCoglTextureVertex (CoglTextureVertex *vertex)
+cogl_perl_texture_vertex_to_sv (const CoglTextureVertex *vertex)
 {
   HV *stash, *hv = newHV ();
 
@@ -84,13 +94,19 @@ newSVCoglTextureVertex (CoglTextureVertex *vertex)
   return sv_bless ((SV *) newRV_noinc ((SV *) hv), stash);
 }
 
+SV *
+newSVCoglTextureVertex (CoglTextureVertex *vertex)
+{
+  return cogl_perl_texture_vertex_to_sv (vertex);
+}
+
 CoglTextureVertex *
 SvCoglTextureVertex (SV *sv)
 {
   CoglTextureVertex *vertex;
   
   vertex = gperl_alloc_temp (sizeof (CoglTextureVertex));
-  read_texture_vertex (sv, vertex);
+  cogl_perl_texture_vertex_from_sv (sv, vertex);
 
   return vertex;
 }
