@@ -4,6 +4,7 @@ CLUTTER_TEXTURE_ERROR           CLUTTER_TYPE_TEXTURE_ERROR      GError  Clutter:
 COGL_BLEND_STRING_ERROR         COGL_TYPE_BLEND_STRING_ERROR    GError  Clutter::Cogl::BlendString::Error
 
 ## Cogl Types
+COGL_TYPE_ATTRIBUTE_TYPE        CoglAttributeType       GEnum           Clutter::Cogl::AttributeType
 COGL_TYPE_BUFFER_BIT            CoglBufferBit           GFlags          Clutter::Cogl::BufferBit
 COGL_TYPE_BUFFER_TARGET         CoglBufferTarget        GFlags          Clutter::Cogl::BufferTarget
 COGL_TYPE_FEATURE_FLAGS         CoglFeatureFlags        GFlags          Clutter::Cogl::FeatureFlags
@@ -38,6 +39,7 @@ CLUTTER_TYPE_GRAVITY            ClutterGravity          GEnum           Clutter:
 CLUTTER_TYPE_GROUP	        ClutterGroup	        GObject	        Clutter::Group
 CLUTTER_TYPE_KNOT               ClutterKnot             GBoxed          Clutter::Knot
 CLUTTER_TYPE_INIT_ERROR         ClutterInitError        GEnum           Clutter::InitError
+CLUTTER_TYPE_INPUT_DEVICE_TYPE  ClutterInputDeviceType  GEnum           Clutter::InputDeviceType
 CLUTTER_TYPE_LIST_MODEL         ClutterListModel        GObject         Clutter::ListModel
 CLUTTER_TYPE_MEDIA	        ClutterMedia	        GInterface	Clutter::Media
 CLUTTER_TYPE_MODEL              ClutterModel            GObject         Clutter::Model
