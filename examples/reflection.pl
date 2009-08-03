@@ -33,13 +33,15 @@ parent texture.
   Glib::Object
   +----Glib::InitiallyUnowned
        +----Clutter::Actor
-            +----Clutter::Texture::Clone
+            +----Clutter::Texture
                  +----Clutter::Ex::TextureReflection
 
 =cut
 
+use Data::Dumper;
+
 use Glib::Object::Subclass
-    'Clutter::Texture::Clone',
+    'Clutter::Texture',
     signals => { },
     properties => [
         Glib::ParamSpec->int(
@@ -49,7 +51,30 @@ use Glib::Object::Subclass
             -1, 65536, -1,
             [ qw( readable writable ) ],
         ),
+        Glib::ParamSpec->object(
+            'parent-texture',
+            'Parent Texture',
+            'The texture to do the reflection for',
+            'Clutter::Texture',
+            [ qw( readable writable ) ],
+        ),
     ];
+
+sub GET_PREFERRED_WIDTH {
+    my ($self, $for_height) = @_;
+
+    return (0, 0) unless defined $self->{parent_texture};
+
+    return $self->{parent_texture}->get_preferred_width($for_height);
+}
+
+sub GET_PREFERRED_HEIGHT {
+    my ($self, $for_width) = @_;
+
+    return (0, 0) unless defined $self->{parent_texture};
+
+    return $self->{parent_texture}->get_preferred_height($for_width);
+}
 
 sub PAINT {
     my ($self) = @_;
@@ -61,7 +86,10 @@ sub PAINT {
     my $cogl_tex = $parent->get_cogl_texture();
     return unless $cogl_tex;
 
-    my ($width, $height) = $self->get_size();
+    my $box = $self->get_allocation_box();
+
+    my ($width, $height) = $box->get_size();
+    return unless $width > 0 and $height > 0;
 
     my $r_height = $self->{reflection_height};
 
@@ -70,10 +98,12 @@ sub PAINT {
 
     my $rty = $r_height / $height;
 
-    my $opacity = $self->get_paint_opacity();
+    my $opacity = $self->get_paint_opacity() / 255;
 
-    my $start = Clutter::Color->new(255, 255, 255, $opacity);
-    my $stop  = Clutter::Color->new(255, 255, 255,        0);
+    my $start = [ 1.0, 1.0, 1.0, $opacity ];
+    my $stop  = [ 1.0, 1.0, 1.0,      0.0 ];
+    $start = Clutter::Cogl::Color->premultiply($start);
+    $stop  = Clutter::Cogl::Color->premultiply($stop);
 
     # these are the reflection vertices. each vertex
     # is an arrayref in the form:
@@ -90,16 +120,16 @@ sub PAINT {
     # the lower right and lower left and 0 opacity; OpenGL will
     # do the gradient for us
     my $vertices = [
-        [      0,         0, 0, 0.0, $rty,   $start],
-        [ $width,         0, 0, 1.0, $rty,   $start],
-        [ $width, $r_height, 0, 1.0,    0.0, $stop ],
-        [      0, $r_height, 0, 0.0,    0.0, $stop ],
+        [      0,         0, 0, 0.0, $rty,   $start ],
+        [ $width,         0, 0, 1.0, $rty,   $start ],
+        [ $width, $r_height, 0, 1.0,    0.0, $stop  ],
+        [      0, $r_height, 0, 0.0,    0.0, $stop  ],
     ];
 
     Clutter::Cogl->push_matrix();
 
     # paint the original texture again, at the new vertices
-    $cogl_tex->texture_polygon($vertices, TRUE);
+    Clutter::Cogl->polygon($vertices, TRUE);
 
     Clutter::Cogl->pop_matrix();
 }
@@ -108,20 +138,27 @@ sub SET_PROPERTY {
     my ($self, $pspec, $value) = @_;
 
     $self->set_reflection_height($value)
-        if ($pspec->name() eq 'reflection-height');
+        if ($pspec->get_name() eq 'reflection_height');
+
+    $self->set_parent_texture($value)
+        if ($pspec->get_name() eq 'parent_texture');
 }
 
 sub GET_PROPERTY {
     my ($self, $pspec) = @_;
 
     return $self->get_reflection_height()
-        if ($pspec->name() eq 'reflection-height');
+        if ($pspec->get_name() eq 'reflection_height');
+
+    return $self->get_parent_texture()
+        if ($pspec->get_name() eq 'parent_texture');
 }
 
 sub INIT_INSTANCE {
     my ($self) = @_;
 
     $self->{reflection_height} = -1;
+    $self->{parent_texture}    = undef;
 }
 
 =pod
@@ -163,6 +200,10 @@ sub set_reflection_height {
     my ($self, $height) = @_;
 
     $self->{reflection_height} = $height;
+
+    $self->queue_relayout();
+
+    $self->notify('reflection-height');
 }
 
 =pod
@@ -177,6 +218,22 @@ sub get_reflection_height {
     my ($self) = @_;
 
     return $self->{reflection_height};
+}
+
+sub set_parent_texture {
+    my ($self, $texture) = @_;
+
+    $self->{parent_texture} = $texture;
+
+    $self->queue_relayout();
+
+    $self->notify('parent-texture');
+}
+
+sub get_parent_texture {
+    my ($self) = @_;
+
+    return $self->{parent_texture};
 }
 
 =pod
@@ -218,7 +275,7 @@ my $filename = defined $ARGV[0] ? $ARGV[0] : 'redhand.png';
 
 my $stage = Clutter::Stage->new();
 $stage->set_size(640, 480);
-$stage->set_color(Clutter::Color->parse('Black'));
+$stage->set_color(Clutter::Color->from_string('Black'));
 $stage->signal_connect(destroy => sub { Clutter->main_quit() });
 $stage->set_title('TextureReflection');
 
@@ -243,9 +300,9 @@ $reflect->set_position(0, $tex->get_height() + 10);
 my $x_pos = ($stage->get_width() - $tex->get_width()) / 2;
 $group->set_position($x_pos, 20);
 
-my $timeline = Clutter::Timeline->new_for_duration(3000);
+my $timeline = Clutter::Timeline->new(3000);
 $timeline->set_loop(TRUE);
-my $alpha = Clutter::Alpha->new($timeline, \&Clutter::Alpha::ramp_inc);
+my $alpha = Clutter::Alpha->new($timeline, 'linear');
 my $behaviour = Clutter::Behaviour::Rotate->new($alpha, 'y-axis', 'cw', 0, 360);
 $behaviour->set_center($group->get_width() / 2, 0, 0);
 $behaviour->apply($group);
