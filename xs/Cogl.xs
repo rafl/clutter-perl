@@ -246,6 +246,44 @@ cogl_rectangle (class=NULL, float x1, float y1, float x2, float y2)
         x1, y1, x2, y2
 
 =for apidoc
+Draws a series of rectangles in the same way that Clutter::Cogl::rectangle()
+does. In some situations it can give a significant performance boost to use
+this function rather than calling Clutter::Cogl::rectangle() separately for
+each rectangle.
+
+The I<vertices> array reference should point to an array of floating point
+values. Each group of 4 values corresponds to the parameters x1, y1, x2, and
+y2, and have the same meaning as in Clutter::Cogl::rectangle().
+=cut
+void
+cogl_rectangles (class=NULL, SV *vertices)
+    PREINIT:
+        AV *av;
+        gfloat *v;
+        guint i, n_rects;
+    CODE:
+        if (!gperl_sv_is_array_ref (vertices))
+                croak ("vertices must be a reference to an array of array "
+                       "references, containing 4 coordinates; e.g.: "
+                       "[ [ x1, y1, x2, y2 ], [ x1, y1, x2, y2] ]");
+        av = (AV *) SvRV (vertices);
+        n_rects = av_len (av);
+        if (n_rects < 1)
+                croak ("vertices array is empty");
+        v = gperl_alloc_temp (sizeof (gfloat) * n_rects * 4);
+        for (i = 0; i < n_rects; i++) {
+                SV **svp = av_fetch (av, i, 0);
+                AV *inner = (AV *) *svp;
+                if (!gperl_sv_is_array_ref (*svp) || (av_len (inner) != 4))
+                        croak ("vertices must contain array references");
+                v[i + 0] = SvNV (*av_fetch (inner, 0, 0));
+                v[i + 1] = SvNV (*av_fetch (inner, 1, 0));
+                v[i + 2] = SvNV (*av_fetch (inner, 2, 0));
+                v[i + 3] = SvNV (*av_fetch (inner, 3, 0));
+        }
+        cogl_rectangles (v, n_rects);
+
+=for apidoc
 Draw a rectangle using the current material and supply texture coordinates
 to be used for the first texture layer of the material. To draw the entire
 texture pass in I<tx1>=0.0, I<ty1>=0.0, I<tx2>=1.0 and I<ty2>=1.0.
@@ -263,27 +301,58 @@ cogl_rectangle_with_texture_coords (class=NULL, x1, y1, x2, y2, tx1, ty1, tx2, t
     C_ARGS:
         x1, y1, x2, y2, tx1, ty1, tx2, ty2
 
-##=for apidoc
-##=cut
-##void
-##cogl_texture_polygon (class=NULL, CoglHandle handle, SV *vertices, gboolean use_color)
-##    PREINIT:
-##        AV *av;
-##        CoglTextureVertex *v;
-##        gint n_vertices, i;
-##    CODE:
-##        if (!gperl_sv_is_array_ref (vertices))
-##          croak ("vertices must be a reference to an array of texture vertices");
-##        av = (AV *) SvRV (vertices);
-##        n_vertices = av_len (av);
-##        if (n_vertices < 1)
-##          croak ("vertices array is empty");
-##        v = gperl_alloc_temp (sizeof (CoglTextureVertex) * n_vertices);
-##        for (i = 0; i < n_vertices; i++) {
-##          SV **svp = av_fetch (av, i, 0);
-##          read_texture_vertex (*svp, v + i);
-##        }
-##        cogl_texture_polygon (handle, n_vertices, v, use_color);
+void
+cogl_rectangles_with_texture_coords (class=NULL, SV *vertices)
+    PREINIT:
+        AV *av;
+        gfloat *v;
+        guint i, n_rects;
+    CODE:
+        if (!gperl_sv_is_array_ref (vertices))
+                croak ("vertices must be a reference to an array of array "
+                       "references, containing 8 coordinates; e.g.: "
+                       "[ [ x1, y1, x2, y2, tx1, ty1, tx2, ty2 ], "
+                       "[ x1, y1, x2, y2, tx1, ty1, tx2, ty2 ] ]");
+        av = (AV *) SvRV (vertices);
+        n_rects = av_len (av);
+        if (n_rects < 1)
+                croak ("vertices array is empty");
+        v = gperl_alloc_temp (sizeof (gfloat) * n_rects * 8);
+        for (i = 0; i < n_rects; i++) {
+                SV **svp = av_fetch (av, i, 0);
+                AV *inner = (AV *) *svp;
+                if (!gperl_sv_is_array_ref (*svp) || (av_len (inner) != 8))
+                        croak ("vertices must contain array references");
+                v[i + 0] = SvNV (*av_fetch (inner, 0, 0));
+                v[i + 1] = SvNV (*av_fetch (inner, 1, 0));
+                v[i + 2] = SvNV (*av_fetch (inner, 2, 0));
+                v[i + 3] = SvNV (*av_fetch (inner, 3, 0));
+                v[i + 4] = SvNV (*av_fetch (inner, 4, 0));
+                v[i + 5] = SvNV (*av_fetch (inner, 5, 0));
+                v[i + 6] = SvNV (*av_fetch (inner, 6, 0));
+                v[i + 7] = SvNV (*av_fetch (inner, 7, 0));
+        }
+        cogl_rectangles_with_texture_coords (v, n_rects);
+
+void
+cogl_polygon (class=NULL, SV *vertices, gboolean use_color)
+    PREINIT:
+        AV *av;
+        CoglTextureVertex *v;
+        gint n_vertices, i;
+    CODE:
+        if (!gperl_sv_is_array_ref (vertices))
+                croak ("vertices must be a reference to an array of texture vertices");
+        av = (AV *) SvRV (vertices);
+        n_vertices = av_len (av) + 1;
+        if (n_vertices < 1)
+                croak ("vertices array is empty");
+        v = gperl_alloc_temp (sizeof (CoglTextureVertex) * n_vertices);
+        for (i = 0; i < n_vertices; i++) {
+                SV **svp = av_fetch (av, i, 0);
+                cogl_perl_texture_vertex_from_sv (*svp, v + i);
+        }
+        cogl_polygon (v, n_vertices, use_color);
 
 =for apidoc
 Sets whether depth testing is enabled. If it is disabled then the
