@@ -31,6 +31,7 @@ CLUTTER_TYPE_BEHAVIOUR_PATH     ClutterBehaviourPath    GObject         Clutter:
 CLUTTER_TYPE_BEHAVIOUR_ROTATE   ClutterBehaviourRotate  GObject         Clutter::Behaviour::Rotate
 CLUTTER_TYPE_BEHAVIOUR_SCALE    ClutterBehaviourScale   GObject         Clutter::Behaviour::Scale
 CLUTTER_TYPE_BEHAVIOUR          ClutterBehaviour        GObject         Clutter::Behaviour
+CLUTTER_TYPE_BINDING_POOL       ClutterBindingPool      GObject         Clutter::BindingPool
 CLUTTER_TYPE_CHILD_META         ClutterChildMeta        GObject         Clutter::ChildMeta
 CLUTTER_TYPE_CONTAINER          ClutterContainer        GInterface      Clutter::Container
 CLUTTER_TYPE_COLOR	        ClutterColor	        GBoxed	        Clutter::Color

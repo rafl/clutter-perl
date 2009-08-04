@@ -52,6 +52,7 @@ xs/ClutterBehaviourOpacity.xs
 xs/ClutterBehaviourPath.xs
 xs/ClutterBehaviourRotate.xs
 xs/ClutterBehaviourScale.xs
+xs/ClutterBindingPool.xs
 xs/ClutterChildMeta.xs
 xs/ClutterContainer.xs
 xs/ClutterEvent.xs
