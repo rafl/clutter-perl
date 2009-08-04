@@ -33,6 +33,7 @@ t/ClutterBehaviourPath.t
 t/ClutterBehaviourScale.t
 t/ClutterContainer.t
 t/ClutterGroup.t
+t/ClutterInterval.t
 t/ClutterModel.t
 t/ClutterRectangle.t
 t/ClutterStage.t
@@ -55,6 +56,7 @@ xs/ClutterChildMeta.xs
 xs/ClutterContainer.xs
 xs/ClutterEvent.xs
 xs/ClutterGroup.xs
+xs/ClutterInterval.xs
 xs/ClutterListModel.xs
 xs/ClutterMedia.xs
 xs/ClutterModel.xs
