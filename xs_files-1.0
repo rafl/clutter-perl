@@ -13,6 +13,7 @@ xs/ClutterBehaviourScale.xs
 xs/ClutterBindingPool.xs
 xs/ClutterCairoTexture.xs
 xs/ClutterChildMeta.xs
+xs/ClutterClone.xs
 xs/ClutterContainer.xs
 xs/ClutterEvent.xs
 xs/ClutterGroup.xs
