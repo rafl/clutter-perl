@@ -25,21 +25,11 @@
 
 #include "clutterperl-private.h"
 
-/* taken from Glib/GType.xs */
 void
 cogl_perl_set_isa (const char *child_package,
                    const char *parent_package)
 {
-        char *child_isa_full;
-        AV *isa;
-
-        New (0, child_isa_full, strlen(child_package) + 5 + 1, char);
-        child_isa_full = strcpy (child_isa_full, child_package);
-        child_isa_full = strcat (child_isa_full, "::ISA");
-        isa = get_av (child_isa_full, TRUE); /* create on demand */
-        Safefree (child_isa_full);
-
-        av_push (isa, newSVpv (parent_package, 0));
+        gperl_set_isa (child_package, parent_package);
 }
 
 gpointer
