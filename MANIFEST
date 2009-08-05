@@ -29,12 +29,13 @@ t/ClutterActor.t
 t/ClutterAlpha.t
 t/ClutterBehaviourEllipse.t
 t/ClutterBehaviourOpacity.t
-t/ClutterBehaviourPath.t
 t/ClutterBehaviourScale.t
+t/ClutterBindingPool.t
 t/ClutterContainer.t
 t/ClutterGroup.t
 t/ClutterInterval.t
 t/ClutterModel.t
+t/ClutterPath.t
 t/ClutterRectangle.t
 t/ClutterStage.t
 t/ClutterTimeline.t
@@ -62,6 +63,7 @@ xs/ClutterListModel.xs
 xs/ClutterMedia.xs
 xs/ClutterModel.xs
 xs/ClutterModelIter.xs
+xs/ClutterPath.xs
 xs/ClutterRectangle.xs
 xs/ClutterScore.xs
 xs/ClutterScript.xs
