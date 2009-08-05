@@ -24,9 +24,9 @@ Clutter::Ex::TextureReflection - Reflection of a texture
 
 =head1 DESCRIPTION
 
-This page describes the API of C<Clutter::Ex::TextureReflection>, a subclass
-of L<Clutter::Texture::Clone> that efficiently paints a reflection of the
-parent texture.
+This page describes the API of C<Clutter::Ex::TextureReflection>, a
+subclass of L<Clutter::Texture> that efficiently paints a reflection
+of the parent texture.
 
 =head1 HIERARCHY
 
@@ -100,8 +100,11 @@ sub PAINT {
 
     my $opacity = $self->get_paint_opacity() / 255;
 
+    # the colors of the vertices
     my $start = [ 1.0, 1.0, 1.0, $opacity ];
     my $stop  = [ 1.0, 1.0, 1.0,      0.0 ];
+
+    # we need to premultiply the alpha
     $start = Clutter::Cogl::Color->premultiply($start);
     $stop  = Clutter::Cogl::Color->premultiply($stop);
 
@@ -220,6 +223,16 @@ sub get_reflection_height {
     return $self->{reflection_height};
 }
 
+=pod
+
+=item B<< $reflection->set_parent_texture ($texturer) >>
+
+  * $texture (Clutter::Texture)
+
+Sets the texture to be reflected.
+
+=cut
+
 sub set_parent_texture {
     my ($self, $texture) = @_;
 
@@ -229,6 +242,14 @@ sub set_parent_texture {
 
     $self->notify('parent-texture');
 }
+
+=pod
+
+=item B<< texture = $reflection->get_parent_texture >>
+
+Retrieves the parent texture.
+
+=cut
 
 sub get_parent_texture {
     my ($self) = @_;
@@ -246,18 +267,23 @@ sub get_parent_texture {
 
 =item 'reflection-height' (integer : readable / writable)
 
-Height of the reflection, in pixels
+Height of the reflection, in pixels, or -1 to use the same height
+of the parent texture.
+
+=item 'parent-texture' (Clutter::Texture : readable / writable)
+
+The L<Clutter::Texture> to generate a reflection for.
 
 =back
 
 =head1 SEE ALSO
 
 L<Clutter>, L<Glib::Object>, L<Glib::InitiallyUnowned>, L<Clutter::Actor>,
-L<Clutter::Texture>, L<Clutter::Texture::Clone>
+L<Clutter::Texture>, L<Clutter::Cogl::Texture>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2008  Intel Corporation.
+Copyright (C) 2008, 2009  Intel Corporation.
 
 This module is free software; you can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License version 2.1, or
