@@ -11,7 +11,7 @@ sub main {
     $stage->set_title('Clutter::Cairo');
     $stage->set_size(400, 300);
 
-    my $texture = Clutter::Texture::Cairo->new(200, 200);
+    my $texture = Clutter::CairoTexture->new(200, 200);
     $texture->set_position(($stage->get_width()  - 200) / 2,
                            ($stage->get_height() - 200) / 2);
 
