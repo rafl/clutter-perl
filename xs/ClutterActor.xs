@@ -39,6 +39,23 @@
         }                                                       } G_STMT_END
 
 static void
+init_property_value (GObject     *gobject,
+                     const gchar *name,
+                     GValue      *value)
+{
+        GParamSpec *pspec;
+
+        pspec = g_object_class_find_property (G_OBJECT_GET_CLASS (gobject), name);
+        if (pspec == NULL) {
+                croak ("Property '%s' not found in object class '%s'",
+                       name,
+                       G_OBJECT_TYPE_NAME (gobject));
+        }
+
+        g_value_init (value, G_PARAM_SPEC_VALUE_TYPE (pspec));
+}
+
+static void
 clutterperl_actor_show_all (ClutterActor *actor)
 {
         CALL_METHOD (actor, "SHOW_ALL");
@@ -1251,6 +1268,195 @@ clutter_actor_get_transformation_matrix (ClutterActor *actor)
     CODE:
         clutter_actor_get_transformation_matrix (actor, &matrix);
         RETVAL = cogl_perl_copy_matrix (&matrix);
+    OUTPUT:
+        RETVAL
+
+##/* defined in clutter-animation.h */
+
+=for apidoc
+=for signature animation = $actor->animate ($mode, $duration, $name, $value, ...)
+=for arg ... list of property name, value pairs
+Animates the given list of properties of I<actor> between the current
+value for each property and a new final value. The animation has a
+definite duration and a speed given by the I<mode>.
+
+For example, this:
+
+    $rectangle->animate(
+        'linear', 250,
+        width  => 100,
+        height => 100,
+    );
+
+will make I<width> and I<height> properties of the Clutter::Actor I<rectangle>
+grow linearly between the current value and 100 pixels, in 250 milliseconds.
+
+The animation I<mode> is a logical id, either from the Clutter::AnimationMode
+enumeration of from Clutter::Alpha::register_func().
+
+All the properties specified will be animated between the current value
+and the final value. If a property should be set at the beginning of
+the animation but not updated during the animation, it should be prefixed
+by the "fixed::" string, for instance:
+
+
+    $actor->animate (
+        'ease-in-sine', 100,
+        rotation_angle_z => 360,
+        "fixed::rotation-center-z" => Clutter::Vertex->new(100, 100, 0),
+    );
+
+Will animate the I<rotation_angle_z> property between the current value
+and 360 degrees, and set the I<rotation_center_z> property to the fixed
+value of the passed L<Clutter::Vertex>.
+
+This function will implicitly create a L<Clutter::Animation> object which
+will be assigned to the I<actor> and will be returned to the developer
+to control the animation or to know when the animation has been
+completed.
+
+Calling this function on an actor that is already being animated
+will cause the current animation to change with the new final values,
+the new easing mode and the new duration - that is, this code:
+
+    $actor->animate ('linear', 250, width => 100, height => 100);
+    $actor->animate ('ease-in-cubic', 500,
+        x => 100,
+        y => 100,
+        width => 200,
+    );
+
+is the equivalent of:
+
+    $actor->animate('ease-in-cubic', 500,
+        x => 100,
+        y => 100,
+        width => 200,
+        height => 100,
+    );
+
+B<Note>: Unless the animation is looping, the L<Clutter::Animation> created
+by Clutter::Actor::animate() will become invalid as soon as it is complete.
+
+Since the created L<Clutter::Animation> instance attached to I<actor>
+is guaranteed to be valid throughout the Clutter::Animation::completed
+signal emission chain, you will not be able to create a new animation
+using Clutter::Actor::animate() on the same I<actor> from within the
+Clutter::Animation::completed signal handler unless you use
+Glib::Object::signal_connect_after() to connect the callback function,
+for instance:
+
+    my $animation = $actor->animate ('ease-in-cubic', 250,
+        x => 100,
+        y => 100,
+    );
+
+    $animation->signal_connect_after("completed" => sub {
+        $actor->animate('ease-in-cubic', 250,
+            x => 500,
+            y => 500,
+        );
+    });
+=cut
+ClutterAnimation *
+clutter_actor_animate (ClutterActor *actor, SV *mode, guint duration, ...)
+    PREINIT:
+        GValue value = { 0, };
+        GValueArray *values;
+        gchar **names;
+        gint i, n_pairs;
+        gulong easing_mode;
+    CODE:
+        if (0 != ((items - 3) % 2))
+                croak ("animate method expects name => value pairs "
+                       "(odd number of arguments detected)");
+        n_pairs = ((items - 3) / 2);
+        names = g_new (gchar*, n_pairs);
+        values = g_value_array_new (n_pairs);
+        for (i = 0; i < n_pairs; i += 1) {
+                names[i] = SvPV_nolen (ST (3 + i * 2));
+                init_property_value (G_OBJECT (actor), names[i], &value);
+                gperl_value_from_sv (&value, ST (3 + i * 2 + 1));
+                g_value_array_append (values, &value);
+                g_value_unset (&value);
+        }
+        easing_mode = clutter_perl_animation_mode_from_sv (mode);
+        RETVAL = clutter_actor_animatev (actor, easing_mode, duration,
+                                         n_pairs,
+                                         (const gchar **) names,
+                                         values->values);
+        g_free (names);
+        g_value_array_free (values);
+    OUTPUT:
+        RETVAL
+
+=for apidoc
+=for signature animation = $actor->animate_with_timeline ($mode, $timeline, $name, $value, ...)
+=for arg ... list of property name, value pairs
+=cut
+ClutterAnimation *
+clutter_actor_animate_with_timeline (ClutterActor *actor, SV *mode, ClutterTimeline *timeline, ...)
+    PREINIT:
+        GValue value = { 0, };
+        GValueArray *values;
+        gchar **names;
+        gint i, n_pairs;
+        gulong easing_mode;
+    CODE:
+        if (0 != ((items - 3) % 2))
+                croak ("animate method expects name => value pairs "
+                       "(odd number of arguments detected)");
+        n_pairs = ((items - 3) / 2);
+        names = g_new (gchar*, n_pairs);
+        values = g_value_array_new (n_pairs);
+        for (i = 0; i < n_pairs; i += 1) {
+                names[i] = SvPV_nolen (ST (3 + i * 2));
+                init_property_value (G_OBJECT (actor), names[i], &value);
+                gperl_value_from_sv (&value, ST (3 + i * 2 + 1));
+                g_value_array_append (values, &value);
+                g_value_unset (&value);
+        }
+        easing_mode = clutter_perl_animation_mode_from_sv (mode);
+        RETVAL = clutter_actor_animate_with_timelinev (actor, easing_mode, timeline,
+                                                       n_pairs,
+                                                       (const gchar **) names,
+                                                       values->values);
+        g_free (names);
+        g_value_array_free (values);
+    OUTPUT:
+        RETVAL
+
+=for apidoc
+=for signature animation = $actor->animate_with_alpha ($alpha, $name, $value, ...)
+=for arg ... list of property name, value pairs
+=cut
+ClutterAnimation *
+clutter_actor_animate_with_alpha (ClutterActor *actor, ClutterAlpha *alpha, ...)
+    PREINIT:
+        GValue value = { 0, };
+        GValueArray *values;
+        gchar **names;
+        gint i, n_pairs;
+    CODE:
+        if (0 != ((items - 2) % 2))
+                croak ("animate method expects name => value pairs "
+                       "(odd number of arguments detected)");
+        n_pairs = ((items - 2) / 2);
+        names = g_new (gchar*, n_pairs);
+        values = g_value_array_new (n_pairs);
+        for (i = 0; i < n_pairs; i += 1) {
+                names[i] = SvPV_nolen (ST (2 + i * 2));
+                init_property_value (G_OBJECT (actor), names[i], &value);
+                gperl_value_from_sv (&value, ST (2 + i * 2 + 1));
+                g_value_array_append (values, &value);
+                g_value_unset (&value);
+        }
+        RETVAL = clutter_actor_animate_with_alphav (actor, alpha,
+                                                    n_pairs,
+                                                    (const gchar **) names,
+                                                    values->values);
+        g_free (names);
+        g_value_array_free (values);
     OUTPUT:
         RETVAL
 
