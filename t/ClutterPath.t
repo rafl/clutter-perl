@@ -1,4 +1,4 @@
-use Clutter::TestHelper tests => 21;
+use Clutter::TestHelper tests => 22;
 
 my $path = Clutter::Path->new();
 isa_ok($path, 'Clutter::Path', 'is a path');
@@ -15,34 +15,35 @@ is($path->get_n_nodes(), 3, 'three nodes');
 my $node;
 
 $node = $path->get_node(0);
-is($node->[0], 'move-to', 'first node');
-is(scalar @{$node}, 2, 'type and points');
-is_deeply($node->[1], [ 10, 10 ], 'third node coordinates');
+is($node->{type}, 'move-to', 'first node');
+is(scalar @{$node->{points}}, 1, 'one point');
+is_deeply($node->{points}, [ [ 10, 10 ] ], 'first node coordinates');
 
 $node = $path->get_node(1);
-is($node->[0], 'line-to', 'second node');
-is(scalar @{$node}, 2, 'type and points');
-is_deeply($node->[1], [ 10, 20 ], 'third node coordinates');
+is($node->{type}, 'line-to', 'second node');
+is(scalar @{$node->{points}}, 1, 'one point');
+is_deeply($node->{points}->[0], [ 10, 20 ], 'second node coordinates');
 
 $node = $path->get_node(2);
-is($node->[0], 'close', 'third node');
+is($node->{type}, 'close', 'third node');
 
-$path->replace_node(2, [ 'line-to', { x => 20, y => 20 } ]);
+$path->replace_node(2, [ 'line-to', [ { x => 20, y => 20 }, ] ]);
 is($path->get_n_nodes(), 3, 'still three nodes');
 $node = $path->get_node(2);
-is($node->[0], 'line-to', 'third node');
-is_deeply($node->[1], [ 20, 20 ], 'third node coordinates');
+is($node->{type}, 'line-to', 'third node');
+is_deeply($node->{points}->[0], [ 20, 20 ], 'third node coordinates');
 
 $path->add_string("C 20,10 20,10 10,10");
 is($path->get_n_nodes(), 4, 'four nodes');
 $node = $path->get_node(3);
-is($node->[0], 'curve-to', 'fourth node');
-my $points = $node->[1];
+is($node->{type}, 'curve-to', 'fourth node');
+my $points = $node->{points};
 is(scalar @{$points}, 3, 'three knots');
 is_deeply($points, [ [ 20, 10 ], [ 20, 10 ], [ 10, 10 ] ], 'curve points');
 
 $path->add_close();
 is($path->get_n_nodes(), 5, 'five nodes');
 $node = $path->get_node(4);
-is($node->[0], 'close', 'last node');
-is(scalar @{$node}, 1, 'just type');
+is($node->{type}, 'close', 'last node');
+is(scalar keys %{$node}, 2, 'still type and points');
+is_deeply($node->{points}, [ ], 'empty points');

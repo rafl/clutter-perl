@@ -71,14 +71,6 @@ get_path_node_points_from_sv (SV *sv, ClutterPathNode *node)
                         break;
         }
 
-        if (n_points == 1) {
-                ClutterKnot *knot = SvClutterKnot (sv);
-
-                node->points[0] = *knot;
-
-                return;
-        }
-
         av = (AV *) SvRV (sv);
 
         if (av_len (av) != (n_points - 1))
@@ -161,47 +153,47 @@ clutter_path_node_wrap (GType        gtype,
                         gboolean     own)
 {
         ClutterPathNode *node = boxed;
-        AV *av;
+        HV *hv;
+        AV *points = NULL;
 
         if (!node)
                 return &PL_sv_undef;
 
-        av = newAV ();
-        av_push (av, newSVClutterPathNodeType (node->type)); 
+        hv = newHV ();
+        hv_store (hv, "type", 4, newSVClutterPathNodeType (node->type), 0);
 
         switch (node->type) {
                 case CLUTTER_PATH_MOVE_TO:
                 case CLUTTER_PATH_REL_MOVE_TO:
-                        av_push (av, newSVClutterKnot_copy (&node->points[0]));
+                        points = newAV ();
+                        av_push (points, newSVClutterKnot_copy (&node->points[0]));
                         break;
 
                 case CLUTTER_PATH_LINE_TO:
                 case CLUTTER_PATH_REL_LINE_TO:
-                        av_push (av, newSVClutterKnot_copy (&node->points[0]));
+                        points = newAV ();
+                        av_push (points, newSVClutterKnot_copy (&node->points[0]));
                         break;
 
                 case CLUTTER_PATH_CURVE_TO:
                 case CLUTTER_PATH_REL_CURVE_TO:
-                {
-                        AV *inner;
-
-                        inner = newAV ();
-                        av_push (inner, newSVClutterKnot_copy (&node->points[0]));
-                        av_push (inner, newSVClutterKnot_copy (&node->points[1]));
-                        av_push (inner, newSVClutterKnot_copy (&node->points[2]));
-
-                        av_push (av, newRV_noinc ((SV *) inner));
-                }
+                        points = newAV ();
+                        av_push (points, newSVClutterKnot_copy (&node->points[0]));
+                        av_push (points, newSVClutterKnot_copy (&node->points[1]));
+                        av_push (points, newSVClutterKnot_copy (&node->points[2]));
                         break;
 
                 case CLUTTER_PATH_CLOSE:
+                        points = newAV ();
                         break;
         }
+
+        hv_store (hv, "points", 6, newRV_noinc ((SV *) points), 0);
 
         if (own)
                 clutter_path_node_free (node);
         
-        return newRV_noinc ((SV *) av);
+        return newRV_noinc ((SV *) hv);
 }
 
 static void *
@@ -284,6 +276,49 @@ BOOT:
         gperl_register_boxed (CLUTTER_TYPE_PATH_NODE, "Clutter::Path::Node",
                               &clutter_path_node_wrapper_class);
 
+=for position DESCRIPTION
+
+=head1 DESCRIPTION
+
+A B<Clutter::Path::Node> is a node inside a L<Clutter::Path>. Each node
+is represented by a hash reference with two keys: I<type> and I<points>.
+The value for I<type> can be one of the following:
+
+=over
+
+=item B<move-to>
+
+=item B<line-to>
+
+=item B<curve-to>
+
+=item B<close>
+
+=back
+
+The value for I<points> is an array reference which contains zero or
+more points. Points are represented by either a hash reference with two
+keys I<x> and I<y>, or by an array reference that contains two doubles.
+
+The necessary number of points depends on the I<type> of the path node:
+
+=over
+
+=item move-to: 1 point
+
+=item line-to: 1 point
+
+=item curve-to: 3 points
+
+=item close: 0 points
+
+=back
+
+The semantics and ordering of the coordinate values are consistent with
+Clutter::Path::add_move_to(), Clutter::Path::add_line_to(),
+Clutter::Path::add_curve_to() and Clutter::Path::add_close().
+
+=cut
 
 =for enum Clutter::Path::NodeType
 =cut
