@@ -1,4 +1,4 @@
-#include "clutterperl.h"
+#include "clutter-perl-private.h"
 
 MODULE = Clutter::Cogl::Path    PACKAGE = Clutter::Cogl::Path   PREFIX = cogl_path_
 

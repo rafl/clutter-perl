@@ -1,4 +1,4 @@
-#include "clutterperl-private.h"
+#include "clutter-perl-private.h"
 
 MODULE = Clutter::CairoTexture  PACKAGE = Clutter::Cairo        PREFIX = clutter_cairo_
 

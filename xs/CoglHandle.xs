@@ -1,4 +1,4 @@
-#include "clutterperl.h"
+#include "clutter-perl-private.h"
 
 static const char *
 get_package (CoglHandle handle)

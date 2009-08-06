@@ -9,7 +9,7 @@
 #include <cogl/cogl.h>
 #include <clutter/clutter.h>
 
-#include "clutterperl-autogen.h"
+#include "clutter-perl-autogen.h"
 
 G_BEGIN_DECLS
 

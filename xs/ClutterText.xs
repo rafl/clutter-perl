@@ -1,4 +1,4 @@
-#include "clutterperl-private.h"
+#include "clutter-perl-private.h"
 
 MODULE = Clutter::Text  PACKAGE = Clutter::Text PREFIX = clutter_text_
 

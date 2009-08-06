@@ -1,4 +1,4 @@
-#include "clutterperl-private.h"
+#include "clutter-perl-private.h"
 
 void
 cogl_perl_texture_vertex_from_sv (SV *sv, CoglTextureVertex *vertex)

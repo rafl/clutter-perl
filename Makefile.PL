@@ -94,7 +94,7 @@ my %pod_files = (
 my @input_maps = qw/ maps /;
 
 # autogeneration
-Glib::CodeGen->parse_maps('clutterperl', input => [<maps-[0-9]\.[0-9]*>]);
+Glib::CodeGen->parse_maps('clutter-perl', input => [<maps-[0-9]\.[0-9]*>]);
 Glib::CodeGen->write_boot(xs_files => \@xs_files);
 
 # this one turns the long list of #defines in clutter-keysyms.h into a
@@ -108,7 +108,7 @@ my $module_cflags = $pkgcfg{cflags};
 my $module_libs   = $pkgcfg{libs};
 
 my @typemaps = map { File::Spec->catfile($cwd, $_) }
-               qw( build/clutterperl.typemap clutter.typemap );
+               qw( build/clutter-perl.typemap clutter.typemap );
 
 my $clutter = ExtUtils::Depends->new('Clutter', @deps);
 $clutter->set_inc($module_cflags . ' -I./build ');
@@ -116,7 +116,7 @@ $clutter->set_libs($module_libs);
 $clutter->add_xs(@xs_files);
 $clutter->add_pm(%pm_files);
 $clutter->add_typemaps(@typemaps);
-$clutter->install(qw(clutterperl.h build/clutterperl-autogen.h doctypes));
+$clutter->install(qw(clutter-perl.h build/clutter-perl-autogen.h doctypes));
 $clutter->save_config('build/IFiles.pm');
 
 WriteMakefile(

@@ -1,7 +1,7 @@
 #ifndef __CLUTTERPERL_PRIVATE_H__
 #define __CLUTTERPERL_PRIVATE_H__
 
-#include "clutterperl.h"
+#include "clutter-perl.h"
 
 G_BEGIN_DECLS
 

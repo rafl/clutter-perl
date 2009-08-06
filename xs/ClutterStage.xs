@@ -23,7 +23,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "clutterperl.h"
+#include "clutter-perl-private.h"
 
 MODULE = Clutter::Stage		PACKAGE = Clutter::Stage	PREFIX = clutter_stage_
 

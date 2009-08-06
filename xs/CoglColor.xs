@@ -1,4 +1,4 @@
-#include "clutterperl.h"
+#include "clutter-perl-private.h"
 
 void
 cogl_perl_color_from_sv (SV *sv, CoglColor *color)

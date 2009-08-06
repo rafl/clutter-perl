@@ -1,4 +1,4 @@
-#include "clutterperl.h"
+#include "clutter-perl.h"
 
 MODULE = Clutter::Behaviour::Depth PACKAGE = Clutter::Behaviour::Depth PREFIX = clutter_behaviour_depth_
 

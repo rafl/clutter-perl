@@ -1,4 +1,4 @@
-#include "clutterperl.h"
+#include "clutter-perl-private.h"
 
 #define HFETCHIV(hv,key) \
         (((svp = hv_fetch ((hv), (key), strlen ((key)), FALSE)) \

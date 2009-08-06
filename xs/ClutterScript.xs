@@ -23,7 +23,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "clutterperl.h"
+#include "clutter-perl-private.h"
 
 /* This doesn't belong here.  But currently, this is the only place a GType for
  * GConnectFlags is needed, so adding extra API to Glib doesn't seem justified.

@@ -1,4 +1,4 @@
-#include "clutterperl-private.h"
+#include "clutter-perl-private.h"
 
 MODULE = Clutter::Cogl::Material        PACKAGE = Clutter::Cogl::Material       PREFIX = cogl_material_
 

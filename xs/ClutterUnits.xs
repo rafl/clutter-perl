@@ -1,4 +1,4 @@
-#include "clutterperl-private.h"
+#include "clutter-perl-private.h"
 
 static GPerlBoxedWrapperClass clutter_units_wrapper_class;
 

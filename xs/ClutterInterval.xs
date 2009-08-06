@@ -1,4 +1,4 @@
-#include "clutterperl-private.h"
+#include "clutter-perl-private.h"
 
 #define GET_METHOD(obj,name)    \
         HV *stash = gperl_object_stash_from_type (G_OBJECT_TYPE (obj)); \

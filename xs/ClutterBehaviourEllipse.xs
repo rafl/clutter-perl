@@ -1,4 +1,4 @@
-#include "clutterperl.h"
+#include "clutter-perl-private.h"
 
 MODULE = Clutter::Behaviour::Ellipse    PACKAGE = Clutter::Behaviour::Ellipse   PREFIX = clutter_behaviour_ellipse_
 

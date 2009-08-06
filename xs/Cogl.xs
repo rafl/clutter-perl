@@ -23,7 +23,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "clutterperl-private.h"
+#include "clutter-perl-private.h"
 
 void
 cogl_perl_set_isa (const char *child_package,

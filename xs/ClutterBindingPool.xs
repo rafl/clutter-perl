@@ -1,4 +1,4 @@
-#include "clutterperl-private.h"
+#include "clutter-perl-private.h"
 
 MODULE = Clutter::BindingPool   PACKAGE = Clutter::BindingPool  PREFIX = clutter_binding_pool_
 

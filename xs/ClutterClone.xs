@@ -1,4 +1,4 @@
-#include "clutterperl-private.h"
+#include "clutter-perl-private.h"
 
 MODULE = Clutter::Clone PACKAGE = Clutter::Clone        PREFIX = clutter_clone_
 

@@ -1,4 +1,4 @@
-#include "clutterperl-private.h"
+#include "clutter-perl-private.h"
 
 CoglMatrix *
 cogl_perl_copy_matrix (const CoglMatrix *matrix)

@@ -1,4 +1,4 @@
-#include "clutterperl.h"
+#include "clutter-perl-private.h"
 
 MODULE = Clutter::ChildMeta     PACKAGE = Clutter::ChildMeta    PREFIX = clutter_child_meta_
 

@@ -1,8 +1,8 @@
 AUTHORS
 ChangeLog.SVN
 clutter.typemap
-clutterperl.h
-clutterperl-private.h
+clutter-perl.h
+clutter-perl-private.h
 Cookbook.pod
 copyright.pod
 doctypes
@@ -54,7 +54,9 @@ xs/ClutterBehaviourPath.xs
 xs/ClutterBehaviourRotate.xs
 xs/ClutterBehaviourScale.xs
 xs/ClutterBindingPool.xs
+xs/ClutterCairoTexture.xs
 xs/ClutterChildMeta.xs
+xs/ClutterClone.xs
 xs/ClutterContainer.xs
 xs/ClutterEvent.xs
 xs/ClutterGroup.xs
@@ -74,6 +76,7 @@ xs/ClutterText.xs
 xs/ClutterTexture.xs
 xs/ClutterTimeline.xs
 xs/ClutterTypes.xs
+xs/ClutterUnits.xs
 xs/Cogl.xs
 xs/CoglColor.xs
 xs/CoglHandle.xs

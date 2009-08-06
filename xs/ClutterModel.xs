@@ -23,7 +23,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "clutterperl.h"
+#include "clutter-perl-private.h"
 
 static gboolean
 clutterperl_model_foreach_func (ClutterModel     *model,

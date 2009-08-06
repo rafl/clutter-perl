@@ -23,7 +23,7 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "clutterperl-private.h"
+#include "clutter-perl-private.h"
 
 #define CALL_METHOD(actor,name)                                 G_STMT_START {  \
         HV *_stash = gperl_object_stash_from_type (G_OBJECT_TYPE ((actor)));    \
