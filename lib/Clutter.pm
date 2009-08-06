@@ -203,7 +203,7 @@ Clutter - Simple GL-based canvas library
   $stage->set_size(800, 600);
   
   # add an actor and place it right in the middle
-  my $label = Clutter::Label->new("Sans 30", "Hello, Clutter!");
+  my $label = Clutter::Text->new("Sans 30", "Hello, Clutter!");
   $label->set_color(Clutter::Color->new(0xff, 0xcc, 0xcc, 0xdd));
   $label->set_anchor_point($label->get_width() / 2,
                            $label->get_height() / 2);
@@ -220,7 +220,7 @@ Clutter - Simple GL-based canvas library
 
 Clutter is a GObject based library for creating fast, visually rich
 graphical user interfaces.  It is intended for creating single window
-heavily stylised applications such as media box ui's, presentations or
+heavily stylised applications such as media box UI's, presentations or
 kiosk style programs in preference to regular 'desktop' style
 applications.
 
@@ -231,7 +231,7 @@ and is definetly not intended to be a general interface for all OpenGL
 functionality.
 
 As well as OpenGL Clutter depends on and uses Glib, Glib::Object,
-Gtk2::Pango, Gtk2::Gdk::Pixbuf and GStreamer.
+Pango and Cairo.
 
 For more informations about Clutter, visit:
 
@@ -241,42 +241,29 @@ You can also subscribe to the Clutter mailing list by sending a
 blank message E<lt>clutter+subscribe AT o-hand.comE<gt>, then follow
 the instructions in resulting reply.
 
-=head1 DIFFERENCES FROM C API
+=head1 SEE ALSO
 
-In order to feel more Perl-ish, the Clutter API has been slightly
-changed for the Perl bindings.
-
-=over 4
-
-=item ClutterCloneTexture =E<gt> Clutter::Texture::Clone
-
-The C<ClutterCloneTexture> has been moved under the L<Clutter::Texture>
-package name, to reinforce the inheritance.
-
-=item ClutterCairo =E<gt> Clutter::Texture::Cairo
-
-As above, the name has been changed to reinforce the inheritance.
-
-=item GtkClutter =E<gt> Gtk2::ClutterEmbed
-
-The widget for embedding a Clutter::Stage into a GTK+ application has
-been moved into the Gtk2 namespace and use the ClutterEmbed name similar
-to the MozEmbed widget for embedding Gecko.
-
-=back
+L<Clutter::index>, L<Cairo>, L<Pango>, L<Glib>.
 
 =head1 AUTHOR
 
-Emmanuele Bassi E<lt>ebassi (AT) openedhand (DOT) comE<gt>
+Emmanuele Bassi E<lt>ebassi (AT) linux.intel.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2006  OpenedHand Ltd.
+Copyright (C) 2006, 2007, 2008  OpenedHand Ltd
+Copyright (C) 2009 Intel Corporation
 
 This module is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation, version 2.1;
-or, at your option, under the terms of The Artistic License, version 2.0.
+modify it under the terms of:
+
+=over 4
+
+=item the GNU Lesser General Public License, version 2.1; or
+
+=item the Artistic License, version 2.0.
+
+=back
 
 This module is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
