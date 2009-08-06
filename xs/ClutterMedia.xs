@@ -36,7 +36,11 @@ MODULE = Clutter::Media		PACKAGE = Clutter::Media	PREFIX = clutter_media_
 
 =head1 DESCRIPTION
 
-FIXME
+B<Clutter::Media> is an interface for controlling playback of media sources.
+
+Clutter core does not provide an implementation of this interface, but
+other integration libraries like Clutter-GStreamer implement it to offer
+a uniform API for applications.
 
 =cut
 
