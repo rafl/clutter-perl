@@ -1,3 +1,12 @@
+Clutter 0.900
+=============
+* First developers snapshot of the Clutter Perl bindings
+* Depend on Clutter 1.0.0
+* Drop the clutter-gtk, clutter-gst and clutter-cairo bindings
+* Add more COGL bindings under Clutter::Cogl
+* Port more examples from Clutter to Perl
+* Provide more C API for bindings based on perl-Clutter
+
 Clutter 0.820
 =============
 * Depend on Clutter 0.8.2
