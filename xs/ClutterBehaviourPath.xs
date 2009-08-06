@@ -11,7 +11,7 @@ clutter_behaviour_path_new (class, alpha=NULL, path=NULL)
     OUTPUT:
         RETVAL
 
-ClutterPath_noinc *
+ClutterPath *
 clutter_behaviour_path_get_path (ClutterBehaviourPath *behaviour)
 
 void
