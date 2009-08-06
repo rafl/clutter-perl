@@ -206,32 +206,6 @@ COGL (class)
         XPUSHs (sv_2mortal (newSVpv (CLUTTER_COGL, 0)));
         PERL_UNUSED_VAR (ax);
 
-=for apidoc
-=for signature modules = Clutter->SUPPORTED_MODULES
-
-Return the list of supported integration libraries. The Clutter Perl bindings
-can be compiled against the various integration libraries that compose the
-Clutter suite; this method can be used to know what degree of support the
-Perl bindings have. This function will return an array of strings:
-
-=over
-
-=item o core (Core support, will always be returned)
-
-=item o gst (Clutter::Gst support)
-
-=item o cairo (Clutter::Texture::Cairo actor)
-
-=item o gtk (Gtk2::ClutterEmbed widget)
-
-=back
-
-=cut
-void
-SUPPORTED_MODULES (class)
-    PPCODE:
-        XPUSHs (sv_2mortal (newSVpv ("core", 0)));
-
 =for object Clutter::main
 =cut
 
