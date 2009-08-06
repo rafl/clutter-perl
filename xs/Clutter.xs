@@ -134,6 +134,14 @@ BOOT:
 #include "register.xsh"
 #include "boot.xsh"
 	gperl_handle_logs_for ("Clutter");
+	gperl_handle_logs_for ("Clutter-X11");
+	gperl_handle_logs_for ("Clutter-GLX");
+	gperl_handle_logs_for ("Clutter-Win32");
+	gperl_handle_logs_for ("Clutter-OSX");
+	gperl_handle_logs_for ("Clutter-SDL");
+        gperl_handle_logs_for ("Cogl");
+        gperl_handle_logs_for ("Cogl-Common");
+        gperl_handle_logs_for ("Cogl-GL");
 
 guint
 MAJOR_VERSION ()
