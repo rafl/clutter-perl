@@ -71,4 +71,6 @@ CLUTTER_TYPE_TEXTURE_FLAGS      ClutterTextureFlags     GFlags          Clutter:
 CLUTTER_TYPE_TEXTURE_QUALITY    ClutterTextureQuality   GEnum           Clutter::TextureQuality
 CLUTTER_TYPE_TIMELINE_DIRECTION ClutterTimelineDirection GEnum          Clutter::TimelineDirection
 CLUTTER_TYPE_TIMELINE	        ClutterTimeline	        GObject	        Clutter::Timeline
+CLUTTER_TYPE_UNIT_TYPE          ClutterUnitType         GEnum           Clutter::UnitType
+CLUTTER_TYPE_UNITS              ClutterUnits            GBoxed          Clutter::Units
 CLUTTER_TYPE_VERTEX             ClutterVertex           GBoxed          Clutter::Vertex
