@@ -32,21 +32,28 @@ clutterperl_event_get_package (ClutterEvent *event)
     {
     case CLUTTER_NOTHING:
       return "Clutter::Event";
+
     case CLUTTER_BUTTON_PRESS:
     case CLUTTER_BUTTON_RELEASE:
       return "Clutter::Event::Button";
+
     case CLUTTER_KEY_PRESS:
     case CLUTTER_KEY_RELEASE:
       return "Clutter::Event::Key";
+
     case CLUTTER_MOTION:
       return "Clutter::Event::Motion";
+
     case CLUTTER_SCROLL:
       return "Clutter::Event::Scroll";
+
     case CLUTTER_ENTER:
     case CLUTTER_LEAVE:
       return "Clutter::Event::Crossing";
+
     case CLUTTER_STAGE_STATE:
       return "Clutter::Event::StageState";
+
     default:
       {
         GEnumClass *class = g_type_class_ref (CLUTTER_TYPE_EVENT_TYPE);
@@ -76,24 +83,30 @@ clutterperl_event_set_time (ClutterEvent *event,
     case CLUTTER_MOTION:
       event->motion.time = time_;
       break;
+
     case CLUTTER_BUTTON_PRESS:
     case CLUTTER_BUTTON_RELEASE:
       event->button.time = time_;
       break;
+
     case CLUTTER_KEY_PRESS:
     case CLUTTER_KEY_RELEASE:
       event->key.time = time_;
       break;
+
     case CLUTTER_SCROLL:
       event->scroll.time = time_;
       break;
+
     case CLUTTER_ENTER:
     case CLUTTER_LEAVE:
       event->crossing.time = time_;
       break;
+
     case CLUTTER_STAGE_STATE:
       event->stage_state.time = time_;
       break;
+
     default:
       break;
     }
@@ -111,17 +124,21 @@ clutterperl_event_set_state (ClutterEvent        *event,
     case CLUTTER_MOTION:
       event->motion.modifier_state = state;
       break;
+
     case CLUTTER_BUTTON_PRESS:
     case CLUTTER_BUTTON_RELEASE:
       event->button.modifier_state = state;
       break;
+
     case CLUTTER_KEY_PRESS:
     case CLUTTER_KEY_RELEASE:
       event->key.modifier_state = state;
       break;
+
     case CLUTTER_SCROLL:
       event->scroll.modifier_state = state;
       break;
+
     default:
       break;
     }
