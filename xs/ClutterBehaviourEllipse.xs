@@ -34,7 +34,7 @@ clutter_behaviour_ellipse_new (class, alpha=NULL, center, size, direction, angle
         if ((!SvRV (size)) || (SvTYPE (SvRV (size))) != SVt_PVAV)
                 croak("Invalid size, expecting an array of two integers");
         if ((!SvRV (angles)) || (SvTYPE (SvRV (angles))) != SVt_PVAV)
-                croak("Invalid size, expecting an array of two floats");
+                croak("Invalid angles, expecting an array of two floats");
         av = (AV *) SvRV (center);
         x = AV_FETCH_IV (av, 0); y = AV_FETCH_IV (av, 1);
         av = (AV *) SvRV (size);
