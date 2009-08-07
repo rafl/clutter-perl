@@ -11,9 +11,9 @@ use Cwd;
 our %build_reqs = (
     'perl-ExtUtils-Depends'   => '0.300',
     'perl-ExtUtils-PkgConfig' => '1.030',
-    'perl-Glib'               => '1.220', # for Glib::MakeHelper
-    'perl-Cairo'              => '1.000', # for the Cairo typemaps
-    'perl-Pango'              => '1.140', # for Pango
+    'perl-Glib'               => '1.220',
+    'perl-Cairo'              => '1.000',
+    'perl-Pango'              => '1.140',
     'clutter'                 => '1.0.0',
 );
 
@@ -52,14 +52,10 @@ unless (eval { %pkgcfg = ExtUtils::PkgConfig->find('clutter-1.0'); 1; }) {
     exit 0;
 }
 
-#
-# retrieve pango's version
-#
+# retrieve Clutter's version
 my @clutter_version = split /\./, $pkgcfg{modversion};
 
-#
 # decide what files to use in the build based on the version we found.
-#
 my @xs_files = ();
 my @xs_lists = Glib::MakeHelper->select_files_by_version("xs_files", @clutter_version);
 foreach my $filename (@xs_lists) {
@@ -123,15 +119,15 @@ WriteMakefile(
     AUTHOR        => 'Emmanuele Bassi <ebassi@linux.intel.com>',
     NAME          => 'Clutter',
     VERSION_FROM  => 'lib/Clutter.pm',
+    ABSTRACT_FROM => 'lib/Clutter.pm',
+    LICENSE       => 'perl, lgpl',
 
     # what the module requires to run
     PREREQ_PM     => \%PREREQ_PM,
     PREREQ_FATAL  => 1,
 
-    ABSTRACT_FROM => 'lib/Clutter.pm',
     XSPROTOARG    => '-noprototypes ',
     MAN3PODS	  => \%pod_files,
-    LICENSE       => 'perl, lgpl',
     DL_FUNCS      => { Clutter => [] },
 
     META_MERGE    => { configure_requires => \%PREREQ_PM },
