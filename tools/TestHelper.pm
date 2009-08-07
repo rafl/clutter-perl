@@ -25,18 +25,6 @@ sub import
             unless Clutter->CHECK_VERSION($rmajor, $rminor, $rmicro);
     }
 
-    if ($opts{sub_module}) {
-        my @modules = Clutter->SUPPORTED_MODULES();
-        my $no_skip = 0;
-
-        foreach my $m (@modules) {
-            $no_skip = 1 if $opts{sub_module} eq $m;
-        }
-
-        plan skip_all => "no support for $opts{sub_module}"
-            unless $no_skip;
-    }
-
     if (!Clutter->init()) {
         plan skip_all => 'Clutter->init failed';
     }
@@ -95,10 +83,6 @@ A reference to a list that is checked with Clutter->CHECK_VERSION
 =item skip_all
 
 Simply skip all tests
-
-=item sub_module => $module_name
-
-Skip all tests if Clutter was not compiled against I<module_name>.
 
 =back
 
