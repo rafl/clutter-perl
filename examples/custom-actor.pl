@@ -20,7 +20,7 @@ Clutter::Ex::Triangle - Basic triangular actor
   use Clutter::Ex::Triangle;
 
   my $triangle = Clutter::Ex::Triangle->new();
-  my $color = Clutter::Color->parse('DarkBlue');
+  my $color = Clutter::Color->from_string('DarkBlue');
   $triangle->set_color($color);
 
   # - or -
@@ -63,11 +63,11 @@ use Glib::Object::Subclass
         leave_event          => \&on_leave,
     },
     properties => [
-        Glib::ParamSpec->boxed(
+        Clutter::ParamSpec->color(
             'color',
             'Color',
             'Color of the triangle',
-            'Clutter::Color',
+            Clutter::Color->new(255, 255, 255, 255),
             [ qw( readable writable ) ],
         ),
     ];
@@ -124,26 +124,31 @@ sub PICK {
     # if pick should not paint, then skip it
     return unless $self->should_pick_paint();
 
-    my $geom = $self->get_allocation_geometry();
+    my $box = $self->get_allocation_box();
 
-    Clutter::Cogl->path_move_to($geom->width() / 2, 0);
-    Clutter::Cogl->path_line_to($geom->width(), $geom->height());
-    Clutter::Cogl->path_line_to(0, $geom->height());
-    Clutter::Cogl->path_line_to($geom->width() / 2, 0);
+    Clutter::Cogl::Path->move_to($box->width() / 2, 0);
+    Clutter::Cogl::Path->line_to($box->width(), $box->height());
+    Clutter::Cogl::Path->line_to(0, $box->height());
+    Clutter::Cogl::Path->line_to($box->width() / 2, 0);
 
-    Clutter::Cogl->color($pick_color);
-    Clutter::Cogl->path_fill();
+    Clutter::Cogl->set_source_color([
+        $pick_color->red(),
+        $pick_color->green(),
+        $pick_color->blue(),
+        $pick_color->alpha(),
+    ]);
+    Clutter::Cogl::Path->fill();
 }
 
 sub PAINT {
     my ($self) = @_;
 
-    my $geom = $self->get_allocation_geometry();
+    my $box = $self->get_allocation_box();
 
-    Clutter::Cogl->path_move_to($geom->width() / 2, 0);
-    Clutter::Cogl->path_line_to($geom->width(), $geom->height());
-    Clutter::Cogl->path_line_to(0, $geom->height());
-    Clutter::Cogl->path_line_to($geom->width() / 2, 0);
+    Clutter::Cogl::Path->move_to($box->width() / 2, 0);
+    Clutter::Cogl::Path->line_to($box->width(), $box->height());
+    Clutter::Cogl::Path->line_to(0, $box->height());
+    Clutter::Cogl::Path->line_to($box->width() / 2, 0);
 
     my $color = $self->{color};
 
@@ -156,8 +161,13 @@ sub PAINT {
 
     $color->alpha($real_alpha);
 
-    Clutter::Cogl->color($color);
-    Clutter::Cogl->path_fill();
+    Clutter::Cogl->set_source_color([
+        $color->red(),
+        $color->green(),
+        $color->blue(),
+        $real_alpha,
+    ]);
+    Clutter::Cogl::Path->fill();
 }
 
 sub SET_PROPERTY {
@@ -287,22 +297,25 @@ use Clutter qw( :init );
 
 my $stage = Clutter::Stage->new();
 $stage->set_size(640, 480);
-$stage->set_color(Clutter::Color->parse('Black'));
+$stage->set_color(Clutter::Color->from_string('Black'));
 $stage->signal_connect(destroy => sub { Clutter->main_quit() });
 
 my $triangle = Clutter::Ex::Triangle->new();
-$triangle->set_color(Clutter::Color->parse('Red'));
+$triangle->set_color(Clutter::Color->from_string('DarkBlue'));
 $triangle->set_reactive(TRUE);
 $triangle->set_size(200, 200);
 $triangle->set_anchor_point(100, 100);
 $triangle->set_position(320, 240);
 $stage->add($triangle);
-$triangle->signal_connect(clicked => sub { Clutter->main_quit() });
+$triangle->signal_connect(clicked => sub {
+    print "You clicked me!\n";
+    Clutter->main_quit();
+});
 
-my $label = Clutter::Label->new();
+my $label = Clutter::Text->new();
 $label->set_font_name('Sans 36px');
 $label->set_text('Click me!');
-$label->set_color(Clutter::Color->parse('Red'));
+$label->set_color(Clutter::Color->from_string('Red'));
 $label->set_position(
     (640 - $label->get_width()) / 2,
      $triangle->get_y() + $triangle->get_height(),
