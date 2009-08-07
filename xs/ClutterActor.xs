@@ -1580,7 +1580,10 @@ PAINT (ClutterActor *actor)
         }
 
 void
-ALLOCATE (ClutterActor *actor, const ClutterActorBox *box, gboolean origin_changed)
+ALLOCATE (actor, box, flags)
+        ClutterActor *actor
+        const ClutterActorBox *box
+        ClutterAllocationFlags flags
     PREINIT:
         ClutterActorClass *klass;
         GType thisclass, parent_class;
@@ -1598,7 +1601,7 @@ ALLOCATE (ClutterActor *actor, const ClutterActorBox *box, gboolean origin_chang
                        g_type_name (thisclass));
         }
         klass = g_type_class_peek (parent_class);
-        klass->allocate (actor, box, origin_changed);
+        klass->allocate (actor, box, flags);
 
 void
 GET_PREFERRED_WIDTH (actor, for_height)
@@ -1629,8 +1632,8 @@ GET_PREFERRED_WIDTH (actor, for_height)
          * in Perl subclasses
          */
         EXTEND (SP, 2);
-        PUSHs (sv_2mortal (newSViv (min_width)));
-        PUSHs (sv_2mortal (newSViv (natural_width)));
+        PUSHs (sv_2mortal (newSVnv (min_width)));
+        PUSHs (sv_2mortal (newSVnv (natural_width)));
 
 void
 GET_PREFERRED_HEIGHT (actor, for_width)
@@ -1661,8 +1664,8 @@ GET_PREFERRED_HEIGHT (actor, for_width)
          * in Perl subclasses
          */
         EXTEND (SP, 2);
-        PUSHs (sv_2mortal (newSViv (min_height)));
-        PUSHs (sv_2mortal (newSViv (natural_height)));
+        PUSHs (sv_2mortal (newSVnv (min_height)));
+        PUSHs (sv_2mortal (newSVnv (natural_height)));
 
 void
 REALIZE (ClutterActor *actor)
