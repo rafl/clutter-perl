@@ -6,6 +6,7 @@ Clutter 0.900
 * Add more COGL bindings under Clutter::Cogl
 * Port more examples from Clutter to Perl
 * Provide more C API for bindings based on perl-Clutter
+* Add ParamSpec bindings for colors and units
 
 Clutter 0.820
 =============
