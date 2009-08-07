@@ -748,19 +748,6 @@ clutter_actor_get_geometry (ClutterActor *actor)
         RETVAL
 
 =for apidoc
-Retrieves the allocation box as a Clutter::Geometry
-=cut
-ClutterGeometry_copy *
-clutter_actor_get_allocation_geometry (ClutterActor *actor)
-    PREINIT:
-        ClutterGeometry geom = { 0, };
-    CODE:
-        clutter_actor_get_allocation_geometry (actor, &geom);
-        RETVAL = &geom;
-    OUTPUT:
-        RETVAL
-
-=for apidoc
 Retrieves the allocation box as a Clutter::ActorBox
 =cut
 ClutterActorBox_copy *
