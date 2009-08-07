@@ -22,6 +22,7 @@ xs/ClutterListModel.xs
 xs/ClutterMedia.xs
 xs/ClutterModel.xs
 xs/ClutterModelIter.xs
+xs/ClutterParamSpec.xs
 xs/ClutterPath.xs
 xs/ClutterRectangle.xs
 xs/ClutterScore.xs
