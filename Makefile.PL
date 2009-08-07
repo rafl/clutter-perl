@@ -136,7 +136,7 @@ WriteMakefile(
 );
 
 
-#=pod
+=pod
 #=unstable
 
 print "
@@ -149,7 +149,7 @@ bugs to clutter AT openedhand DOT com as soon as possible.
 WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
 ";
 
-#=cut
+=cut
 
 sub MY::postamble
 {
