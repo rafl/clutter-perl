@@ -542,14 +542,14 @@ method. The default implementation of the C< PICK > method is the equivalent
 of:
 
   sub PICK {
-    my ($self, $pick_color) = @_;
+      my ($self, $pick_color) = @_;
 
-    return unless $self->should_pick_paint();
+      return unless $self->should_pick_paint();
 
-    my $allocation = $self->get_allocation_box();
+      my $allocation = $self->get_allocation_box();
 
-    Clutter::Cogl->set_source_color4ub($pick_color->values());
-    Clutter::Cogl->rectangle(0, 0, $box->width(), $box->height());
+      Clutter::Cogl->set_source_color([ $pick_color->values() ]);
+      Clutter::Cogl->rectangle(0, 0, $box->width(), $box->height());
   }
 
 Which will render the actor as a rectangle the size of its bounding box (Note:
@@ -559,15 +559,51 @@ An actor with internal children, or implementing the L<Clutter::Container>
 interface should, instead, use:
 
   sub PICK {
-    my ($self, $pick_color) = @_;
+      my ($self, $pick_color) = @_;
 
-    # chain up to allow picking the container
-    $self->SUPER::PICK ($pick_color);
+      # chain up to allow picking the container
+      $self->SUPER::PICK ($pick_color);
 
-    foreach my $child in ($self->get_children()) {
-        $child->paint(); # this will result in the PICK method of
-                         # the child being called
-    }
+      foreach my $child in ($self->get_children()) {
+          $child->paint(); # this will result in the PICK method of
+                           # the child being called
+      }
+  }
+
+=item APPLY_TRANSFORM ($actor, $matrix)
+
+=over
+
+=item o $actor (Clutter::Actor)
+
+=item o $matrix (Clutter::Cogl::Matrix)
+
+=back
+
+The C< APPLY_TRANSFORM > virtual function allows applying additional
+transformations on top of the ones handled by the Clutter::Actor API,
+like Clutter::Actor::set_rotation() or Clutter::Actor::set_scale().
+These additional transformations will be used when paiting the actor
+and when transforming coordinates.
+
+The actor receives a L<Clutter::Cogl::Matrix> that can be transformed
+using the relative API.
+
+When overriding the C< APPLY_TRANSFORM > an actor must B<always> chain
+up to the parent class implementation.
+
+For instance, this implementation of the virtual function will apply
+an implicit traslation of the actor; the offsets can be controlled
+by objects like L<Gtk2::Adjustment>:
+
+  sub APPLY_TRANSFORM {
+      my ($self, $matrix) = @_;
+
+      $self->SUPER::APPLY_TRANSFORM ($matrix);
+
+      $matrix->translate($self->{x_offset} * -1,
+                         $self->{y_offset} * -1,
+                         0.0);
   }
 
 =back
@@ -748,7 +784,7 @@ clutter_actor_get_geometry (ClutterActor *actor)
         RETVAL
 
 =for apidoc
-Retrieves the allocation box as a Clutter::ActorBox
+Retrieves the allocation box as a L<Clutter::ActorBox>
 =cut
 ClutterActorBox_copy *
 clutter_actor_get_allocation_box (ClutterActor *actor)
@@ -1377,6 +1413,8 @@ clutter_actor_animate (ClutterActor *actor, SV *mode, guint duration, ...)
     OUTPUT:
         RETVAL
 
+##/* defined in clutter-animation.h */
+
 =for apidoc
 =for signature animation = $actor->animate_with_timeline ($mode, $timeline, $name, $value, ...)
 =for arg ... list of property name, value pairs
@@ -1412,6 +1450,8 @@ clutter_actor_animate_with_timeline (ClutterActor *actor, SV *mode, ClutterTimel
         g_value_array_free (values);
     OUTPUT:
         RETVAL
+
+##/* defined in clutter-animation.h */
 
 =for apidoc
 =for signature animation = $actor->animate_with_alpha ($alpha, $name, $value, ...)
