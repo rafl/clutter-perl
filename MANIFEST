@@ -1,14 +1,15 @@
 AUTHORS
 ChangeLog.SVN
-clutter.typemap
-clutter-perl.h
 clutter-perl-private.h
+clutter-perl.h
+clutter.typemap
 Cookbook.pod
 copyright.pod
 doctypes
 examples/behaviour.pl
 examples/cairo.pl
 examples/custom-actor.pl
+examples/easing.pl
 examples/gtk-clutter.pl
 examples/hello.pl
 examples/rects.pl
@@ -83,5 +84,6 @@ xs/CoglHandle.xs
 xs/CoglMaterial.xs
 xs/CoglMatrix.xs
 xs/CoglPath.xs
+xs/CoglShader.xs
 xs/CoglTexture.xs
 xs_files-1.0

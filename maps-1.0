@@ -13,6 +13,7 @@ COGL_TYPE_MATERIAL_ALPHA_FUNC   CoglMaterialAlphaFunc   GEnum           Clutter:
 COGL_TYPE_MATERIAL_FILTER       CoglMaterialFilter      GEnum           Clutter::Cogl::MaterialFilter
 COGL_TYPE_MATERIAL_LAYER_TYPE   CoglMaterialLayerType   GEnum           Clutter::Cogl::MaterialLayerType
 COGL_TYPE_PIXEL_FORMAT          CoglPixelFormat         GFlags          Clutter::Cogl::PixelFormat
+COGL_TYPE_SHADER_TYPE           CoglShaderType          GEnum           Clutter::Cogl::ShaderType
 COGL_TYPE_TEXTURE_FLAGS         CoglTextureFlags        GFlags          Clutter::Cogl::TextureFlags
 
 ## Clutter Types
