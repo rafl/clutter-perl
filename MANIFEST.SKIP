@@ -16,3 +16,4 @@ Makefile\.old$
 \.tar\.gz$
 clutter-perl.doap
 tools/mk-html-docs.sh
+ChangeLog.SVN
