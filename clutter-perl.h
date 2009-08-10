@@ -7,6 +7,7 @@
 #include <pango-perl.h>
 
 #include <cogl/cogl.h>
+#include <cogl/cogl-pango.h>
 #include <clutter/clutter.h>
 
 #include "clutter-perl-autogen.h"

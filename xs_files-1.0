@@ -40,6 +40,7 @@ xs/CoglColor.xs
 xs/CoglHandle.xs
 xs/CoglMaterial.xs
 xs/CoglMatrix.xs
+xs/CoglPango.xs
 xs/CoglPath.xs
 xs/CoglShader.xs
 xs/CoglTexture.xs

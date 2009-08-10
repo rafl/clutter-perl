@@ -16,6 +16,10 @@ COGL_TYPE_PIXEL_FORMAT          CoglPixelFormat         GFlags          Clutter:
 COGL_TYPE_SHADER_TYPE           CoglShaderType          GEnum           Clutter::Cogl::ShaderType
 COGL_TYPE_TEXTURE_FLAGS         CoglTextureFlags        GFlags          Clutter::Cogl::TextureFlags
 
+## CoglPango Types
+COGL_PANGO_TYPE_FONT_MAP        CoglPangoFontMap        GObject         Clutter::Cogl::Pango::FontMap
+COGL_PANGO_TYPE_RENDERER        CoglPangoRenderer       GObject         Clutter::Cogl::Pango::Renderer
+
 ## Clutter Types
 CLUTTER_TYPE_ACTOR_BOX	        ClutterActorBox	        GBoxed	        Clutter::ActorBox
 CLUTTER_TYPE_ACTOR_FLAGS	ClutterActorFlags	GFlags  	Clutter::ActorFlags
