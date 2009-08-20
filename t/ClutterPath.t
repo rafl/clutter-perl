@@ -1,4 +1,4 @@
-use Clutter::TestHelper tests => 22;
+use Clutter::TestHelper tests => 29;
 
 my $path = Clutter::Path->new();
 isa_ok($path, 'Clutter::Path', 'is a path');
@@ -47,3 +47,24 @@ $node = $path->get_node(4);
 is($node->{type}, 'close', 'last node');
 is(scalar keys %{$node}, 2, 'still type and points');
 is_deeply($node->{points}, [ ], 'empty points');
+
+my $n = 0;
+$path->foreach(sub { $n += 1; });
+is($n, 5, 'foreach');
+
+$path->clear(); ok(1);
+
+$path = Clutter::Path->new('M 10,10 C 20,10 20,10 20,20');
+is($path->get_n_nodes(), 2, 'new from description');
+is($path->get_node(0)->{type}, 'move-to', 'node from description');
+
+$path->clear(); ok(1);
+
+$path = Clutter::Path->new(
+    { type => 'move-to', points => [ [ 10, 10 ] ] },
+    [ 'line-to', [ [ 10, 20 ] ] ],
+    { type => 'line-to', points => [ [ 20, 20 ] ] },
+    [ 'line-to', [ [ 10, 10 ] ] ],
+);
+is($path->get_n_nodes(), 4, 'new from nodes');
+is_deeply($path->get_node(2)->{points}->[0], [ 20, 20 ], 'node from data');
