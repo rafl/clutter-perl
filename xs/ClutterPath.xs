@@ -367,11 +367,20 @@ BOOT:
         gperl_register_sink_func (CLUTTER_TYPE_PATH, clutterperl_path_sink);
 
 
-ClutterPath_noinc *clutter_path_new (class, const gchar *description=NULL);
+ClutterPath_noinc *clutter_path_new (class, ...);
     CODE:
         RETVAL = clutter_path_new ();
-        if (description != NULL) {
-                clutter_path_set_description (RETVAL, description);
+        if (items == 2) {
+                if (SvTYPE (ST (1)) == SVt_PV) {
+                        clutter_path_set_description (RETVAL, SvPV_nolen (ST (1)));
+                }
+        }
+        else {
+                gint i;
+                for (i = 1; i < items; i++) {
+                        ClutterPathNode *node = SvClutterPathNode (ST (i));
+                        clutter_path_add_node (RETVAL, node);
+                }
         }
     OUTPUT:
         RETVAL
