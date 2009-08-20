@@ -80,12 +80,12 @@ sub INIT_INSTANCE {
 sub ALPHA_NOTIFY {
     my ($self, $alpha_value) = @_;
 
-    my $angle = $alpha_value
-              * ($self->{angle_end} - $self->{angle_start})
-              / Clutter::Alpha->MAX_ALPHA;
-
     my @actors = $self->get_actors();
     return unless scalar @actors;
+
+    my $angle = $alpha_value
+              * ($self->{angle_end} - $self->{angle_start})
+              + $self->{angle_start};
 
     foreach my $actor (@actors) {
         $actor->set_rotation('z-axis', $angle,
@@ -108,6 +108,7 @@ $stage->set_color(Clutter::Color->new(0xcc, 0xcc, 0xcc, 0xff));
 $stage->signal_connect(key_press_event => sub { Clutter->main_quit(); });
 
 my $group = Clutter::Group->new();
+$group->set_position(100, 100);
 $stage->add($group);
 
 my $rect = Clutter::Rectangle->new();
@@ -126,33 +127,36 @@ if ($@) {
 }
 else {
     $hand->set_position(5, 5);
-
     $rect->set_size($hand->get_width()  + 10,
                     $hand->get_height() + 10);
 
     $group->add($hand);
 }
 
-my $timeline = Clutter::Timeline->new_for_duration(4000);
-$timeline->set(loop => TRUE);
+my $timeline = Clutter::Timeline->new(4000);
+$timeline->set_loop(TRUE);
 
-my $alpha = Clutter::Alpha->new($timeline, \&Clutter::Alpha::ramp_inc);
-
-my $o_behave = Clutter::Behaviour::Opacity->new($alpha, 0x33, 0xff);
+my $o_behave = Clutter::Behaviour::Opacity->new(
+    Clutter::Alpha->new($timeline, 'linear'),
+    0x33, 0xff
+);
 $o_behave->apply($group);
 
-my $p_behave
-    = Clutter::Behaviour::Path->new($alpha,
-        [   0,   0 ],
-        [   0, 150 ],
-        [ 240, 150 ],
-        [ 240,   0 ],
-        [   0,   0 ],
-      );
+my $p_behave = Clutter::Behaviour::Path->new(
+    Clutter::Alpha->new($timeline, 'ease-in-out-sine'),
+    Clutter::Path->new(
+        [ 'move-to', [ [ 100, 100 ] ] ],
+        [ 'line-to', [ [   0, 250 ] ] ],
+        [ 'line-to', [ [ 250, 250 ] ] ],
+        [ 'line-to', [ [ 250, 150 ] ] ],
+        [ 'close',                    ],
+    ),
+);
 $p_behave->apply($group);
 
-my $r_behave
-    = Clutter::Ex::Behaviour::Rotate->new(alpha => $alpha);
+my $r_behave = Clutter::Ex::Behaviour::Rotate->new(
+    alpha => Clutter::Alpha->new($timeline, 'ease-in-cubic'),
+);
 $r_behave->apply($group);
 
 $timeline->start();
