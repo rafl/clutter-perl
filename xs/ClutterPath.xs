@@ -219,6 +219,15 @@ clutter_path_node_unwrap (GType        gtype,
                         svp = hv_fetch (hv, "type", 4, FALSE);
                         node->type = get_path_node_type_from_sv (*svp);
 
+                        if (node->type == CLUTTER_PATH_CLOSE)
+                                break;
+                        else {
+                                if (!hv_exists (hv, "points", 6)) {
+                                        croak ("A node without points can only "
+                                               "be of type 'close'");
+                                }
+                        }
+
                         svp = hv_fetch (hv, "points", 6, FALSE);
                         get_path_node_points_from_sv (*svp, node);
                 }
@@ -231,6 +240,15 @@ clutter_path_node_unwrap (GType        gtype,
 
                         svp = av_fetch (av, 0, 0);
                         node->type = get_path_node_type_from_sv (*svp);
+
+                        if (node->type == CLUTTER_PATH_CLOSE)
+                                break;
+                        else {
+                                if (av_len (av) == 0) {
+                                        croak ("A node without points can only "
+                                               "be of type 'close'");
+                                }
+                        }
 
                         svp = av_fetch (av, 1, 0);
                         get_path_node_points_from_sv (*svp, node);
