@@ -366,7 +366,44 @@ MODULE = Clutter::Path  PACKAGE = Clutter::Path PREFIX = clutter_path_
 BOOT:
         gperl_register_sink_func (CLUTTER_TYPE_PATH, clutterperl_path_sink);
 
+=for position DESCRIPTION
 
+=head1 DESCRIPTION
+
+A B<Clutter::Path> contains a description of a path consisting of straight
+lines and Bezier curves. This can be used in a L<Clutter::BehaviourPath> to
+animate an actor moving along the path.
+
+The path consists of a series of nodes; see L<Clutter::PathNode> for more
+information on the node notation.
+
+You can build a path using the node adding functions such as
+Clutter::Path::add_line_to() or Clutter::Path::add_curve_to()
+
+Alternatively the path can be described in a string using a subset of the SVG
+path syntax. See Clutter::Path::add_string() for details.
+=cut
+
+=for apidoc
+=for signature path = Clutter::Path->new ()
+=for signature path = Clutter::Path->new ($description)
+=for signature path = Clutter::Path->new ($node, ...)
+=for arg ... (__hide__)
+Creates a new path.
+
+The optional arguments can be a stringified definition of the path, using
+a subset of the SVG path syntax or a list of nodes, e.g.:
+
+    Clutter::Path->new("M 10,10 L 200,200 z");
+
+    # or the equivalent
+
+    Clutter::Path->new(
+        [ 'move-to', [ [ 10, 10 ] ] ],
+        [ 'line-to', [ [ 200, 200 ] ] ],
+        [ 'close' ],
+    );
+=cut
 ClutterPath_noinc *clutter_path_new (class, ...);
     CODE:
         RETVAL = clutter_path_new ();
@@ -385,12 +422,40 @@ ClutterPath_noinc *clutter_path_new (class, ...);
     OUTPUT:
         RETVAL
 
+=for apidoc
+Replaces all the nodes in the I<path> with nodes described in I<description>.
+
+See Clutter::Path::add_string() for the format of the path description.
+=cut
 gboolean clutter_path_set_description (ClutterPath *path, const gchar *description);
 
 const gchar_ornull *clutter_path_get_description (ClutterPath *path);
 
+=for apidoc
+Draws I<path> on a Cairo::Context using the Cairo API
+
+This method is useful in case you store a path as Clutter::Path and wish
+to paint it on a Clutter::CairoTexture
+=cut
 void clutter_path_to_cairo_path (ClutterPath *path, cairo_t *cr);
 
+=for apidoc
+Invokes the code reference inside I<func> for each node inside I<path>.
+
+The function will have the following parameters:
+
+=over
+
+=item B<node>
+
+The current node in the path
+
+=item B<data>
+
+The data passed to Clutter::Path::foreach()
+
+=back
+=cut
 void clutter_path_foreach (ClutterPath *path, SV *func, SV *data=NULL);
     PREINIT:
         GPerlCallback *cb;
@@ -399,11 +464,22 @@ void clutter_path_foreach (ClutterPath *path, SV *func, SV *data=NULL);
         clutter_path_foreach (path, clutterperl_path_foreach_func, cb);
         gperl_callback_destroy (cb);
 
+=for apidoc
+Clears the I<path> and removes all the nodes inside it
+=cut
 void clutter_path_clear (ClutterPath *path);
 
 =for apidoc
 =for signature index = $path->get_position ($progress)
 =for signature (index, knot) = $path->get_position ($progress)
+Retrieves the index of the node inside I<path> at the relative position
+expressed as the I<progress> over the current path's length
+
+In array context this method will also return the knot with the position
+on the path given the value of I<progress>.
+
+The I<progress> is a floating point value between 0.0 and 1.0; it usually
+comes from a Clutter::Alpha or a Clutter::Interval.
 =cut
 void clutter_path_get_position (ClutterPath *path, gdouble progress);
     PREINIT:
@@ -416,14 +492,29 @@ void clutter_path_get_position (ClutterPath *path, gdouble progress);
                 XPUSHs (sv_2mortal (newSVClutterKnot (&knot)));
         }
 
+=for apidoc
+Inserts the given I<node> at the given I<index>
+=cut
 void clutter_path_insert_node (ClutterPath *path, gint index, ClutterPathNode *node);
 
+=for apidoc
+Removes the node at the given I<index>
+=cut
 void clutter_path_remove_node (ClutterPath *path, gint index);
 
+=for apidoc
+Replaces the current node at the given I<index> with a new node
+=cut
 void clutter_path_replace_node (ClutterPath *path, gint index, ClutterPathNode *node);
 
+=for apidoc
+Retrieves an approximation of the total length of the path
+=cut
 guint clutter_path_get_length (ClutterPath *path);
 
+=for apidoc
+Retrieves the node at the given I<index>
+=cut
 ClutterPathNode_copy *clutter_path_get_node (ClutterPath *path, guint index);
     PREINIT:
         ClutterPathNode node;
@@ -435,6 +526,7 @@ ClutterPathNode_copy *clutter_path_get_node (ClutterPath *path, guint index);
 
 =for apidoc
 =for signature (nodes) = $path->get_nodes ()
+Retrieves a list of all the nodes inside I<path>
 =cut
 void clutter_path_get_nodes (ClutterPath *path);
     PREINIT:
@@ -447,7 +539,94 @@ void clutter_path_get_nodes (ClutterPath *path);
         }
         g_slist_free (nodes);
 
+=for apidoc
+Retrieves the number of nodes inside I<path>
+=cut
 guint clutter_path_get_n_nodes (ClutterPath *path);
+
+=for apidoc Clutter::Path::add_move_to
+=for signature $path->add_move_to ($x, $y)
+=for arg ... (__hide__)
+Appends a 'move-to' node to I<path>
+=cut
+
+=for apidoc Clutter::Path::add_rel_move_to
+=for signature $path->add_rel_move_to ($x, $y)
+=for arg ... (__hide__)
+Appends a 'rel-move-to' node to I<path>
+=cut
+
+=for apidoc Clutter::Path::add_line_to
+=for signature $path->add_line_to ($x, $y)
+=for arg ... (__hide__)
+Appends a 'line-to' node to I<path>
+=cut
+
+=for apidoc Clutter::Path::add_rel_line_to
+=for signature $path->add_rel_line_to ($x, $y)
+=for arg ... (__hide__)
+Appends a 'rel-line-to' node to I<path>
+=cut
+
+=for apidoc Clutter::Path::add_curve_to
+=for signature $path->add_curve_to ($x1, $y1, $x2, $y2, $x3, $y3)
+=for arg ... (__hide__)
+Appends a 'curve-to' node to I<path>
+=cut
+
+=for apidoc Clutter::Path::add_rel_curve_to
+=for signature $path->add_rel_curve_to ($x1, $y1, $x2, $y2, $x3, $y3)
+=for arg ... (__hide__)
+Appends a 'rel-curve-to' node to I<path>
+=cut
+
+=for apidoc Clutter::Path::add_close
+=for signature $path->add_close
+=for arg ... (__hide__)
+Appends a 'close' node to I<path>
+=cut
+
+=for apidoc Clutter::Path::add_string
+=for signature $path->add_string ($description)
+=for arg ... (__hide__)
+Adds new nodes to the end of the path as described in I<description>.
+
+The format is a subset of the SVG path format. Each node is represented
+by a letter and is followed by zero, one or three pairs of coordinates.
+The coordinates can be separated by spaces or a comma.
+
+The types are:
+
+=over
+
+=item M - equivalent 'move-to'/'CLUTTER_PATH_MOVE_TO'
+=item m - equivalent 'rel-move-to'/'CLUTTER_PATH_REL_MOVE_TO'
+
+Take one pair of coordinates
+
+=item L - equivalent to 'line-to'/'CLUTTER_PATH_LINE_TO'
+=item l - equivalent to 'rel-line-to'/'CLUTTER_PATH_REL_LINE_TO'
+
+Take one pair of coordinates
+
+=item C - equivalent to 'curve-to'/'CLUTTER_PATH_CURVE_TO'
+=item c - equivalent to 'rel-curve-to'/'CLUTTER_PATH_REL_CURVE_TO'
+
+Take three pairs of coordinates
+
+=item z - equivalent to 'close'/'CLUTTER_PATH_CLOSE'
+
+No coordinates needed
+
+=back
+
+For example, to move an actor in a 100 by 100 pixel square, centered
+on the point 300, 300, you could use the following path:
+
+  M 250,350 l 0 -100 L 350,250 l 0 100 z
+
+This function may croak on failure.
+=cut
 
 void clutter_path_add_move_to (ClutterPath *path, ...);
     ALIAS:
@@ -527,6 +706,7 @@ void clutter_path_add_move_to (ClutterPath *path, ...);
                         if (items != 2) {
                                 croak ("Usage: Clutter::Path::add_string (path, string)");
                         }
-                        clutter_path_add_string (path, SvPV_nolen (ST (1)));
+                        if (!clutter_path_add_string (path, SvPV_nolen (ST (1))))
+                            croak ("Invalid path description");
                         break;
         }
