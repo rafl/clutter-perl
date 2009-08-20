@@ -270,6 +270,23 @@ clutterperl_path_sink (GObject *object)
         g_object_unref (object);
 }
 
+static GPerlCallback *
+clutterperl_path_foreach_func_create (SV *func, SV *data)
+{
+        GType param_types[1];
+
+        param_types[0] = CLUTTER_TYPE_PATH_NODE;
+
+        return gperl_callback_new (func, data, 1, param_types, 0);
+}
+
+static void
+clutterperl_path_foreach_func (const ClutterPathNode *node,
+                               gpointer               data)
+{
+        gperl_callback_invoke ((GPerlCallback *) data, NULL, node);
+}
+
 MODULE = Clutter::Path  PACKAGE = Clutter::Knot PREFIX = clutter_knot_
 
 BOOT:
@@ -362,6 +379,16 @@ ClutterPath_noinc *clutter_path_new (class, const gchar *description=NULL);
 gboolean clutter_path_set_description (ClutterPath *path, const gchar *description);
 
 const gchar_ornull *clutter_path_get_description (ClutterPath *path);
+
+void clutter_path_to_cairo_path (ClutterPath *path, cairo_t *cr);
+
+void clutter_path_foreach (ClutterPath *path, SV *func, SV *data=NULL);
+    PREINIT:
+        GPerlCallback *cb;
+    CODE:
+        cb = clutterperl_path_foreach_func_create (func, data);
+        clutter_path_foreach (path, clutterperl_path_foreach_func, cb);
+        gperl_callback_destroy (cb);
 
 void clutter_path_clear (ClutterPath *path);
 
@@ -494,4 +521,3 @@ void clutter_path_add_move_to (ClutterPath *path, ...);
                         clutter_path_add_string (path, SvPV_nolen (ST (1)));
                         break;
         }
-
