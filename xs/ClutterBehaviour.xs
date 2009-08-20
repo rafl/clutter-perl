@@ -143,7 +143,7 @@ gboolean
 clutter_behaviour_is_applied (ClutterBehaviour *behaviour, ClutterActor *actor)
 
 void
-clutter_behaviour_actors_foreach (behaviour, func, data)
+clutter_behaviour_actors_foreach (behaviour, func, data=NULL)
         ClutterBehaviour *behaviour
         SV *func
         SV *data
