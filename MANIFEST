@@ -8,6 +8,7 @@ doctypes
 examples/behaviour.pl
 examples/cairo.pl
 examples/custom-actor.pl
+examples/custom-container.pl
 examples/easing.pl
 examples/gtk-clutter.pl
 examples/hello.pl

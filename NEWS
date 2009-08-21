@@ -7,6 +7,7 @@ Clutter 1.001
   SVG notation and by using lists of Clutter::PathNode objects
 * Add more units to the test suite, covering Clutter::Path and Clutter::Event
 * Fully document Clutter::Path
+* Add an example of a Clutter::Container implementation
 
 Clutter 1.000
 =============
