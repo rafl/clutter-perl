@@ -1,3 +1,13 @@
+Clutter 1.001
+=============
+* Add Clutter::Cogl::Pango API bindings
+* Fix a segmentation fault when parsing path nodes of type 'close'
+* Add Clutter::Path::foreach() and Clutter::Path::to_cairo_path()
+* Allow constructing Clutter::Path objects both by using the stringified
+  SVG notation and by using lists of Clutter::PathNode objects
+* Add more units to the test suite, covering Clutter::Path and Clutter::Event
+* Fully document Clutter::Path
+
 Clutter 1.000
 =============
 * First developers snapshot of the Clutter Perl bindings
