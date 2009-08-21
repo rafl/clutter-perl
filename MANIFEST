@@ -32,6 +32,7 @@ t/ClutterBehaviourOpacity.t
 t/ClutterBehaviourScale.t
 t/ClutterBindingPool.t
 t/ClutterContainer.t
+t/ClutterEvent.t
 t/ClutterGroup.t
 t/ClutterInterval.t
 t/ClutterModel.t
