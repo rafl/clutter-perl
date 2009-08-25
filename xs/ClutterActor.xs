@@ -796,6 +796,16 @@ clutter_actor_get_allocation_box (ClutterActor *actor)
     OUTPUT:
         RETVAL
 
+ClutterGeometry_copy *
+clutter_actor_get_allocation_geometry (ClutterActor *actor)
+    PREINIT:
+        ClutterGeometry geometry = { 0, };
+    CODE:
+        clutter_actor_get_allocation_geometry (actor, &geometry);
+        RETVAL = &geometry;
+    OUTPUT:
+        RETVAL
+
 void
 clutter_actor_set_position (ClutterActor *actor, gfloat x, gfloat y)
 
