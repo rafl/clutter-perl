@@ -27,6 +27,20 @@
 
 MODULE = Clutter::Shader        PACKAGE = Clutter::Shader       PREFIX = clutter_shader_
 
+=for object Clutter::Shader - Programmable pipeline abstraction
+=cut
+
+=for position DESCRIPTION
+
+=head1 DESCRIPTION
+
+B<Clutter::Shader> is an object providing an abstraction over the
+OpenGL programmable pipeline. By using Clutter::Shader instances it
+is possible to override the drawing pipeline by using small programs
+also known as "shaders".
+
+=cut
+
 ClutterShader_noinc *
 clutter_shader_new (class)
     C_ARGS:

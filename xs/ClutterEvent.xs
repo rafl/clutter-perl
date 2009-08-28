@@ -184,6 +184,9 @@ clutterperl_event_unwrap (GType       gtype,
 
 MODULE = Clutter::Event		PACKAGE = Clutter::Event	PREFIX = clutter_event_
 
+=for object Clutter::Event - User and window system events
+=cut
+
 =head1 EVENT TYPES
 
 =over

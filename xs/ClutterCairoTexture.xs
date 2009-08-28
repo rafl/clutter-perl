@@ -10,6 +10,54 @@ MODULE = Clutter::CairoTexture  PACKAGE = Clutter::CairoTexture PREFIX = clutter
 BOOT:
         gperl_set_isa ("Clutter::Cairo::Context", "Cairo::Context");
 
+=for object Clutter::CairoTexture - Texture with Cairo integration
+=cut
+
+=for position DESCRIPTION
+
+=head1 SYNOPSIS
+
+    my $texture = Clutter::CairoTexture->new(64, 64);
+    my $cr = $texture->create_context();
+
+    # use Cairo API to draw on the Cairo::Context
+
+    # destroys the Context and uploads the contents to the
+    # CairoTexture; alternatively, you can let $cr go out
+    # of scope
+    $cr = undef;
+
+=head1 DESCRIPTION
+
+B<Clutter::CairoTexture> is a L<Clutter::Texture> that displays the contents
+of a Cairo::Context. The Clutter::CairoTexture actor will create a
+Cairo image surface which will then be uploaded to a GL texture when needed.
+
+Clutter::CairoTexture will provide a Cairo::Context  by using the
+Clutter::CairoTexture::create_context() and the
+Clutter::CairoTexture::create_context_for_region() methods; you can use the
+Cairo API to draw on the context and then destroy the context when done.
+
+As soon as the context is destroyed, the contents of the surface will be
+uploaded into the Clutter::CairoTexture actor.
+
+Although a new Cairo::Context is created each time you call the
+create_context() or the create_context_for_region() methods, the CairoTexture
+will use the same image surface. You can call Clutter::CairoTexturr::clear()
+to erase the contents between calls.
+
+B<Warning>: Note that you should never use the code above inside the
+Clutter::Actor::PAINT or Clutter::Actor::PICK virtual functions or
+signal handlers because it will lead to performance degradation.
+
+=cut
+
+=for position SEE_ALSO
+
+L<Clutter::Texture>, L<Cairo>
+
+=cut
+
 ClutterActor_noinc *clutter_cairo_texture_new (class, guint width, guint height);
     C_ARGS:
         width, height

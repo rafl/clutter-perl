@@ -32,6 +32,9 @@ clutterperl_media_init (ClutterMediaIface *iface)
 
 MODULE = Clutter::Media		PACKAGE = Clutter::Media	PREFIX = clutter_media_
 
+=for object Clutter::Media - An interface for controlling playback of media actors
+=cut
+
 =for position DESCRIPTION
 
 =head1 DESCRIPTION

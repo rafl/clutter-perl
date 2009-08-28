@@ -2,6 +2,41 @@
 
 MODULE = Clutter::Behaviour::Ellipse    PACKAGE = Clutter::Behaviour::Ellipse   PREFIX = clutter_behaviour_ellipse_
 
+=for object Clutter::Behaviour::Ellipse - A behaviour interpolating position along an ellipse
+=cut
+
+=for position DESCRIPTION
+
+=head1 SYNOPSIS
+
+    my $behaviour = Clutter::Behaviour::Ellipse->new(
+        Clutter::Alpha->new($timeline, 'linear'),
+        [ 100, 100 ],   # center of the ellipse
+        [ 250, 250 ],   # width and height of the ellipse
+        [   0, 360 ],   # initial and final angle
+    );
+
+    $behaviour->apply($icon_group);
+
+=head1 DESCRIPTION
+
+B<Clutter::Behaviour::Ellipse> interpolates actors along a path defined by
+an ellipse.
+
+B<Note>: When applying an ellipse behaviour to an actor, the behaviour will
+update the actor's position and depth and set them to what is dictated by
+the ellipses initial position.
+
+=cut
+
+=for position SEE_ALSO
+
+=head1 SEE ALSO
+
+L<Clutter::Behaviour>, L<Clutter::Alpha>
+
+=cut
+
 =for apidoc
 =for arg center an array reference containing the x and y coordinates
 =for arg size an array reference containing the width and height of the ellipse

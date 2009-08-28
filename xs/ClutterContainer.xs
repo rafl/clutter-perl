@@ -345,6 +345,9 @@ clutterperl_container_foreach_callback (ClutterActor *actor,
 
 MODULE = Clutter::Container     PACKAGE = Clutter::Container	PREFIX = clutter_container_
 
+=for object Clutter::Container - An interface for implementing container actors
+=cut
+
 =for position DESCRIPTION
 
 =head1 DESCRIPTION
@@ -631,7 +634,7 @@ _ADD_INTERFACE (class, const char *target_class)
     }
 
 =for apidoc
-=for arg actor __hide__
+=for arg actor (__hide__)
 =for arg ... list of actors
 Adds a list of actors to I<container>
 =cut
@@ -645,7 +648,7 @@ clutter_container_add (ClutterContainer *container, ClutterActor *actor, ...)
 	  clutter_container_add_actor (container, SvClutterActor (ST (i)));
 
 =for apidoc
-=for arg actor __hide__
+=for arg actor (__hide__)
 =for arg ... list of actors
 Removes a list of actors from I<container>
 =cut

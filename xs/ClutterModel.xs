@@ -234,6 +234,29 @@ clutterperl_model_class_init (ClutterModelClass *klass)
 
 MODULE = Clutter::Model         PACKAGE = Clutter::Model        PREFIX = clutter_model_
 
+=for object Clutter::Model - A generic Model base class
+=cut
+
+=for position DESCRIPTION
+
+=head1 DESCRIPTION
+
+B<Clutter::Model> is a generic list model API which can be used to implement
+the model-view-controller architectural pattern in Clutter.
+
+Clutter::Model provides the base API for manipulating and iterating over
+strongly typed storages.
+
+=cut
+
+=for position SEE_ALSO
+
+=head1 SEE ALSO
+
+L<Clutter::ListModel>
+
+=cut
+
 =for position post_methods
 
 =head1 CREATING A CUSTOM MODEL

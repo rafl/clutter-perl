@@ -27,6 +27,9 @@
 
 MODULE = Clutter::Texture PACKAGE = Clutter::Texture PREFIX = clutter_texture_
 
+=for object Clutter::Texture - An actor for displaying and manipulating images
+=cut
+
 =for enum ClutterTextureFlags
 =cut
 

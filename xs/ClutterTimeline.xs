@@ -27,6 +27,9 @@
 
 MODULE = Clutter::Timeline	PACKAGE = Clutter::Timeline	PREFIX = clutter_timeline_
 
+=for object Clutter::Timeline - A class for time-based events
+=cut
+
 ClutterTimeline_noinc *
 clutter_timeline_new (class=NULL, guint duration)
     C_ARGS:

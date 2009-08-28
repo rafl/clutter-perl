@@ -27,6 +27,8 @@
 
 MODULE = Clutter::Rectangle	PACKAGE = Clutter::Rectangle	PREFIX = clutter_rectangle_
 
+=for object Clutter::Rectangle - A simple rectangular actor
+=cut
 
 ClutterActor_noinc *
 clutter_rectangle_new (class, color=NULL)

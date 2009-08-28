@@ -27,11 +27,62 @@
 
 MODULE = Clutter::Stage		PACKAGE = Clutter::Stage	PREFIX = clutter_stage_
 
+=for object Clutter::Stage - Top level visual element to which actors are placed
+=cut
+
+=for position DESCRIPTION
+
+=head1 SYNOPSIS
+
+    my $stage = Clutter::Stage->new();
+    $stage->signal_connect(destroy => sub { Clutter->main_quit });
+
+    $stage->add($actor, $rectangle, $group, $texture, $label);
+    $stage->show();
+
+    $stage->destroy();
+
+    # the default stage is owned by Clutter, and get_default() will
+    # always return the same pointer
+    my $stage = Clutter::Stage->get_default();
+
+=head1 DESCRIPTION
+
+B<Clutter::Stage> is a top level 'window' on which child actors are placed
+and manipulated.
+
+Clutter creates a default stage upon initialization, which can be retrieved
+using Clutter::Stage::get_default(). Clutter always provides the default
+stage, unless the backend is unable to create one. The stage returned
+by Clutter::Stage::get_default() is guaranteed to always be the same.
+
+Backends might provide support for multiple stages. The support for this
+feature can be checked at run-time using the Clutter::feature_available()
+function and the 'stage-multiple' flag. If the backend used  supports
+multiple stages, new Clutter::Stage instances can be created using
+Clutter::Stage::new(). These stages must be managed by the developer
+using Clutter::Actor::destroy(), which will take care of destroying all the
+actors contained inside them.
+
+Clutter::Stage is a proxy actor, wrapping the backend-specific implementation
+of the windowing system. It is possible to subclass Clutter::Stage, as long
+as every overridden virtual function chains up to the parent class
+corresponding function.
+
+=cut
+
+=for apidoc
+Retrieves the default Clutter::Stage. The returned stage is always the same
+and it B<must not> be destroyed.
+=cut
 ClutterActor_noinc *
 clutter_stage_get_default (class)
     C_ARGS:
         /* void */
 
+=for apidoc
+Creates a new Clutter::Stage, if the Clutter backend supports multiple stages.
+=cut
 ClutterActor_noinc *
 clutter_stage_new (class)
     C_ARGS:

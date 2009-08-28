@@ -366,6 +366,9 @@ MODULE = Clutter::Path  PACKAGE = Clutter::Path PREFIX = clutter_path_
 BOOT:
         gperl_register_sink_func (CLUTTER_TYPE_PATH, clutterperl_path_sink);
 
+=for object Clutter::Path - An object describing a path
+=cut
+
 =for position DESCRIPTION
 
 =head1 DESCRIPTION

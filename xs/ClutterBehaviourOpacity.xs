@@ -27,6 +27,35 @@
 
 MODULE = Clutter::Behaviour::Opacity    PACKAGE = Clutter::Behaviour::Opacity   PREFIX = clutter_behaviour_opacity_
 
+=for object Clutter::Behaviour::Opacity - A behaviour controlling opacity
+=cut
+
+=for position DESCRIPTION
+
+=head1 SYNOPSIS
+
+    my $behaviour = Clutter::Behaviour::Opacity->new();
+    $behaviour->set_alpha(Clutter::Alpha->new($timeline, 'linear'));
+    $behaviour->set_bounds(255, 0);     # fade out
+    $behaviour->apply($actor);
+
+    $timeline->start();
+
+=head1 DESCRIPTION
+
+B<Clutter::Behaviour::Opacity> interpolates the opacity of the actors
+to which it has been applied between two values.
+
+=cut
+
+=for position SEE_ALSO
+
+=head1 SEE ALSO
+
+L<Clutter::Behaviour>, L<Clutter::Alpha>
+
+=cut
+
 ClutterBehaviour_noinc *
 clutter_behaviour_opacity_new (class, alpha=NULL, opacity_start, opacity_end)
         ClutterAlpha_ornull *alpha

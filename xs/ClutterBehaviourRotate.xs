@@ -2,6 +2,34 @@
 
 MODULE = Clutter::Behaviour::Rotate PACKAGE = Clutter::Behaviour::Rotate PREFIX = clutter_behaviour_rotate_
 
+=for object Clutter::Behaviour::Rotate - A behaviour controlling rotation
+=cut
+
+=for position DESCRIPTION
+
+=head1 SYNOPSIS
+
+    my $behaviour = Clutter::Behaviour::Rotate->new();
+    $behaviour->set_alpha(Clutter::Alpha->new($timeline, 'ease-out-quad'));
+    $behaviour->set_axis('z-axis');
+    $behaviour->set_direction('ccw');
+    $behaviour->set_bounds(270, 90);
+
+=head1 DESCRIPTION
+
+B<Clutter::Behaviour::Rotate> rotates actors between a starting and ending
+angle on a given axis.
+
+=cut
+
+=for position SEE_ALSO
+
+=head1 SEE ALSO
+
+L<Clutter::Behaviour>, L<Clutter::Alpha>
+
+=cut
+
 ClutterBehaviour_noinc *
 clutter_behaviour_rotate_new (class, alpha=NULL, axis, direction, angle_begin, angle_end)
         ClutterAlpha_ornull *alpha

@@ -83,8 +83,10 @@ BOOT:
         gperl_register_boxed (CLUTTER_TYPE_UNITS, "Clutter::Units",
                               &clutter_units_wrapper_class);
 
+=for object Clutter::Units - A logical distance unit
+=cut
 
-=for position SYNOPSIS
+=for position DESCRIPTION
 
 =head1 SYNOPSIS
 
@@ -98,10 +100,6 @@ BOOT:
     $units = Clutter::Units->from_string("12 pt");
     print $units->{type};       # "pt"
     print $units->to_pixels();
-
-=cut
-
-=for position DESCRIPTION
 
 =head1 DESCRIPTION
 

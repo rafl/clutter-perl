@@ -2,6 +2,9 @@
 
 MODULE = Clutter::BindingPool   PACKAGE = Clutter::BindingPool  PREFIX = clutter_binding_pool_
 
+=for object Clutter::BindingPool - Pool for key bindings
+=cut
+
 =for position DESCRIPTION
 
 =head1 DESCRIPTION

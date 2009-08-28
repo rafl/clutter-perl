@@ -2,6 +2,9 @@
 
 MODULE = Clutter::StageManager  PACKAGE = Clutter::StageManager PREFIX = clutter_stage_manager_
 
+=for object Clutter::StageManager - Manages the Clutter stages
+=cut
+
 ClutterStageManager_noinc *
 clutter_stage_manager_get_default (SV *class)
     C_ARGS:

@@ -107,7 +107,15 @@ MODULE = Clutter::Interval      PACKAGE = Clutter::Interval     PREFIX = clutter
 BOOT:
         gperl_register_sink_func (CLUTTER_TYPE_INTERVAL, clutterperl_interval_sink);
 
+=for object Clutter::Interval - An object holding an interval of two values
+=cut
+
 =for position DESCRIPTION
+
+=head1 SYNOPSIS
+
+    my $interval = Clutter::Interval->new('Glib::Int', 0, 11);
+    my $value = $interval->compute_value(0.5);
 
 =head1 DESCRIPTION
 

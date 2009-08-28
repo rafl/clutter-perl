@@ -82,6 +82,9 @@ clutterperl_behaviour_foreach_func (ClutterBehaviour *behaviour,
 
 MODULE = Clutter::Behaviour     PACKAGE = Clutter::Behaviour    PREFIX = clutter_behaviour_
 
+=for object Clutter::Behaviour - Class for providing behaviours to actors
+=cut
+
 =for position DESCRIPTION
 
 =head1 DESCRIPTION
@@ -117,7 +120,7 @@ implementation of the following method:
 
 =item o $behaviour (Clutter::Behaviour)
 
-=item o $alpha_value (integer) The value computed by the alpha function
+=item o $alpha_value (float) The value computed by the alpha function
 
 =back
 

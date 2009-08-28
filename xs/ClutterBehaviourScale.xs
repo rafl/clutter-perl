@@ -27,6 +27,34 @@
 
 MODULE = Clutter::Behaviour::Scale    PACKAGE = Clutter::Behaviour::Scale   PREFIX = clutter_behaviour_scale_
 
+=for object Clutter::Behaviour::Scale - A behaviour controlling scale
+=cut
+
+=for position DESCRIPTION
+
+=head1 SYNOPSIS
+
+    my $behaviour = Clutter::Behaviour::Scale->new(
+        Clutter::Alpha->new($timeline, 'ease-in-quad'),
+        1.0, 1.0,       # initial scaling factors
+        2.0, 2.0,       # final scaling factors
+    );
+
+=head1 DESCRIPTION
+
+B<Clutter::Behaviour::Scale> interpolates actors scaling factors between
+two values.
+
+=cut
+
+=for position SEE_ALSO
+
+=head1 SEE ALSO
+
+L<Clutter::Behaviour>, L<Clutter::Alpha>
+
+=cut
+
 =for enum ClutterGravity
 =cut
 

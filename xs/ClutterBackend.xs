@@ -27,6 +27,22 @@
 
 MODULE = Clutter::Backend       PACKAGE = Clutter::Backend      PREFIX = clutter_backend_
 
+=for object Clutter::Backend - Clutter Backend abstraction
+=cut
+
+=for position DESCRIPTION
+
+=head1 DESCRIPTION
+
+Clutter can be compiled against different backends. Each backend
+has to implement a set of functions, in order to be used by Clutter.
+
+B<Clutter::Backend is the base class abstracting the various implementation;
+it provides a basic API to query the backend for generic information
+and settings.
+
+=cut
+
 ClutterBackend_noinc *
 clutter_backend_get_default (class)
     CODE:

@@ -183,6 +183,9 @@ clutterperl_model_iter_class_init (ClutterModelIterClass *klass)
 
 MODULE = Clutter::Model::Iter   PACKAGE = Clutter::Model::Iter  PREFIX = clutter_model_iter_
 
+=for object Clutter::Model::Iter - An iterator object for Clutter::Model
+=cut
+
 =for apidoc
 =for arg ... of column indices
 

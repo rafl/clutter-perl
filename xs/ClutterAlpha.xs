@@ -61,6 +61,9 @@ MODULE = Clutter::Alpha PACKAGE = Clutter::Alpha PREFIX = clutter_alpha_
 BOOT:
         gperl_register_sink_func (CLUTTER_TYPE_ALPHA, clutterperl_alpha_sink);
 
+=for object Clutter::Alpha - A class for calculating a value as a function of time
+=cut
+
 =for position DESCRIPTION
 
 =head1 DESCRIPTION

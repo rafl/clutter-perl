@@ -300,6 +300,9 @@ BOOT:
          */
         gperl_register_sink_func (CLUTTER_TYPE_ACTOR, clutterperl_actor_sink);
 
+=for object Clutter::Actor - Base abstract class for all visual elements
+=cut
+
 =for position DESCRIPTION
 
 Clutter::Actor is the base class for actors. An actor in Clutter is a single

@@ -6,6 +6,8 @@ BOOT:
         gperl_register_param_spec (CLUTTER_TYPE_PARAM_COLOR, "Clutter::Param::Color");
         gperl_register_param_spec (CLUTTER_TYPE_PARAM_UNITS, "Clutter::Param::Units");
 
+=for object Clutter::ParamSpec - ParamSpecs for installing new properties
+=cut
 
 GParamSpec *
 clutter_param_spec_color (class, name, nick, blurb, default_value, flags)

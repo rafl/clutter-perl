@@ -2,6 +2,9 @@
 
 MODULE = Clutter::Text  PACKAGE = Clutter::Text PREFIX = clutter_text_
 
+=for object Clutter::Text - An actor for displaying and editing text
+=cut
+
 =for position DESCRIPTION
 
 =head1 DESCRIPTION

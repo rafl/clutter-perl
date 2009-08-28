@@ -2,6 +2,86 @@
 
 MODULE = Clutter::Animation     PACKAGE = Clutter::Animation    PREFIX = clutter_animation_
 
+=for object Clutter::Animation - Animate object properties
+=cut
+
+=for position DESCRIPTION
+
+=head1 SYNOPSIS
+
+    my $animation = Clutter::Animation->new();
+
+    # 500 milliseconds of duration
+    $animation->set_duration(500);
+
+    # cubic easing mode
+    $animation->set_mode('ease-out-cubic');
+
+    # set the object we want to animate
+    $animation->set_object($texture);
+
+    # bind the properties we want to animate on the object; bind()
+    # calls can be chained up to
+    $animation->bind('scale-x', 2.0)
+              ->bind('scale-y', 2.0)
+              ->bind('opacity', 255);
+
+    # start the animation
+    $animation->get_timeline()->start();
+
+=head1 DESCRIPTION
+
+B<Clutter::Animation> is an class providing simple, implicit animations
+for L<Glib::Object> instances.
+
+Clutter::Animation instances will bind one or more object properties
+belonging to a Glib::Object to a L<Clutter::Interval>, and will then use a
+L<Clutter::Alpha> to interpolate the property between the initial and final
+values of the interval.
+
+The duration of the animation is set using Clutter::Animation::set_duration().
+The easing mode of the animation is set using Clutter::Animation::set_mode().
+
+If you want to control the animation you should retrieve the
+L<Clutter::Timeline> using Clutter::Animation::get_timeline() and then
+use L<Clutter::Timeline> methods like Clutter::Timeline::start(),
+Clutter::Timeline::pause() or Clutter::Timeline::stop().
+
+A Clutter::Animation will emit the Clutter::Animation::completed signal
+when the L<Clutter::Timeline> used by the animation is completed; unlike
+L<Clutter::Timeline>, though, the Clutter::Animation::completed will not be
+emitted if Clutter::Animation:loop is set to %TRUE - that is, a looping
+animation never completes.
+
+If your animation depends on user control you can force its completion
+using Clutter::Animation::completed().
+
+If the Glib::Object instance bound to a Clutter::Animation implements the
+Clutter::Animatable interface it is possible for that instance to control
+the way the initial and final states are interpolated.
+
+Clutter::Animation is distinguished from L<Clutter::Behaviour> because
+the former can only control Glib::Object properties of a single Glib::Object
+instance, while the latter can control multiple properties using accessor
+functions inside the L<Clutter::Behaviour>::ALPHA_NOTIFY virtual function,
+and can control multiple L<Clutter::Actor>s at the same time.
+
+For convenience, it is possible to use the Clutter::Actor::animate()
+method which will take care of setting up and tearing down a
+Clutter::Animation instance and animate an actor between its current
+state and the specified final state.
+
+=cut
+
+=for position SEE_ALSO
+
+=head1 SEE ALSO
+
+L<Clutter::Timeline>, L<Clutter::Alpha>, L<Clutter::Behaviour>,
+L<Clutter::Interval>, L<Clutter::Actor>.
+
+=cut
+
 =for enum Clutter::AnimationMode
 =cut
 
