@@ -30,15 +30,19 @@ use Exporter;
 require DynaLoader;
 
 # the version scheme is:
+#
 #   CLUTTER_MAJOR
 #   dot
 #   CLUTTER_MINOR * 100 + CLUTTER_MICRO * 10 + bindings release
 #
-# this scheme allocates enough space for ten releases
-# of the bindings for each point release of libclutter,
-# which should be enough even in case of brown paper
-# bag releases. -- ebassi
+# where CLUTTER_MAJOR, CLUTTER_MINOR and CLUTTER_MICRO are the components
+# of the minimum required Clutter version.
+#
+# this scheme allocates enough space for ten releases of the bindings
+# for each point release of libclutter, which should be enough even in
+# case of brown paper bag releases. -- ebassi
 our $VERSION = '1.000';
+$VERSION = eval $VERSION;
 
 our @ISA = qw( DynaLoader Exporter );
 
