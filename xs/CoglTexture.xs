@@ -117,6 +117,9 @@ BOOT:
         cogl_perl_set_isa ("Clutter::Cogl::Texture", "Clutter::Cogl::Handle");
 
 
+=for object Clutter::Cogl::Texture - Low-level image handling
+=cut
+
 =for position DESCRIPTION
 
 =head1 DESCRIPTION

@@ -68,6 +68,9 @@ cogl_perl_struct_to_sv (gpointer object, const char *package)
 
 MODULE = Clutter::Cogl  PACKAGE = Clutter::Cogl PREFIX = cogl_
 
+=for object Clutter::Cogl - Abstraction over programmable GPUs
+=cut
+
 =for enum CoglFeatureFlags
 =cut
 

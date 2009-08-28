@@ -5,6 +5,9 @@ MODULE = Clutter::Cogl::Material        PACKAGE = Clutter::Cogl::Material       
 BOOT:
         cogl_perl_set_isa ("Clutter::Cogl::Material", "Clutter::Cogl::Handle");
 
+=for object Clutter::Cogl::Material - A material used to fill a geometry
+=cut
+
 =for position DESCRIPTION
 
 =head1 DESCRIPTION

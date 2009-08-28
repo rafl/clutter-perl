@@ -46,6 +46,9 @@ cogl_perl_handle_to_sv (CoglHandle handle)
 
 MODULE = Clutter::Cogl::Handle  PACKAGE = Clutter::Cogl::Handle  PREFIX = cogl_handle_
 
+=for object Clutter::Cogl::Handle - Base class for COGL objects
+=cut
+
 =for position DESCRIPTION
 
 =head1 DESCRIPTION

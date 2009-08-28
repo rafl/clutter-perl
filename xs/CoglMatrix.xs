@@ -15,7 +15,16 @@ cogl_perl_copy_matrix (const CoglMatrix *matrix)
 
 MODULE = Clutter::Cogl::Matrix  PACKAGE = Clutter::Cogl::Matrix PREFIX = cogl_matrix_
 
+=for object Clutter::Cogl::Matrix - A 4x4 transformation matrix
+=cut
+
 =for position DESCRIPTION
+
+=head1 SYNOPSIS
+
+    my $matrix = Clutter::Cogl::Matrix->init_identity();
+    $matrix->rotate(90.0, 0, 0, 0);
+    $matrix->scale(2.0, 2.0, 0);
 
 =head1 DESCRIPTION
 

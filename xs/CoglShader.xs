@@ -5,6 +5,8 @@ MODULE = Clutter::Cogl::Shader  PACKAGE = Clutter::Cogl::Shader PREFIX = cogl_sh
 BOOT:
         cogl_perl_set_isa ("Clutter::Cogl::Shader", "Clutter::Cogl::Handle");
 
+=for apidoc Clutter::Cogl::Shader - GLSL shader wrapper for Cogl
+=cut
 
 CoglHandle cogl_shader_new (class, CoglShaderType shader_type);
     CODE:
@@ -27,6 +29,9 @@ MODULE = Clutter::Cogl::Shader  PACKAGE = Clutter::Cogl::Program  PREFIX = cogl_
 BOOT:
         cogl_perl_set_isa ("Clutter::Cogl::Program", "Clutter::Cogl::Handle");
 
+
+=for apidoc Clutter::Cogl::Program - Shader wrapper for Cogl
+=cut
 
 CoglHandle cogl_program_new (class);
     CODE:

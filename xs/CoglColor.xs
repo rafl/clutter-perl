@@ -115,6 +115,9 @@ SvCoglColor (SV *sv)
 
 MODULE = Clutter::Cogl::Color   PACKAGE = Clutter::Cogl::Color
 
+=for object Clutter::Cogl::Color - COGL Color representation
+=cut
+
 =for position DESCRIPTION
 
 =head1 DESCRIPTION

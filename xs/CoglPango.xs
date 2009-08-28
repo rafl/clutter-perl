@@ -2,6 +2,9 @@
 
 MODULE = Clutter::Cogl::Pango PACKAGE = Clutter::Cogl::Pango::FontMap PREFIX = cogl_pango_font_map_
 
+=for object Clutter::Cogl::Pango - Pango integration with Cogl
+=cut
+
 PangoFontMap_noinc *cogl_pango_font_map_new (class);
     C_ARGS:
         /* void */

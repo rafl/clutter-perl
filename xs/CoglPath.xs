@@ -2,6 +2,9 @@
 
 MODULE = Clutter::Cogl::Path    PACKAGE = Clutter::Cogl::Path   PREFIX = cogl_path_
 
+=for object Clutter::Cogl::Path - Path primitives for Cogl
+=cut
+
 =for position DESCRIPTION
 
 =head1 DESCRIPTION
