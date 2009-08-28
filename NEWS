@@ -8,6 +8,7 @@ Clutter 1.001
 * Add more units to the test suite, covering Clutter::Path and Clutter::Event
 * Fully document Clutter::Path
 * Add an example of a Clutter::Container implementation
+* Improve documentation
 
 Clutter 1.000
 =============
