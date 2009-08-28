@@ -107,16 +107,38 @@ MODULE = Clutter::Interval      PACKAGE = Clutter::Interval     PREFIX = clutter
 BOOT:
         gperl_register_sink_func (CLUTTER_TYPE_INTERVAL, clutterperl_interval_sink);
 
+=for position DESCRIPTION
 
+=head1 DESCRIPTION
+
+B<Clutter::Interval> is a simple object providing a strongly-typed storage
+for a interval between two values.
+
+B<Note>: Once a Clutter::Interval for a specific type has been instantiated
+the Clutter::Interval I<value-type> property cannot be changed anymore.
+
+Clutter::Interval is used by #ClutterAnimation to define the interval of
+values that an implicit animation should tween over.
+
+B<Note>: Currently, you cannot subclass a Clutter::Interval to override the
+interval validation and the value computation; this requires additional
+support inside the Glib Perl bindings that is not currently available.
+
+=cut
+
+=for apidoc
+Creates a new Clutter::Interval, representing an interval of values with
+the given I<type>
+=cut
 ClutterInterval *
-clutter_interval_new (class, const gchar *package, SV *initial=NULL, SV *final=NULL)
+clutter_interval_new (class, const gchar *type, SV *initial=NULL, SV *final=NULL)
     PREINIT:
         GValue final_value = { 0, };
         GType gtype = G_TYPE_INVALID;
     CODE:
-        gtype = gperl_type_from_package (package);
+        gtype = gperl_type_from_package (type);
         if (gtype == G_TYPE_INVALID) {
-                croak ("Invalid type '%s' for the interval", package);
+                croak ("Invalid type '%s' for the interval", type);
         }
         RETVAL = clutter_interval_new (gtype);
         if (initial) {
@@ -144,6 +166,9 @@ clutter_interval_new (class, const gchar *package, SV *initial=NULL, SV *final=N
     OUTPUT:
         RETVAL
 
+=for apidoc
+Gets the type of the values inside the I<interval>
+=cut
 const gchar *clutter_interval_get_value_type (ClutterInterval *interval);
     PREINIT:
         GType type = 0;
@@ -153,6 +178,9 @@ const gchar *clutter_interval_get_value_type (ClutterInterval *interval);
     OUTPUT:
         RETVAL
 
+=for apidoc
+Sets the I<initial> value of the I<interval>
+=cut
 void clutter_interval_set_initial_value (ClutterInterval *interval, SV *initial);
     PREINIT:
         GValue value = { 0, };
@@ -166,6 +194,9 @@ void clutter_interval_set_initial_value (ClutterInterval *interval, SV *initial)
                 croak ("Unable to convert scalar into a valid initial value");
         }
 
+=for apidoc
+Gets the I<initial> value of the I<interval>
+=cut
 SV *clutter_interval_get_initial_value (ClutterInterval *interval);
     PREINIT:
         const GValue *value;
@@ -175,6 +206,9 @@ SV *clutter_interval_get_initial_value (ClutterInterval *interval);
     OUTPUT:
         RETVAL
 
+=for apidoc
+Sets the I<final> value of the I<interval>
+=cut
 void clutter_interval_set_final_value (ClutterInterval *interval, SV *final);
     PREINIT:
         GValue value = { 0, };
@@ -188,6 +222,9 @@ void clutter_interval_set_final_value (ClutterInterval *interval, SV *final);
                 croak ("Unable to convert scalar into a valid final value");
         }
 
+=for apidoc
+Gets the final value of the I<interval>
+=cut
 SV *clutter_interval_get_final_value (ClutterInterval *interval);
     PREINIT:
         const GValue *value;
@@ -197,6 +234,11 @@ SV *clutter_interval_get_final_value (ClutterInterval *interval);
     OUTPUT:
         RETVAL
 
+=for apidoc
+Sets the I<initial> and I<final> values of the interval. The
+values must be compatible with the type set when creating the I<interval>
+itself
+=cut
 void clutter_interval_set_interval (ClutterInterval *interval, SV *initial, SV *final);
     PREINIT:
         GValue value = { 0, };
@@ -220,6 +262,7 @@ void clutter_interval_set_interval (ClutterInterval *interval, SV *initial, SV *
 
 =for apidoc
 =for signature (initial, final) = $interval->get_interval ()
+Gets the I<initial> and I<final> values of the I<interval>
 =cut
 void clutter_interval_get_interval (ClutterInterval *interval);
     PPCODE:
@@ -229,6 +272,10 @@ void clutter_interval_get_interval (ClutterInterval *interval);
 
 gboolean clutter_interval_validate (ClutterInterval *interval, GParamSpec *pspec);
 
+=for apidoc
+=for signature value = $interval->compute_value ($factor)
+Computes the value of the I<interval> given the I<factor>
+=cut
 SV *
 clutter_interval_compute_value (ClutterInterval *interval, gdouble factor)
     PREINIT:
