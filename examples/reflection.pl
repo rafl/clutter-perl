@@ -129,12 +129,8 @@ sub PAINT {
         [      0, $r_height, 0, 0.0,    0.0, $stop  ],
     ];
 
-    Clutter::Cogl->push_matrix();
-
     # paint the original texture again, at the new vertices
     Clutter::Cogl->polygon($vertices, TRUE);
-
-    Clutter::Cogl->pop_matrix();
 }
 
 sub SET_PROPERTY {
