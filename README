@@ -1,4 +1,4 @@
-Clutter version 1.000
+Clutter version 1.001
 =====================
 
 Perl bindings to the Clutter OpenGL canvas.  Clutter aims to give a nice
@@ -43,9 +43,6 @@ This module requires these other modules and libraries:
   Cairo >= 1.0.0 (Perl module)
   Pango >= 1.140 (Perl module)
   Clutter >= 1.0.0 (C library)
-  Gtk2 >= 1.140 (Perl module) [optional]
-  Clutter-GStreamer >= 0.10.0 (C library) [optional]
-  Clutter-GTK+ >= 0.10.0 (C library) [optional]
 
 In order to build it from source, you'll also need:
 
