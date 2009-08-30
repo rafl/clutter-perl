@@ -126,14 +126,6 @@ sub FOREACH {
     }
 }
 
-sub FOREACH_WITH_INTERNALS {
-    my ($self, $func, $data) = @_;
-
-    foreach my $child (@{$self->{children}}) {
-        &$func ($child, $data);
-    }
-}
-
 sub CREATE_CHILD_META {
     my ($self, $actor) = @_;
 

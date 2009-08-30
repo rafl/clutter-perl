@@ -33,6 +33,13 @@
        HV * stash = gperl_object_stash_from_type (G_OBJECT_TYPE (obj)); \
        GV * slot = gv_fetchmethod (stash, name);
 
+#define GET_METHOD_WITH_FALLBACK(obj, name, fallback) \
+        HV * stash = gperl_object_stash_from_type (G_OBJECT_TYPE (obj)); \
+        GV * slot = gv_fetchmethod (stash, name); \
+        if (slot == NULL || !GvCV (slot)) { \
+          slot = gv_fetchmethod (stash, fallback); \
+        }
+
 #define METHOD_EXISTS (slot && GvCV (slot))
 
 #define PREP(obj) \
@@ -167,7 +174,9 @@ clutterperl_container_foreach_with_internals (ClutterContainer *container,
                                               ClutterCallback   callback,
                                               gpointer          callback_data)
 {
-  GET_METHOD (container, "FOREACH_WITH_INTERNALS");
+  GET_METHOD_WITH_FALLBACK (container,
+                            "FOREACH_WITH_INTERNALS",
+                            "FOREACH");
 
   if (METHOD_EXISTS)
     {
