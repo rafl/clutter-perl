@@ -19,6 +19,7 @@ examples/redhand.png
 examples/reflection.pl
 examples/script.pl
 examples/test-animation.pl
+glossary.pod
 lib/Clutter.pm
 Makefile.PL
 MANIFEST			This list of files

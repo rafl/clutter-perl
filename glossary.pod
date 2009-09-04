@@ -1,0 +1,114 @@
+=head1 NAME
+
+Clutter::glossary - Glossary of Clutter terms
+
+=head1 DESCRIPTION
+
+In order to understand the Clutter documentation it is necessary to define
+a common set of terms. This glossary lists those terms.
+
+=over
+
+=item B<actor>
+
+An item in the I<scenegraph>. Every actor has a I<parent>, except the I<stage>,
+and some actors can be I<containers>. Every actor has a I<geometry> and, when
+visible, it should paint its contents. The base class for actors is
+L<Clutter::Actor>.
+
+=item B<allocation>
+
+The final size of an I<actor> within its I<parent>, either explicitly set by
+the developer or by the I<container>. For example, an actor might have a
+preferred I<minimum size> of 20 by 20 pixels and a I<natural size> of 40 by 40
+pixels, but its parent may decide to allocate 50 by 20 pixels for it instead.
+
+See also: I<minimum size>, I<natural size>
+
+=item B<child>
+
+A I<container>'s child is an I<actor> contained inside it.
+
+=item B<container>
+
+An I<actor> which can contain other actors. If a container is meant to be
+extended using public API it should implement the L<Clutter::Container>
+interface; otherwise it is a composite actor. A container can let its
+I<children> manage their I<geometry>, like L<Clutter::Group>, or they can
+take care of assigning one.
+
+=item B<event>
+
+Events are the way in which the Clutter backend informs Clutter about
+external events like pointer motion, button clicks, key presses, etc.
+
+=item B<geometry>
+
+An I<actor>'s position and size. A geometry can be expressed in
+I<actor>-relative I<untransformed> coordinates; or in I<stage>-relative,
+I<transformed> coordinates.
+
+=item B<minimum size>
+
+The minimum, useful size of an I<actor>. For instance, a button might have
+a minimum size of 20 by 20 millimeters on a touch screen, to retain the
+ability for the user to press it. A I<container> that manages the size of
+its I<children> should always try to I<allocate> at least their minimum size.
+
+See also: I<natural size>, I<allocation>
+
+=item B<natural size>
+
+The default size requested by an I<actor>.
+
+See also: I<minimum size>, I<allocation>
+
+=item B<parent>
+
+An I<actor>'s parent is the I<container> which the actor resides.
+
+=item B<scenegraph>
+
+The tree of all I<actors>, starting from the I<stage> at the root and
+following the I<containers>.
+
+=item B<stage>
+
+The top-level I<container> for I<actors>. Depending on the Clutter back end
+a stage can be associated to a window or to a frame buffer; also depending
+on the back end is the number of instantiatable stages. Stages in Clutter can
+be manipulated using the L<Clutter::Stage> API.
+
+=item B<transformation>
+
+A rotation, scaling or traslation of an I<actor>. Transformations are
+independent of the actor's I<geometry>.
+
+=back
+
+=head1 AUTHOR
+
+Emmanuele Bassi E<lt>ebassi@linux.intel.comE<gt>
+
+=head1 COPYRIGHT
+
+Copyright (C) 2009 Intel Corporation
+
+This module is free software; you can redistribute it and/or modify it under
+the terms of either:
+
+=over 4
+
+=item * the GNU Lesser General Public License version 2.1; or
+
+=item * the Artistic License, version 2.0.
+
+=back
+
+See L<Clutter> for the full copyright notice.
+
+=head1 SEE ALSO
+
+L<Clutter> (3pm)
+
+=cut
