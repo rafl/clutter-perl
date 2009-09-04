@@ -1,3 +1,10 @@
+Clutter 1.002
+=============
+* Allow omitting FOREACH_WITH_INTERNALS from Container implementations,
+  just like the documentation said
+* Improve Clutter::Animation documentation
+* Improve the examples
+
 Clutter 1.001
 =============
 * Add Clutter::Cogl::Pango API bindings
