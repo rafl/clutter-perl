@@ -6,6 +6,7 @@ Cookbook.pod
 copyright.pod
 doctypes
 examples/behaviour.pl
+examples/bubbles.pl
 examples/cairo.pl
 examples/circles.pl
 examples/custom-actor.pl
