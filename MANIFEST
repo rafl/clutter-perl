@@ -12,7 +12,6 @@ examples/circles.pl
 examples/custom-actor.pl
 examples/custom-container.pl
 examples/easing.pl
-examples/gtk-clutter.pl
 examples/hello.pl
 examples/rects.pl
 examples/redhand.png
