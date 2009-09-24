@@ -13,19 +13,19 @@ our $buffer =<<ENDUI;
   { "id" : "fade-timeline",  "type" : "ClutterTimeline", "duration" : 1500 },
   {
     "id" : "move-behaviour", "type" : "ClutterBehaviourPath",
-    "alpha" : { "timeline" : "move-timeline", "function" : "sine-inc" },
-    "knots" : [ [ 100, 100 ], [ 200, 150 ] ]
+    "alpha" : { "timeline" : "move-timeline", "mode" : "easeInSine" },
+    "path" : "M 100,100 L 200,150"
   },
   {
     "id" : "scale-behaviour", "type" : "ClutterBehaviourScale",
     "x-scale-start" : 1.0, "x-scale-end" : 0.7,
     "y-scale-start" : 1.0, "y-scale-end" : 0.7,
-    "alpha" : { "timeline" : "scale-timeline", "function" : "sine-inc" }
+    "alpha" : { "timeline" : "scale-timeline", "mode" : "easeInSine" }
   },
   {
     "id" : "fade-behaviour", "type" : "ClutterBehaviourOpacity",
     "opacity-start" : 255, "opacity-end" : 0,
-    "alpha" : { "timeline" : "fade-timeline", "function" : "sine-inc" }
+    "alpha" : { "timeline" : "fade-timeline", "mode" : "linear" }
   },
   {
     "id" : "main-stage",
