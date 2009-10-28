@@ -39,7 +39,7 @@ clutterperl_interval_validate (ClutterInterval *interval,
 
                 {
                         SV *sv_ret = POPs;
-                        retval = Sv_TRUE (sv_ret);
+                        retval = SvTRUE (sv_ret);
                 }
 
                 FINISH;
@@ -141,7 +141,6 @@ the given I<type>
 ClutterInterval *
 clutter_interval_new (class, const gchar *type, SV *initial=NULL, SV *final=NULL)
     PREINIT:
-        GValue final_value = { 0, };
         GType gtype = G_TYPE_INVALID;
     CODE:
         gtype = gperl_type_from_package (type);
