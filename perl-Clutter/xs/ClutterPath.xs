@@ -54,6 +54,7 @@ get_path_node_points_from_sv (SV *sv, ClutterPathNode *node)
                        "ClutterKnot or a reference to an array of "
                        "ClutterKnots");
 
+        n_points = 0;
         switch (node->type) {
                 case CLUTTER_PATH_MOVE_TO:
                 case CLUTTER_PATH_REL_MOVE_TO:
@@ -69,6 +70,10 @@ get_path_node_points_from_sv (SV *sv, ClutterPathNode *node)
                 case CLUTTER_PATH_REL_CURVE_TO:
                         n_points = 3;
                         break;
+
+                case CLUTTER_PATH_CLOSE:
+                        g_assert_not_reached ();
+                        return;
         }
 
         av = (AV *) SvRV (sv);
@@ -202,8 +207,6 @@ clutter_path_node_unwrap (GType        gtype,
                           SV          *sv)
 {
         ClutterPathNode *node;
-        gint enum_val = 0;
-        SV **svp;
 
         if (!sv || !SvOK (sv) || !SvRV (sv))
                 return NULL;
