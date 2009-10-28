@@ -1,0 +1,16 @@
+Copyright (C) 2006, 2007, 2008  OpenedHand Ltd
+
+Copyright (C) 2009  Intel Corporation
+
+This module is free software; you can redistribute it and/or modify it under
+the terms of either:
+
+=over
+
+=item * the GNU Lesser General Public Library version 2.1; or
+
+=item * the Artistic License, version 2.0.
+
+=back
+
+See L<Clutter> for the full copyright notice.
