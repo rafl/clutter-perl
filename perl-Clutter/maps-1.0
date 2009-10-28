@@ -61,6 +61,7 @@ CLUTTER_TYPE_PATH_NODE          ClutterPathNode         GBoxed          Clutter:
 CLUTTER_TYPE_PATH               ClutterPath             GObject         Clutter::Path
 CLUTTER_TYPE_PICK_MODE          ClutterPickMode         GEnum           Clutter::PickMode
 CLUTTER_TYPE_RECTANGLE	        ClutterRectangle        GObject	        Clutter::Rectangle
+CLUTTER_TYPE_REQUEST_MODE       ClutterRequestMode      GEnum           Clutter::RequestMode
 CLUTTER_TYPE_ROTATE_AXIS        ClutterRotateAxis       GEnum           Clutter::RotateAxis
 CLUTTER_TYPE_ROTATE_DIRECTION   ClutterRotateDirection  GEnum           Clutter::RotateDirection
 CLUTTER_TYPE_SCROLL_DIRECTION   ClutterScrollDirection  GEnum           Clutter::ScrollDirection
