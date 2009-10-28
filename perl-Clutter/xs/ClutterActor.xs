@@ -1307,6 +1307,14 @@ clutter_actor_get_transformation_matrix (ClutterActor *actor)
     OUTPUT:
         RETVAL
 
+#if CLUTTER_CHECK_VERSION(1, 1, 2)
+
+ClutterRequestMode clutter_actor_get_request_mode (ClutterActor *actor);
+
+void clutter_actor_set_request_mode (ClutterActor *actor, ClutterRequestMode mode);
+
+#endif
+
 ##/* defined in clutter-animation.h */
 
 =for apidoc
