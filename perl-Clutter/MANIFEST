@@ -24,6 +24,7 @@ Makefile.PL
 MANIFEST			This list of files
 MANIFEST.SKIP
 maps-1.0
+maps-1.2
 NEWS
 README
 t/0.t
@@ -63,8 +64,10 @@ xs/ClutterChildMeta.xs
 xs/ClutterClone.xs
 xs/ClutterContainer.xs
 xs/ClutterEvent.xs
+xs/ClutterFixedLayout.xs
 xs/ClutterGroup.xs
 xs/ClutterInterval.xs
+xs/ClutterLayoutManager.xs
 xs/ClutterListModel.xs
 xs/ClutterMedia.xs
 xs/ClutterModel.xs
@@ -92,3 +95,4 @@ xs/CoglPath.xs
 xs/CoglShader.xs
 xs/CoglTexture.xs
 xs_files-1.0
+xs_files-1.2
