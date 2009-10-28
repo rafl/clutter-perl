@@ -160,7 +160,9 @@ Retrieves the easing mode as set using Clutter::Animation::set_mode()
 =cut
 SV *clutter_animation_get_mode (ClutterAnimation *animation);
     CODE:
-        clutter_perl_animation_mode_to_sv (clutter_animation_get_mode (animation));
+        RETVAL = clutter_perl_animation_mode_to_sv (clutter_animation_get_mode (animation));
+    OUTPUT:
+        RETVAL
 
 =for apidoc
 Sets the duration of I<animation>, in milliseconds
