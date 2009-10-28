@@ -41,7 +41,7 @@ require DynaLoader;
 # this scheme allocates enough space for ten releases of the bindings
 # for each point release of libclutter, which should be enough even in
 # case of brown paper bag releases. -- ebassi
-our $VERSION = '1.003';
+our $VERSION = '1.100';
 $VERSION = eval $VERSION;
 
 our @ISA = qw( DynaLoader Exporter );
