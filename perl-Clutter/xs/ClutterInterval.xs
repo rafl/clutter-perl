@@ -298,4 +298,27 @@ clutter_interval_compute_value (ClutterInterval *interval, gdouble factor)
         }
     OUTPUT:
         RETVAL
+=for apidoc Clutter::Interval::_INSTALL_OVERRIDES __hide__
+=cut
 
+void
+_INSTALL_OVERRIDES (const char *package)
+    PREINIT:
+        GType gtype;
+        ClutterIntervalClass *klass;
+    CODE:
+        gtype = gperl_object_type_from_package (package);
+        if (!gtype) {
+                croak("package `%s' is not registered with Clutter-Perl",
+                      package);
+        }
+        if (!g_type_is_a (gtype, CLUTTER_TYPE_INTERVAL)) {
+                croak("package `%s' (%s) is not a Clutter::Interval",
+                      package, g_type_name (gtype));
+        }
+        klass = g_type_class_peek (gtype);
+        if (!klass) {
+                croak("INTERNAL ERROR: can't peek a type class for `%s' (%d)",
+                      g_type_name (gtype), gtype);
+        }
+        clutterperl_interval_class_init (klass);
