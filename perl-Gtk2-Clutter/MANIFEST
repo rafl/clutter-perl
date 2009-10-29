@@ -9,6 +9,7 @@ MANIFEST.SKIP
 maps-0.10
 NEWS
 README
+t/GtkClutterEmbed.t
 xs/GtkClutter.xs
 xs/GtkClutterEmbed.xs
 xs_files-0.10
