@@ -82,7 +82,7 @@ my @input_maps = qw/ maps /;
 
 # autogeneration
 Glib::CodeGen->parse_maps('clutter-gst-perl', input => [<maps-[0-9]\.[0-9]*>]);
-Glib::CodeGen->write_boot(xs_files => \@xs_files);
+Glib::CodeGen->write_boot(xs_files => \@xs_files, ignore => '^Clutter::GStreamer$');
 
 my @deps = qw/ Glib Cairo Pango Clutter /;
 my $cwd = cwd();
