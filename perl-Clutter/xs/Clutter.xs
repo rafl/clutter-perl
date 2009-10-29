@@ -60,7 +60,7 @@ clutter_threads_init (class)
         }
 
 guint
-clutter_threads_add_idle (class, callback, data=NULL, priority=G_PRIORITY_DEFAULT_IDLE)
+clutter_threads_add_idle (class=NULL, callback, data=NULL, priority=G_PRIORITY_DEFAULT_IDLE)
         SV *callback
         SV *data
         gint priority
@@ -76,7 +76,7 @@ clutter_threads_add_idle (class, callback, data=NULL, priority=G_PRIORITY_DEFAUL
         RETVAL
 
 guint
-clutter_threads_add_timeout (class, interval, callback, data=NULL, priority=G_PRIORITY_DEFAULT_IDLE)
+clutter_threads_add_timeout (class=NULL, interval, callback, data=NULL, priority=G_PRIORITY_DEFAULT_IDLE)
         guint interval
         SV *callback
         SV *data
@@ -94,7 +94,7 @@ clutter_threads_add_timeout (class, interval, callback, data=NULL, priority=G_PR
         RETVAL
 
 guint
-clutter_threads_add_frame_source (class, fps, callback, data=NULL, priority=G_PRIORITY_DEFAULT_IDLE)
+clutter_threads_add_frame_source (class=NULL, fps, callback, data=NULL, priority=G_PRIORITY_DEFAULT_IDLE)
         guint fps
         SV *callback
         SV *data
@@ -112,7 +112,7 @@ clutter_threads_add_frame_source (class, fps, callback, data=NULL, priority=G_PR
         RETVAL
 
 guint
-clutter_threads_add_repaint_func (class, SV *callback, SV *data=NULL)
+clutter_threads_add_repaint_func (class=NULL, SV *callback, SV *data=NULL)
     PREINIT:
         GPerlCallback *cb;
     CODE:
@@ -120,6 +120,8 @@ clutter_threads_add_repaint_func (class, SV *callback, SV *data=NULL)
         RETVAL = clutter_threads_add_repaint_func (clutterperl_threads_cb,
                                                    cb,
                                                    (GDestroyNotify) gperl_callback_destroy);
+    OUTPUT:
+        RETVAL
 
 void clutter_threads_remove_repaint_func (class, guint func_id);
     C_ARGS:
