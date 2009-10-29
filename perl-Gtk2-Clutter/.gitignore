@@ -1,0 +1,10 @@
+Clutter.bs
+blib/
+build/
+html/
+Makefile
+Makefile.old
+pm_to_blib
+*.c
+*.o
+*.bak
