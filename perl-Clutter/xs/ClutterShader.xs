@@ -59,9 +59,11 @@ clutter_shader_compile (ClutterShader *shader)
     PREINIT:
         GError *error = NULL;
     CODE:
-        clutter_shader_compile (shader, &error);
+        RETVAL = clutter_shader_compile (shader, &error);
         if (error)
                 gperl_croak_gerror (NULL, error);
+    OUTPUT:
+        RETVAL
 
 void
 clutter_shader_release (ClutterShader *shader)
