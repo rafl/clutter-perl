@@ -106,7 +106,7 @@ animation.
 =cut
 
 ClutterAlpha_noinc *
-clutter_alpha_new (class, ClutterTimeline *timeline=NULL, SV *mode=NULL)
+clutter_alpha_new (class=NULL, ClutterTimeline *timeline=NULL, SV *mode=NULL)
     CODE:
         RETVAL = clutter_alpha_new ();
         if (timeline) {
@@ -150,7 +150,7 @@ clutter_alpha_get_mode (ClutterAlpha *alpha)
         RETVAL
 
 gulong
-register_func (SV *class, SV *func, SV *data)
+register_func (SV *class=NULL, SV *func, SV *data)
     CODE:
         RETVAL = clutter_alpha_register_closure (gperl_closure_new (func, data, FALSE));
     OUTPUT:

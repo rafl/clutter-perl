@@ -20,8 +20,8 @@ clutter_units_wrap (GType        gtype,
         units_value = clutter_units_get_unit_value (units);
 
         hv = newHV ();
-        hv_store (hv, "type", 4, newSVClutterUnitType (units_type), 0);
-        hv_store (hv, "value", 5, newSVnv (units_value), 0);
+        (void) hv_store (hv, "type", 4, newSVClutterUnitType (units_type), 0);
+        (void) hv_store (hv, "value", 5, newSVnv (units_value), 0);
 
         if (own)
                 clutter_units_free (units);

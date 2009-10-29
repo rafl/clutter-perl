@@ -53,7 +53,7 @@ clutter_texture_new (class, filename=NULL)
         RETVAL
 
 ClutterActor *
-clutter_texture_new_from_actor (SV *class, ClutterActor *actor)
+clutter_texture_new_from_actor (class=NULL, ClutterActor *actor)
     C_ARGS:
         actor
 

@@ -6,10 +6,13 @@ MODULE = Clutter::StageManager  PACKAGE = Clutter::StageManager PREFIX = clutter
 =cut
 
 ClutterStageManager_noinc *
-clutter_stage_manager_get_default (SV *class)
+clutter_stage_manager_get_default (class=NULL)
     C_ARGS:
         /* void */
 
+=for apidoc
+This function is deprecated.
+=cut
 void
 clutter_stage_manager_set_default_stage (manager, stage)
         ClutterStageManager *manager

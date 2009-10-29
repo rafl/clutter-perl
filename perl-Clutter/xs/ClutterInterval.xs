@@ -79,7 +79,7 @@ clutterperl_interval_compute_value (ClutterInterval *interval,
                 ClutterIntervalClass *klass;
                 ClutterIntervalClass *parent;
 
-                klass = CLUTTER_INTERVAL_GET_CLASS (klass);
+                klass = CLUTTER_INTERVAL_GET_CLASS (interval);
                 parent = g_type_class_peek_parent (klass);
 
                 retval = parent->compute_value (interval, factor, value);

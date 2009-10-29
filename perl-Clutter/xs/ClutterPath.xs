@@ -158,6 +158,7 @@ clutter_path_node_wrap (GType        gtype,
                         gboolean     own)
 {
         ClutterPathNode *node = boxed;
+        SV *sv;
         HV *hv;
         AV *points = NULL;
 
@@ -165,7 +166,9 @@ clutter_path_node_wrap (GType        gtype,
                 return &PL_sv_undef;
 
         hv = newHV ();
-        hv_store (hv, "type", 4, newSVClutterPathNodeType (node->type), 0);
+
+        sv = newSVClutterPathNodeType (node->type);
+        (void) hv_store (hv, "type", 4, sv, 0);
 
         switch (node->type) {
                 case CLUTTER_PATH_MOVE_TO:
@@ -193,7 +196,8 @@ clutter_path_node_wrap (GType        gtype,
                         break;
         }
 
-        hv_store (hv, "points", 6, newRV_noinc ((SV *) points), 0);
+        sv = newRV_noinc ((SV *) points);
+        (void) hv_store (hv, "points", 6, sv, 0);
 
         if (own)
                 clutter_path_node_free (node);
