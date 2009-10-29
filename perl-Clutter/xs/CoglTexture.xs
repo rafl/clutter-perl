@@ -78,16 +78,16 @@ cogl_perl_texture_vertex_to_sv (const CoglTextureVertex *vertex)
   /* model coordinates; we store them into floats to avoid exposing
    * fixed point values in the bindings
    */
-  hv_store (hv, "x", 1, newSVnv (vertex->x), 0);
-  hv_store (hv, "y", 1, newSVnv (vertex->y), 0);
-  hv_store (hv, "z", 1, newSVnv (vertex->z), 0);
+  (void) hv_store (hv, "x", 1, newSVnv (vertex->x), 0);
+  (void) hv_store (hv, "y", 1, newSVnv (vertex->y), 0);
+  (void) hv_store (hv, "z", 1, newSVnv (vertex->z), 0);
 
   /* texture coordinates */
-  hv_store (hv, "tx", 2, newSVnv (vertex->tx), 0);
-  hv_store (hv, "ty", 2, newSVnv (vertex->ty), 0);
+  (void) hv_store (hv, "tx", 2, newSVnv (vertex->tx), 0);
+  (void) hv_store (hv, "ty", 2, newSVnv (vertex->ty), 0);
 
   /* color */
-  hv_store (hv, "color", 5, cogl_perl_color_to_sv (&vertex->color), 0);
+  (void) hv_store (hv, "color", 5, cogl_perl_color_to_sv (&vertex->color), 0);
 
   stash = gv_stashpv ("Clutter::Cogl::TextureVertex", TRUE);
 
@@ -215,7 +215,7 @@ void
 cogl_texture_get_gl_texture (CoglHandle handle)
     PREINIT:
         unsigned int out_gl_handle = 0;
-        int out_gl_target = 0;
+        unsigned int out_gl_target = 0;
         gboolean res = FALSE;
     PPCODE:
         res = cogl_texture_get_gl_texture (handle,
