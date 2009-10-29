@@ -53,14 +53,11 @@ sub dl_load_flags { $^O eq 'darwin' ? 0x00 : 0x01 }
 sub import {
     my $class = shift;
 
-    # Clutter::Threads->init() must be called before calling Clutter->init(),
-    # but we don't want to force the order of the options passed, so we store
-    # the choices and call everything in the correct order later.
-    my $init         = 0;
+    my $init = 0;
 
     foreach (@_) {
-        if    (/^[-:]?init$/)         { $init = 1;           }
-        else                          { $class->VERSION($_); }
+        if    (/^[-:]?init$/) { $init = 1;           }
+        else                  { $class->VERSION($_); }
     }
 
     Gtk2::Clutter->init() if $init == 1;
@@ -82,9 +79,51 @@ Gtk2::Clutter - Integration between Gtk2 and Clutter
 
 =head1 SYNOPSIS
 
+  # initialize Gtk2 and Clutter in the right order
   use Gtk2::Clutter qw( :init );
 
+  my $w = Gtk2::Window->new('toplevel');
+  $w->signal_connect(destroy => sub { Gtk2->main_quit });
+  $w->set_default_size(640, 480);
+
+  my $e = Gtk2::Clutter::Embed->new();
+  $w->add($e);
+  $e->show();
+
+  # retrieve the Stage embedded
+  my $s = $e->get_stage();
+
+  my $r = Clutter::Rectangle->new(Clutter::Color->new(255, 0, 0, 255));
+  $s->add($r);
+  $r->set_size(200, 200);
+  $r->set_anchor_point_from_gravity('center');
+  $r->set_position($s->get_width() / 2, $s->get_height() / 2);
+
+  # keep the Rectangle centered when the Stage changes size
+  $s->signal_connect(allocation_changed => sub {
+      my ($stage, $allocation, $flags)
+
+      $r->set_position(
+          $allocation->get_width() / 2,
+          $allocation->get_height() / 2
+      );
+  });
+
+  $w->show();
+
+  Gtk2->main();
+
+=head1 ABSTRACT
+
+Perl bindings for the Clutter-GTK integration library for Clutter
+and GTK+. This module allows you to combine Clutter scenegraph
+elements inside GTK+ applications.
+
 =head1 DESCRIPTION
+
+B<Gtk2::Clutter> is a module that allows the Perl developer to write
+GTK+ applications (using the Gtk2 module) and embed Clutter scenegraphs
+inside the application user interface.
 
 Clutter is a GObject based library for creating fast, visually rich
 graphical user interfaces.  It is intended for creating single window
@@ -92,13 +131,16 @@ heavily stylised applications such as media box UI's, presentations or
 kiosk style programs in preference to regular 'desktop' style
 applications.
 
+GTK+ is a GObject based toolkit for creating modern Graphical User
+Interface application.
+
 For more informations about Clutter, visit:
 
   http://www.clutter-project.org
 
-You can also subscribe to the Clutter mailing list by sending a
-blank message E<lt>clutter+subscribe AT o-hand.comE<gt>, then follow
-the instructions in resulting reply.
+For more informations about GTK+, visit:
+
+  http://www.gtk.org
 
 =head1 SEE ALSO
 

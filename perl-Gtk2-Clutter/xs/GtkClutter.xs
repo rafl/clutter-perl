@@ -7,7 +7,15 @@ BOOT:
 #include "boot.xsh"
         gperl_handle_logs_for ("Clutter-Gtk");
 
+=for object Gtk2::Clutter::main
+=cut
 
+=for apidoc
+Initializes Clutter and Gtk2::Clutter.
+
+This function should be called instead of Clutter->init() and
+Gtk2->init().
+=cut
 ClutterInitError
 gtk_clutter_init (class=NULL)
     PREINIT:

@@ -77,24 +77,22 @@ my %pm_files = (
 
 my %pod_files = (
     'lib/Gtk2/Clutter.pm' => '$(INST_MAN3DIR)/Gtk2::Clutter.$(MAN3EXT)',
+
     Glib::MakeHelper->do_pod_files(@xs_files),
 );
 
-# typemaps generation files
-my @input_maps = qw/ maps /;
-
 # autogeneration
 Glib::CodeGen->parse_maps('clutter-gtk-perl', input => [<maps-[0-9]\.[0-9]*>]);
-Glib::CodeGen->write_boot(xs_files => \@xs_files);
+Glib::CodeGen->write_boot(xs_files => \@xs_files, ignore => '^Gtk2::Clutter$');
 
-my @deps = qw/ Glib Cairo Pango Clutter Gtk2 /;
+my @deps = qw/ Clutter Gtk2 /;
 my $cwd = cwd();
 
 my $module_cflags = $pkgcfg{cflags};
 my $module_libs   = $pkgcfg{libs};
 
 my @typemaps = map { File::Spec->catfile($cwd, $_) }
-               qw( build/clutter-gtk-perl.typemap clutter-gtk.typemap );
+               qw( build/clutter-gtk-perl.typemap );
 
 my $clutter = ExtUtils::Depends->new('Gtk2::Clutter', @deps);
 $clutter->set_inc($module_cflags . ' -I./build ');
@@ -102,7 +100,7 @@ $clutter->set_libs($module_libs);
 $clutter->add_xs(@xs_files);
 $clutter->add_pm(%pm_files);
 $clutter->add_typemaps(@typemaps);
-$clutter->install(qw(clutter-gtk-perl.h build/clutter-gtk-perl-autogen.h doctypes));
+$clutter->install(qw(clutter-gtk-perl.h build/clutter-gtk-perl-autogen.h));
 $clutter->save_config('build/IFiles.pm');
 
 WriteMakefile(
@@ -118,7 +116,6 @@ WriteMakefile(
 
     XSPROTOARG    => '-noprototypes ',
     MAN3PODS	  => \%pod_files,
-    DL_FUNCS      => { 'Gtk2::Clutter' => [] },
 
     META_MERGE    => { configure_requires => \%PREREQ_PM },
 
@@ -146,7 +143,6 @@ sub MY::postamble
     return Glib::MakeHelper->postamble_clean()
          . Glib::MakeHelper->postamble_docs_full(
                DEPENDS => $clutter,
-               DOCTYPES => 'doctypes',
                COPYRIGHT_FROM => 'copyright.pod',
            );
 }
