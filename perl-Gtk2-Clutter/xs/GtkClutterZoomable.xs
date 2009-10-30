@@ -45,7 +45,7 @@ zoomable_set_adjustment (GtkClutterZoomable *zoomable,
 static GtkAdjustment *
 zoomable_get_adjustment (GtkClutterZoomable *zoomable)
 {
-        GtkAdjustment *adj;
+        GtkAdjustment *adj = NULL;
 
         GET_METHOD (zoomable, "GET_ADJUSTMENT")
 
