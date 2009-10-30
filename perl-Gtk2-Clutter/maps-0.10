@@ -1,3 +1,4 @@
 GTK_CLUTTER_TYPE_EMBED          GtkClutterEmbed         GObject         Gtk2::Clutter::Embed
 GTK_CLUTTER_TYPE_SCROLLABLE     GtkClutterScrollable    GInterface      Gtk::Clutter::Scrollable
 GTK_CLUTTER_TYPE_VIEWPORT       GtkClutterViewport      GObject         Gtk2::Clutter:Viewport
+GTK_CLUTTER_TYPE_ZOOMABLE       GtkClutterZoomable      GInterface      Gtk2::Clutter::Zoomable
