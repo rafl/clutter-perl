@@ -38,6 +38,7 @@ unless (eval "use ExtUtils::Depends '$build_reqs{'perl-ExtUtils-Depends'}';"
            . "use Cairo '$build_reqs{'perl-Cairo'}';"
            . "use Pango '$build_reqs{'perl-Pango'}';"
 	   . "use Gtk2 '$build_reqs{'perl-Gtk2'}';"
+	   . "use Clutter '$build_reqs{'perl-Clutter'}';"
 	   . "use Glib::CodeGen;"
 	   . "use Glib::MakeHelper;"
            . "1") {
