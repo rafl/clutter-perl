@@ -312,6 +312,12 @@ foreach my $i (0 .. 9) {
 
     $rect->set_color($color);
     $rect->set_size(50, 50);
+    $rect->set_reactive(TRUE);
+    $rect->signal_connect(button_press_event => sub {
+        print "Clicked child number: ", $i, "\n";
+
+        return $Clutter::EVENT_PROPAGATE;
+    });
 
     $box->add($rect);
     $box->child_set($rect, 'allocate-hidden', FALSE);
@@ -330,11 +336,14 @@ $stage->signal_connect(key_press_event => sub {
     my ($actor, $event, $container) = @_;
 
     if ($event->key_symbol eq $Clutter::Keysyms{q}) {
+
         Clutter->main_quit();
-        return TRUE;
+
+        return $Clutter::EVENT_STOP;
     }
 
-    return FALSE unless $event->key_symbol eq $Clutter::Keysyms{h};
+    return $Clutter::EVENT_STOP
+        unless $event->key_symbol eq $Clutter::Keysyms{h};
 
     foreach my $child ($container->get_children()) {
         my $value = $container->child_get($child, 'allocate-hidden');
@@ -344,7 +353,7 @@ $stage->signal_connect(key_press_event => sub {
 
     $container->queue_relayout();
 
-    return TRUE;
+    return $Clutter::EVENT_STOP;
 }, $box);
 
 $stage->add($box, $info);
