@@ -147,6 +147,7 @@ sub MY::postamble
     return Glib::MakeHelper->postamble_clean()
          . Glib::MakeHelper->postamble_docs_full(
                DEPENDS => $clutter,
+	       DOCTYPES => 'doctypes',
                COPYRIGHT_FROM => 'copyright.pod',
            );
 }

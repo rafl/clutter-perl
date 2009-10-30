@@ -13,4 +13,4 @@ the terms of either:
 
 =back
 
-See L<Clutter> for the full copyright notice.
+See L<Clutter::GStreamer> for the full copyright notice.
