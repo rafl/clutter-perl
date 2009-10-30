@@ -1,2 +1,3 @@
 CLUTTER_GST_TYPE_AUDIO          ClutterGstAudio         GObject         Clutter::GStreamer::Audio
+CLUTTER_GST_TYPE_VIDEO_SINK     ClutterGstVideoSink     GObject         Clutter::GStreamer::VideoSink
 CLUTTER_GST_TYPE_VIDEO_TEXTURE  ClutterGstVideoTexture  GObject         Clutter::GStreamer::VideoTexture

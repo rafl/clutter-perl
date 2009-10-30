@@ -6,6 +6,7 @@
 #include <cairo-perl.h>
 #include <pango-perl.h>
 #include <clutter-perl.h>
+#include <gst2perl.h>
 
 #include <clutter-gst/clutter-gst.h>
 

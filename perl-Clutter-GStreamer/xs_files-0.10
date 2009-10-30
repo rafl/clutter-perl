@@ -1,3 +1,4 @@
 xs/ClutterGst.xs
 xs/ClutterGstAudio.xs
+xs/ClutterGstVideoSink.xs
 xs/ClutterGstVideoTexture.xs

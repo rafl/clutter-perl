@@ -15,6 +15,7 @@ our %build_reqs = (
     'perl-Cairo'              => '1.000',
     'perl-Pango'              => '1.140',
     'perl-Clutter'            => '1.000',
+    'perl-GStreamer'          => '0.10',
     'clutter'                 => '1.0.0',
     'clutter-gst'             => '0.10.0',
 );
@@ -26,6 +27,7 @@ my %PREREQ_PM = (
     'Cairo'               => $build_reqs{'perl-Cairo'},
     'Pango'               => $build_reqs{'perl-Pango'},
     'Clutter'             => $build_reqs{'perl-Clutter'},
+    'GStreamer'           => $build_reqs{'perl-GStreamer'},
 );
 
 # Writing a fake Makefile ensures that CPAN will pick up the correct
@@ -35,6 +37,8 @@ unless (eval "use ExtUtils::Depends '$build_reqs{'perl-ExtUtils-Depends'}';"
            . "use Glib '$build_reqs{'perl-Glib'}';"
            . "use Cairo '$build_reqs{'perl-Cairo'}';"
            . "use Pango '$build_reqs{'perl-Pango'}';"
+	   . "use GStreamer '$build_reqs{'perl-GStreamer'}';"
+	   . "use Clutter '$build_reqs{'perl-Clutter'}';"
 	   . "use Glib::CodeGen;"
 	   . "use Glib::MakeHelper;"
            . "1") {
@@ -84,14 +88,14 @@ my @input_maps = qw/ maps /;
 Glib::CodeGen->parse_maps('clutter-gst-perl', input => [<maps-[0-9]\.[0-9]*>]);
 Glib::CodeGen->write_boot(xs_files => \@xs_files, ignore => '^Clutter::GStreamer$');
 
-my @deps = qw/ Glib Cairo Pango Clutter /;
+my @deps = qw/ Clutter GStreamer /;
 my $cwd = cwd();
 
 my $module_cflags = $pkgcfg{cflags};
 my $module_libs   = $pkgcfg{libs};
 
 my @typemaps = map { File::Spec->catfile($cwd, $_) }
-               qw( build/clutter-gst-perl.typemap clutter-gst.typemap );
+               qw( build/clutter-gst-perl.typemap );
 
 my $clutter = ExtUtils::Depends->new('Clutter::GStreamer', @deps);
 $clutter->set_inc($module_cflags . ' -I./build ');
@@ -99,7 +103,7 @@ $clutter->set_libs($module_libs);
 $clutter->add_xs(@xs_files);
 $clutter->add_pm(%pm_files);
 $clutter->add_typemaps(@typemaps);
-$clutter->install(qw(clutter-gst-perl.h build/clutter-gst-perl-autogen.h doctypes));
+$clutter->install(qw(clutter-gst-perl.h build/clutter-gst-perl-autogen.h));
 $clutter->save_config('build/IFiles.pm');
 
 WriteMakefile(
@@ -115,7 +119,6 @@ WriteMakefile(
 
     XSPROTOARG    => '-noprototypes ',
     MAN3PODS	  => \%pod_files,
-    DL_FUNCS      => { 'Clutter::GStreamer' => [] },
 
     META_MERGE    => { configure_requires => \%PREREQ_PM },
 
@@ -143,7 +146,6 @@ sub MY::postamble
     return Glib::MakeHelper->postamble_clean()
          . Glib::MakeHelper->postamble_docs_full(
                DEPENDS => $clutter,
-               DOCTYPES => 'doctypes',
                COPYRIGHT_FROM => 'copyright.pod',
            );
 }
