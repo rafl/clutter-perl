@@ -129,6 +129,8 @@ The I<type> key can contain one of the following:
 
 =item B<mm>     : millimeters
 
+=item B<cm>     : centimeters
+
 =back
 
 The I<value> key must contain a double.
@@ -178,6 +180,19 @@ ClutterUnits_copy* clutter_units_from_pt (class, gfloat pt);
         RETVAL = &units;
     OUTPUT:
         RETVAL
+
+#if CLUTTER_CHECK_VERSION(1, 1, 2)
+
+ClutterUnits_copy* clutter_units_from_cm (class, gfloat cm);
+    PREINIT:
+        ClutterUnits units;
+    CODE:
+        clutter_units_from_cm (&units, cm);
+        RETVAL = &units;
+    OUTPUT:
+        RETVAL
+
+#endif /* CLUTTER_CHECK_VERSION(1, 1, 2) */
 
 ClutterUnits_copy* clutter_units_from_string (class, const gchar *string);
     PREINIT:
