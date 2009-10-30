@@ -1,4 +1,5 @@
 AUTHORS
+Changes
 clutter-gtk-perl.h
 copyright.pod
 examples/gtk-clutter-embed.pl
@@ -12,4 +13,7 @@ README
 t/GtkClutterEmbed.t
 xs/GtkClutter.xs
 xs/GtkClutterEmbed.xs
+xs/GtkClutterScrollable.xs
+xs/GtkClutterViewport.xs
+xs/GtkClutterZoomable.xs
 xs_files-0.10
