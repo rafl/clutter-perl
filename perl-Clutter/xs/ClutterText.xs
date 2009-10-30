@@ -184,3 +184,13 @@ void clutter_text_position_to_coords (ClutterText *text, gint position);
                 PUSHs (sv_2mortal (newSVnv (line_height)));
         }
 
+#if CLUTTER_CHECK_VERSION(1, 0, 8)
+
+void
+clutter_text_set_preedit_string (text, preedit_str=NULL, preedit_attrs=NULL, cursor_pos=0)
+        ClutterText *text
+        const gchar_ornull *preedit_str
+        PangoAttrList_ornull *preedit_attrs
+        guint cursor_pos
+
+#endif /* CLUTTER_CHECK_VERSION(1, 0, 8) */
