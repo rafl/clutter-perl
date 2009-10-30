@@ -4,3 +4,4 @@ CoglTextureVertex       texture vertex
 CoglMatrix              matrix
 CoglColor               array of R, G, B, A values
 CoglFixed               fixed point value
+CoglPangoFontMap        Pango::FontMap
