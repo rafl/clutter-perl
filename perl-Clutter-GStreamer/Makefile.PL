@@ -26,8 +26,8 @@ my %PREREQ_PM = (
     'Glib'                => $build_reqs{'perl-Glib'},
     'Cairo'               => $build_reqs{'perl-Cairo'},
     'Pango'               => $build_reqs{'perl-Pango'},
-    'Clutter'             => $build_reqs{'perl-Clutter'},
     'GStreamer'           => $build_reqs{'perl-GStreamer'},
+    'Clutter'             => $build_reqs{'perl-Clutter'},
 );
 
 # Writing a fake Makefile ensures that CPAN will pick up the correct
@@ -70,7 +70,7 @@ foreach my $filename (@xs_lists) {
     push @xs_files, @names;
 }
 
-print "Loaded " . scalar(@xs_files) . " xs files for Clutter\n";
+print "Loaded " . scalar(@xs_files) . " xs files for Clutter::GStreamer\n";
 
 my %pm_files = (
     'lib/Clutter/GStreamer.pm' => '$(INST_LIBDIR)/GStreamer.pm',
@@ -78,15 +78,13 @@ my %pm_files = (
 
 my %pod_files = (
     'lib/Clutter/GStreamer.pm' => '$(INST_MAN3DIR)/Clutter::GStreamer.$(MAN3EXT)',
+
     Glib::MakeHelper->do_pod_files(@xs_files),
 );
 
-# typemaps generation files
-my @input_maps = qw/ maps /;
-
 # autogeneration
 Glib::CodeGen->parse_maps('clutter-gst-perl', input => [<maps-[0-9]\.[0-9]*>]);
-Glib::CodeGen->write_boot(xs_files => \@xs_files, ignore => '^Clutter::GStreamer$');
+Glib::CodeGen->write_boot(xs_files => \@xs_files, ignore => qr/^Clutter::GStreamer$/);
 
 my @deps = qw/ Clutter GStreamer /;
 my $cwd = cwd();
@@ -120,7 +118,10 @@ WriteMakefile(
     XSPROTOARG    => '-noprototypes ',
     MAN3PODS	  => \%pod_files,
 
-    META_MERGE    => { configure_requires => \%PREREQ_PM },
+    META_MERGE    => {
+        configure_requires => \%PREREQ_PM,
+	no_index => { directory => [ qw/ xs / ], },
+    },
 
     $clutter->get_makefile_vars(),
 );
