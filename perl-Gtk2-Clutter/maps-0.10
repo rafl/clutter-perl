@@ -1,1 +1,2 @@
 GTK_CLUTTER_TYPE_EMBED          GtkClutterEmbed         GObject         Gtk2::Clutter::Embed
+GTK_CLUTTER_TYPE_VIEWPORT       GtkClutterViewport      GObject         Gtk2::Clutter:Viewport
