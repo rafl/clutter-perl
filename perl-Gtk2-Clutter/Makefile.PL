@@ -84,7 +84,7 @@ my %pod_files = (
 
 # autogeneration
 Glib::CodeGen->parse_maps('clutter-gtk-perl', input => [<maps-[0-9]\.[0-9]*>]);
-Glib::CodeGen->write_boot(xs_files => \@xs_files, ignore => '^Gtk2::Clutter$');
+Glib::CodeGen->write_boot(xs_files => \@xs_files, ignore => qr/^Gtk2::Clutter$/);
 
 my @deps = qw/ Clutter Gtk2 /;
 my $cwd = cwd();
@@ -118,7 +118,10 @@ WriteMakefile(
     XSPROTOARG    => '-noprototypes ',
     MAN3PODS	  => \%pod_files,
 
-    META_MERGE    => { configure_requires => \%PREREQ_PM },
+    META_MERGE    => {
+        configure_requires => \%PREREQ_PM,
+	no_index => { directories => [ qw/ xs / ] },
+    },
 
     $clutter->get_makefile_vars(),
 );
