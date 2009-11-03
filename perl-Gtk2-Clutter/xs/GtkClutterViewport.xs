@@ -10,17 +10,5 @@ gtk_clutter_viewport_new (class=NULL, h_adjust=NULL, v_adjust=NULL, z_adjust=NUL
     C_ARGS:
         h_adjust, v_adjust, z_adjust
 
-=for apidoc
-=for signature (x, y, z) = $viewport->get_origin
-=cut
 void
-gtk_clutter_viewport_get_origin (GtkClutterViewport *viewport)
-    PREINIT:
-        gfloat x, y, z;
-    PPCODE:
-        x = y = z = 0;
-        gtk_clutter_viewport_get_origin (viewport, &x, &y, &z);
-        EXTEND (SP, 3);
-        PUSHs (sv_2mortal (newSVnv (x)));
-        PUSHs (sv_2mortal (newSVnv (y)));
-        PUSHs (sv_2mortal (newSVnv (z)));
+gtk_clutter_viewport_get_origin (GtkClutterViewport *viewport, OUTLIST gfloat x, OUTLIST gfloat y, OUTLIST gfloat z)
