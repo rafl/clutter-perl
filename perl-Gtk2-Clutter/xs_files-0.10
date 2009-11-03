@@ -3,3 +3,4 @@ xs/GtkClutterEmbed.xs
 xs/GtkClutterScrollable.xs
 xs/GtkClutterViewport.xs
 xs/GtkClutterZoomable.xs
+xs/GtkClutterUtil.xs
